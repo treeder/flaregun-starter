@@ -8,7 +8,7 @@ Then run it to start:
 make run
 ```
 
-Now we can modify things to make it your own. 
+Now you can modify things to make it your own. 
 
 ## Database
 
@@ -27,3 +27,31 @@ Edit [layout.js](./layout.js) to update the layout of your app.
 ## Routes
 
 This uses file based routing based on [Cloudflare Pages Functions](https://developers.cloudflare.com/pages/functions/routing/). But since Pages Functions are deprecated, we only use the same routing as functions, otherwise, this is all Workers focused. 
+
+## Deploying to Production
+
+This is two steps. 
+
+1. Run setup script to create resources.
+2. Setup auto deployment
+
+### Setup
+
+This will create all your cloudflare resources such as your database and file storage. 
+
+First get an [API token for Cloudflare](https://developers.cloudflare.com/fundamentals/api/get-started/create-token/) and get your account ID.
+
+Choose "Edit Cloudflare Workers" template. 
+
+![alt text](image.png)
+
+Keep all the same settings, but add `Read` access to D1.
+
+Create a `.env` file with:
+
+```sh
+CLOUDFLARE_API_TOKEN=X
+CLOUDFLARE_ACCOUNT_ID=Y
+```
+
+Then run `make setup`.

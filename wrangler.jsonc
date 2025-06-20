@@ -1,63 +1,63 @@
 {
-    "name": "flaregun",
-    "compatibility_date": "2025-06-01",
-    "main": "./dist/index.js",
-    "assets": {
-      "directory": "./public/",
-      "binding": "ASSETS"
-      //  "not_found_handling": "404-page"
-    },
-    "env": {
-      "dev": {
-        "vars": {
-          "ENV": "dev"
-        },
-        "kv_namespaces": [
-          {
-            "binding": "KV",
-            "id": "flaregun-dev"
-          }
-        ],
-        "d1_databases": [
-          {
-            "binding": "D1",
-            "database_name": "flaregun-dev",
-            "database_id": "flaregun-dev"
-          }
-        ],
-        "r2_buckets": [
-          {
-            "binding": "R2",
-            "bucket_name": "flaregun-dev"
-          }
-        ]
+  "name": "flaregun",
+  "compatibility_date": "2025-06-01",
+  "main": "./dist/index.js",
+  "assets": {
+    "directory": "./public/",
+    "binding": "ASSETS"
+  },
+  "env": {
+    "dev": {
+      "vars": {
+        "ENV": "dev"
       },
-      "prod": {
-        "vars": {
-          "ENV": "prod"
-        },
-        "kv_namespaces": [
-          {
-            "binding": "KV",
-            "id": "flaregun-prod"
-          }
-        ],
-        "d1_databases": [
-          {
-            "binding": "D1",
-            "database_name": "flaregun-prod",
-            "database_id": "flaregun-prod"
-          }
-        ],
-        "r2_buckets": [
-          {
-            "binding": "R2",
-            "bucket_name": "flaregun-prod"
-          }
-        ]
-      }
+      "kv_namespaces": [
+        {
+          "binding": "KV",
+          "id": "flaregun-dev"
+        }
+      ],
+      "d1_databases": [
+        {
+          "binding": "D1",
+          "database_name": "flaregun-dev",
+          "database_id": "flaregun-dev"
+        }
+      ],
+      "r2_buckets": [
+        {
+          "binding": "R2",
+          "bucket_name": "flaregun-dev"
+        }
+      ]
     },
-    "placement": {
-      "mode": "smart"
+    "prod": {
+      "vars": {
+        "ENV": "prod"
+      },
+      "kv_namespaces": [
+        {
+          "binding": "KV",
+          "id": "98db8d8b30984b0fba3ce8d4fd6ec292",
+          "title": "flaregun-prod"
+        }
+      ],
+      "d1_databases": [
+        {
+          "binding": "D1",
+          "database_name": "flaregun-prod",
+          "database_id": "77fddcbc-fc0f-4bb0-8190-58b87de4af4b"
+        }
+      ],
+      "r2_buckets": [
+        {
+          "binding": "R2",
+          "bucket_name": "flaregun-prod"
+        }
+      ]
     }
+  },
+  "placement": {
+    "mode": "smart"
   }
+}
