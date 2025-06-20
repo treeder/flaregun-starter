@@ -1,0 +1,18 @@
+{
+  "name": "flaregun-starter",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "console-logger": "github:treeder/console-logger",
+    "flaregun": "github:treeder/flaregun",
+    "migrations": "github:treeder/migrations",
+    "nanoid": "^5.1.5",
+    "rend": "github:treeder/rend"
+  }
+}
