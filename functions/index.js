@@ -1,7 +1,11 @@
 import { html } from "rend"
+import { Product } from "./models.js"
 
 export async function onRequestGet(c) {
-  let products = await c.data.d1.query("products")
+  let products = await c.data.d1.query("products", {
+    model: Product,
+  })
+  console.log(products)
   return await c.data.rend.html({
     main: render,
     products,
@@ -12,7 +16,7 @@ function render(d) {
   return html`
   <script type="module">
   import "/components/product-form.js"
-  </script>
+</script>
 
   <div class="flex col g20">
     <div>
@@ -24,11 +28,13 @@ function render(d) {
     <div>
       <div class="headline-medium">Products</div>
     </div>
-    <div class="flex col g12">
+    <div class="grid g12 w100" style="grid-template-columns: repeat(4, 1fr);">
       ${d.products.map(p => html`
-        <div class="flex g12">
-        <div>${p.name}</div><div>${p.description}</div><div>${p.price}</div>
-        </div>`)}
+        <div>${p.name}</div>
+        <div>${p.description}</div>
+        <div>${p.price}</div>
+        <div>${p.data?.x}</div>
+        `)}
     </div>
   </div>
   `

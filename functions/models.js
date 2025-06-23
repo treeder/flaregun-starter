@@ -20,5 +20,8 @@ export class Product {
     price: {
       type: Number,
     },
+    data: {
+      type: Object,
+    }
   }
 }

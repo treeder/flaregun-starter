@@ -14,7 +14,7 @@ Now you can modify things to make it your own.
 
 ### Schema
 
-Edit [models.js](./models.js) to update your database schema. It uses mostly the same syntax as Lit properties.
+Edit [models.js](./functions/models.js) to update your database schema. It uses mostly the same syntax as Lit properties.
 
 ### Using the database
 
@@ -22,7 +22,7 @@ See the D1 docs in the main README.
 
 ## Layout
 
-Edit [layout.js](./layout.js) to update the layout of your app.
+Edit [layout.js](./functions/layout.js) to update the layout of your app.
 
 ## Routes
 
@@ -41,7 +41,7 @@ This will create all your cloudflare resources such as your database and file st
 
 First get an [API token for Cloudflare](https://developers.cloudflare.com/fundamentals/api/get-started/create-token/) and get your account ID.
 
-Choose "Edit Cloudflare Workers" template. 
+Choose "Edit Cloudflare Workers" template.
 
 ![alt text](image.png)
 
