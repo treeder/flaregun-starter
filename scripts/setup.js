@@ -3,6 +3,12 @@ import { exec, execSync, spawnSync } from "child_process"
 import { fetchCF } from "./cfapi.js"
 import { writeFileSync } from "fs"
 
+let c = {
+  env: process.env,
+}
+
+await parseWrangler(c)
+
 async function parseWrangler(c) {
   const wranglerConfig = await parseFile("../wrangler.jsonc")
   // console.log(wranglerConfig)
@@ -22,12 +28,8 @@ async function parseWrangler(c) {
   }
   writeFileSync("../wrangler.jsonc", JSON.stringify(wranglerConfig, null, 2))
 
+  console.log("Setup complete!")
 }
-let c = {
-  env: process.env,
-}
-
-await parseWrangler(c)
 
 
 async function createDB(c, d1) {

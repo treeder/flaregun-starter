@@ -4,8 +4,8 @@ First clone this repo and get this directory.
 
 Then run it to start:
 
-```
-make run
+```sh
+make run # or npm start
 ```
 
 Now you can modify things to make it your own. 
@@ -18,7 +18,7 @@ Edit [models.js](./functions/models.js) to update your database schema. It uses 
 
 ### Using the database
 
-See the D1 docs in the main README.
+See the [D1 docs](https://github.com/treeder/flaregun/blob/main/README.md#d1-sqlite-database) in the flaregun repository.
 
 ## Layout
 
@@ -26,14 +26,15 @@ Edit [layout.js](./functions/layout.js) to update the layout of your app.
 
 ## Routes
 
-This uses file based routing based on [Cloudflare Pages Functions](https://developers.cloudflare.com/pages/functions/routing/). But since Pages Functions are deprecated, we only use the same routing as functions, otherwise, this is all Workers focused. 
+This uses file based routing from [Cloudflare Pages Functions](https://developers.cloudflare.com/pages/functions/routing/), but runs on Workers 
+because Pages Functions are deprecated. We only use the same routing as functions, otherwise, this is all Workers related. 
 
 ## Deploying to Production
 
 This is two steps. 
 
 1. Run setup script to create resources.
-2. Setup auto deployment
+2. Manual deploy OR setup auto deploy
 
 ### Setup
 
@@ -43,7 +44,7 @@ First get an [API token for Cloudflare](https://developers.cloudflare.com/fundam
 
 Choose "Edit Cloudflare Workers" template.
 
-![alt text](image.png)
+![alt text](docs/images/image.png)
 
 Keep all the same settings, but add `Read` access to D1.
 
@@ -54,4 +55,28 @@ CLOUDFLARE_API_TOKEN=X
 CLOUDFLARE_ACCOUNT_ID=Y
 ```
 
-Then run `make setup`.
+Then run:
+
+```sh
+npm run setup
+```
+
+### Deploy
+
+To manually deploy:
+
+```sh
+make run deploy
+```
+
+### Auto Deploy
+
+This is the better way to go so it's all automated. 
+
+If you've already deployed, go your work applications settings and connect your GitHub repository:
+
+![alt text](docs/images/image-1.png)
+
+If you haven't deployed yet, go to Workers section, click Create then choose "import a repository"
+
+![alt text](docs/images/image-2.png)

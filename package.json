@@ -4,8 +4,10 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
+    "start": "npm install && npx concurrently \"npx nodemon --watch functions --watch public --exec 'npx wrangler pages functions build --outdir=./dist/'\" \"npx wrangler dev --env dev --live-reload\"",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "setup": "cd scripts && node --env-file .env ./setup.js"
+    "setup": "cd scripts && node --env-file ../.env ./setup.js",
+    "deploy": "npx wrangler deploy --env prod --no-bundle --outdir=./dist/"
   },
   "author": "",
   "license": "ISC",
