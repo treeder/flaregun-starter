@@ -5,7 +5,7 @@ First clone this repo and get this directory.
 Then run it to start:
 
 ```sh
-make run # or npm start
+npm start
 ```
 
 Now you can modify things to make it your own. 

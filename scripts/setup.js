@@ -1,5 +1,4 @@
-import { parse, parseFile, parseFileSync } from "jsonc-parse"
-import { exec, execSync, spawnSync } from "child_process"
+import { parseFile } from "jsonc-parse"
 import { fetchCF } from "./cfapi.js"
 import { writeFileSync } from "fs"
 

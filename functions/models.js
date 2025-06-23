@@ -1,4 +1,4 @@
-// First define your models as classes:
+// Define your models as classes with a static properties attribute:
 export class Product {
   static properties = {
     id: {
