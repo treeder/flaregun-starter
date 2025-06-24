@@ -14,14 +14,15 @@
       "kv_namespaces": [
         {
           "binding": "KV",
-          "id": "flaregun-dev"
+          "title": "flaregun-dev",
+          "id": "0a5bdf2a494a4d8cb0d1d5d8e26827f7"
         }
       ],
       "d1_databases": [
         {
           "binding": "D1",
           "database_name": "flaregun-dev",
-          "database_id": "flaregun-dev"
+          "database_id": "603a5bdc-a4b5-4b49-95b3-7e6817dc4bfc"
         }
       ],
       "r2_buckets": [
@@ -38,8 +39,8 @@
       "kv_namespaces": [
         {
           "binding": "KV",
-          "id": "98db8d8b30984b0fba3ce8d4fd6ec292",
-          "title": "flaregun-prod"
+          "title": "flaregun-prod",
+          "id": "98db8d8b30984b0fba3ce8d4fd6ec292"
         }
       ],
       "d1_databases": [

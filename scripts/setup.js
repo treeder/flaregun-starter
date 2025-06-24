@@ -11,19 +11,24 @@ await parseWrangler(c)
 async function parseWrangler(c) {
   const wranglerConfig = await parseFile("../wrangler.jsonc")
   // console.log(wranglerConfig)
-  let prod = wranglerConfig.env.prod
-  // console.log(prod)
-  for (let kv of prod.kv_namespaces) {
-    console.log(kv)
-    await createKV(c, kv)
-  }
-  for (let d1 of prod.d1_databases) {
-    console.log(d1)
-    await createDB(c, d1)
-  }
-  for (let r2 of prod.r2_buckets) {
-    console.log(r2)
-    await createR2(c, r2)
+
+  for (let env in wranglerConfig.env) {
+    console.log(`Creating resources for envronment: ${env}`)
+    let prod = wranglerConfig.env[env]
+    // let prod = wranglerConfig.env.prod
+    // console.log(prod)
+    for (let kv of prod.kv_namespaces) {
+      console.log(kv)
+      await createKV(c, kv)
+    }
+    for (let d1 of prod.d1_databases) {
+      console.log(d1)
+      await createDB(c, d1)
+    }
+    for (let r2 of prod.r2_buckets) {
+      console.log(r2)
+      await createR2(c, r2)
+    }
   }
   writeFileSync("../wrangler.jsonc", JSON.stringify(wranglerConfig, null, 2))
 
@@ -32,9 +37,9 @@ async function parseWrangler(c) {
 
 
 async function createDB(c, d1) {
-  if (d1.database_id) {
-    return
-  }
+  // if (d1.database_id) {
+  //   return
+  // }
   // check if exists first
   let r = await fetchCF(c, "/d1/database", {
     q: { "name": d1.database_name },
@@ -61,9 +66,9 @@ async function createDB(c, d1) {
 }
 
 async function createKV(c, kv) {
-  if (kv.id) {
-    return
-  }
+  // if (kv.id) {
+  //   return
+  // }
   // check if exists first
   let r = await fetchCF(c, "/storage/kv/namespaces", {
     q: { "title": kv.title },

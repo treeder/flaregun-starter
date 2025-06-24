@@ -66,12 +66,18 @@ npm run setup
 To manually deploy:
 
 ```sh
-make run deploy
+npm run deploy
 ```
 
 ### Auto Deploy
 
-This is the better way to go so it's all automated. 
+This is the better way to go so it's all automated and will deploy on every commit. 
+
+Set build command to:
+
+```sh
+npm run build
+```
 
 If you've already deployed, go your work applications settings and connect your GitHub repository:
 
@@ -80,3 +86,11 @@ If you've already deployed, go your work applications settings and connect your 
 If you haven't deployed yet, go to Workers section, click Create then choose "import a repository"
 
 ![alt text](docs/images/image-2.png)
+
+### Deploying dev environment
+
+This will run a separate instance with separate database and other resources. 
+
+```sh
+make run deploy:dev
+```
