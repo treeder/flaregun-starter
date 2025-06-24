@@ -74,7 +74,7 @@ Choose "Edit Cloudflare Workers" template.
 
 ![alt text](docs/images/image.png)
 
-Keep all the same settings, but add `Read` access to D1.
+Keep all the same settings, but add `Write` access to D1.
 
 Create a `.env` file with:
 
