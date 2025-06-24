@@ -92,5 +92,5 @@ If you haven't deployed yet, go to Workers section, click Create then choose "im
 This will run a separate instance with separate database and other resources. 
 
 ```sh
-make run deploy:dev
+npm run deploy:dev
 ```
