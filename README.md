@@ -1,8 +1,6 @@
 This is a starter kit for running a full-stack app quickly on Cloudflare without using a framework. 
 
-First clone this repo and get this directory. 
-
-Then run it to start:
+First clone this repo then run it to start:
 
 ```sh
 npm start
