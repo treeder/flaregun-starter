@@ -21,7 +21,7 @@ export class Product {
       type: Number,
     },
     data: {
-      type: Object,
+      type: Object, // this will be stored as a JSON object so you can stuff anything in here and still query on it. 
     }
   }
 }
