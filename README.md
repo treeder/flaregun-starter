@@ -27,6 +27,36 @@ Edit [layout.js](./functions/layout.js) to update the layout of your app.
 This uses file based routing from [Cloudflare Pages Functions](https://developers.cloudflare.com/pages/functions/routing/), but runs on Workers 
 because Pages Functions are deprecated. We only use the same routing as functions, otherwise, this is all Workers related. 
 
+To add a new route, just add a new file to the functions directory and that will be your route. 
+
+For UI endpoints:
+
+```js
+import { html } from "rend"
+
+export async function onRequestGet(c) {
+  return await c.data.rend.html({
+    main: render,
+  })
+}
+
+function render(d) {
+  return html`
+  <div>Hello world!</div>
+  `
+}
+```
+
+For API endpoints:
+
+```js
+export async function onRequestGet(c) {
+  return Response.json({
+    hello: "world",
+  })
+}
+```
+
 ## Deploying to Production
 
 This is two steps. 
