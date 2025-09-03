@@ -1,18 +1,8 @@
 import { html, slot } from 'rend'
 
 export async function layout(d) {
-  return `${header(d)}
-
-${await slot('main', d)}
-
-${footer(d)}
-`
-}
-
-
-export function header(d) {
-  let title = d.title ? d.title + " - Flaregun" : "Flaregun Starter Kit"
-  return html`<!DOCTYPE html>
+  let title = d.title ? d.title + ' - Flaregun' : 'Flaregun Starter Kit'
+  return `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
@@ -52,11 +42,9 @@ export function header(d) {
     <div class="title-large">Flaregun Starter Kit</div>
   </div>
 </div>
-`
-}
 
-export function footer(d) {
-  return html`
+${await slot('main', d)}
+
 </body>
 </html>
 `
