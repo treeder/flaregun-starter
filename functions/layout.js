@@ -8,6 +8,7 @@ export async function layout(d) {
   <meta charset="utf-8" />
   <title>${title}</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="/images/flaregun2.png">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -29,7 +30,8 @@ export async function layout(d) {
       "lit-html/": "https://cdn.jsdelivr.net/npm/lit-html@3/",
       "material/": "https://cdn.jsdelivr.net/gh/treeder/material@1/",
       "api": "https://cdn.jsdelivr.net/gh/treeder/api@0/api.js",
-      "state": "https://cdn.jsdelivr.net/gh/treeder/state@1/state.js"
+      "state": "https://cdn.jsdelivr.net/gh/treeder/state@1/state.js",
+      "models": "https://cdn.jsdelivr.net/gh/treeder/models@1/index.js"
     }
   }
   </script>

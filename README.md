@@ -1,4 +1,6 @@
-This is a starter kit for running a full-stack app quickly on Cloudflare without using a framework. 
+# Flaregun Starter Kit
+
+This is a starter kit for running a full-stack app quickly on Cloudflare without using a framework.
 
 First clone this repo then run it to start:
 
@@ -6,7 +8,7 @@ First clone this repo then run it to start:
 npm start
 ```
 
-Now you can modify things to make it your own. 
+Now you can modify things to make it your own.
 
 ## Database
 
@@ -24,15 +26,14 @@ Edit [layout.js](./functions/layout.js) to update the layout of your app.
 
 ## Routes
 
-This uses file based routing from [Cloudflare Pages Functions](https://developers.cloudflare.com/pages/functions/routing/), but runs on Workers 
-because Pages Functions are deprecated. We only use the same routing as functions, otherwise, this is all Workers related. 
+This uses file based routing from [Cloudflare Pages Functions](https://developers.cloudflare.com/pages/functions/routing/), but runs on Workers because Pages Functions are deprecated. We only use the routing from functions, otherwise, this is all Workers related.
 
-To add a new route, just add a new file to the functions directory and that will be your route. 
+To add a new route, just add a new file to the functions directory and that will be your route.
 
 For UI endpoints:
 
 ```js
-import { html } from "rend"
+import { html } from 'rend'
 
 export async function onRequestGet(c) {
   return await c.data.rend.html({
@@ -41,9 +42,7 @@ export async function onRequestGet(c) {
 }
 
 function render(d) {
-  return html`
-  <div>Hello world!</div>
-  `
+  return html` <div>Hello world!</div> `
 }
 ```
 
@@ -52,21 +51,21 @@ For API endpoints:
 ```js
 export async function onRequestGet(c) {
   return Response.json({
-    hello: "world",
+    hello: 'world',
   })
 }
 ```
 
 ## Deploying to Production
 
-This is two steps. 
+This is two steps.
 
 1. Run setup script to create resources.
 2. Manual deploy OR setup auto deploy
 
 ### Setup
 
-This will create all your cloudflare resources such as your database and file storage. 
+This will create all your cloudflare resources such as your database and file storage.
 
 First get an [API token for Cloudflare](https://developers.cloudflare.com/fundamentals/api/get-started/create-token/) and get your account ID.
 
@@ -99,7 +98,7 @@ npm run deploy
 
 ### Auto Deploy
 
-This is the better way to go so it's all automated and will deploy on every commit. 
+This is the better way to go so it's all automated and will deploy on every commit.
 
 Set build command to:
 
@@ -117,7 +116,7 @@ If you haven't deployed yet, go to Workers section, click Create then choose "im
 
 ### Deploying dev environment
 
-This will run a separate instance with separate database and other resources. 
+This will run a separate instance with separate database and other resources.
 
 ```sh
 npm run deploy:dev
