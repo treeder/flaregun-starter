@@ -1,8 +1,6 @@
-install:
-	npm install
 
-run: install
-	npx concurrently "npx nodemon --watch functions --watch public --exec 'npx wrangler pages functions build --outdir=./dist/'"  "npx wrangler dev --env dev --live-reload"
+run:
+	npm start
 
 pushdev:
 	git push origin --force `git symbolic-ref --short HEAD`:dev

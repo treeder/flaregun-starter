@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "npm install && npx concurrently \"npx nodemon --watch functions --watch public --exec 'npx wrangler pages functions build --outdir=./dist/'\" \"npx wrangler dev --env dev --live-reload\"",
+    "start": "npm install && npx concurrently \"npx nodemon --watch functions --watch public --exec 'npx wrangler pages functions build --outdir=./dist/'\" \"npx wrangler dev --env dev --no-bundle --live-reload\"",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "npx wrangler pages functions build --outdir=./dist/",
     "setup": "cd scripts && node --env-file ../.env ./setup.js",

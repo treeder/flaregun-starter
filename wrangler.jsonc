@@ -15,7 +15,7 @@
         {
           "binding": "KV",
           "title": "flaregun-dev",
-          "id": ""
+          "id": "flaregun-dev"
         }
       ],
       "d1_databases": [
@@ -40,7 +40,7 @@
         {
           "binding": "KV",
           "title": "flaregun-prod",
-          "id": ""
+          "id": "flaregun-prod"
         }
       ],
       "d1_databases": [
@@ -60,5 +60,9 @@
   },
   "placement": {
     "mode": "smart"
+  },
+  "observability": {
+    "enabled": true,
+    "head_sampling_rate": 1
   }
 }

@@ -1,6 +1,6 @@
-import { parseFile } from "jsonc-parse"
-import { fetchCF } from "./cfapi.js"
-import { writeFileSync } from "fs"
+import { parseFile } from 'jsonc-parse'
+import { fetchCF } from './cfapi.js'
+import { writeFileSync } from 'fs'
 
 let c = {
   env: process.env,
@@ -9,11 +9,11 @@ let c = {
 await parseWrangler(c)
 
 async function parseWrangler(c) {
-  const wranglerConfig = await parseFile("../wrangler.jsonc")
+  const wranglerConfig = await parseFile('../wrangler.jsonc')
   // console.log(wranglerConfig)
 
   for (let env in wranglerConfig.env) {
-    console.log(`Creating resources for envronment: ${env}`)
+    console.log(`Creating resources for environment: ${env}`)
     let prod = wranglerConfig.env[env]
     // let prod = wranglerConfig.env.prod
     // console.log(prod)
@@ -30,19 +30,18 @@ async function parseWrangler(c) {
       await createR2(c, r2)
     }
   }
-  writeFileSync("../wrangler.jsonc", JSON.stringify(wranglerConfig, null, 2))
+  writeFileSync('../wrangler.jsonc', JSON.stringify(wranglerConfig, null, 2))
 
-  console.log("Setup complete!")
+  console.log('Setup complete!')
 }
-
 
 async function createDB(c, d1) {
   // if (d1.database_id) {
   //   return
   // }
   // check if exists first
-  let r = await fetchCF(c, "/d1/database", {
-    q: { "name": d1.database_name },
+  let r = await fetchCF(c, '/d1/database', {
+    q: { name: d1.database_name },
   })
   console.log(r)
   if (r.result.length > 0) {
@@ -51,12 +50,12 @@ async function createDB(c, d1) {
     return
   }
   console.log(`Creating database ${d1.database_name}`)
-  r = await fetchCF(c, "/d1/database", {
-    method: "POST",
+  r = await fetchCF(c, '/d1/database', {
+    method: 'POST',
     body: {
       name: d1.database_name,
       // primary_location_hint: "wnam"
-    }
+    },
   })
   console.log(r)
   d1.database_id = r.result.uuid
@@ -70,8 +69,8 @@ async function createKV(c, kv) {
   //   return
   // }
   // check if exists first
-  let r = await fetchCF(c, "/storage/kv/namespaces", {
-    q: { "title": kv.title },
+  let r = await fetchCF(c, '/storage/kv/namespaces', {
+    q: { title: kv.title },
   })
   console.log(r)
   for (let kstore of r.result) {
@@ -82,16 +81,15 @@ async function createKV(c, kv) {
     }
   }
   console.log(`Creating KV store ${kv.title}`)
-  r = await fetchCF(c, "/storage/kv/namespaces", {
-    method: "POST",
+  r = await fetchCF(c, '/storage/kv/namespaces', {
+    method: 'POST',
     body: {
       title: kv.title,
       // primary_location_hint: "wnam"
-    }
+    },
   })
   console.log(r)
   kv.id = r.result.id
-
 }
 
 async function createR2(c, r2) {
@@ -108,19 +106,20 @@ async function createR2(c, r2) {
     console.error(e, e.data)
     if (e.data.errors.length > 0) {
       let e2 = e.data.errors[0]
-      if (e2.code === 10006) { // bucket does not exist
+      if (e2.code === 10006) {
+        // bucket does not exist
       } else {
         throw e
       }
     }
   }
   console.log(`Creating R2 bucket ${r2.bucket_name}`)
-  let r = await fetchCF(c, "/r2/buckets", {
-    method: "POST",
+  let r = await fetchCF(c, '/r2/buckets', {
+    method: 'POST',
     body: {
       name: r2.bucket_name,
       // primary_location_hint: "wnam"
-    }
+    },
   })
   console.log(r)
   // r2.id = r.result.id
