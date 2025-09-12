@@ -9,7 +9,7 @@
   "build": {
     "command": "npx wrangler pages functions build --outdir=./dist/",
     "cwd": ".",
-    "watch_dir": "functions"
+    "watch_dir": ["functions", "public"]
   },
   "env": {
     "dev": {
