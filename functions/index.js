@@ -1,8 +1,8 @@
-import { html } from "rend"
-import { Product } from "./models.js"
+import { html } from 'rend'
+import { Product } from './models.js'
 
 export async function onRequestGet(c) {
-  let products = await c.data.d1.query("products", {
+  let products = await c.data.d1.query('products', {
     model: Product,
   })
   console.log(products)
@@ -14,28 +14,28 @@ export async function onRequestGet(c) {
 
 function render(d) {
   return html`
-  <script type="module">
-  import "/components/product-form.js"
-</script>
+    <script type="module">
+      import '/components/product-form.js'
+    </script>
 
-  <div class="flex col g20">
-    <div>
-      Hello World!
+    <div class="flex col g20">
+      <div>Hello World!</div>
+      <div>
+        <product-form></product-form>
+      </div>
+      <div>
+        <div class="headline-medium">Products</div>
+      </div>
+      <div class="grid g12 w100" style="grid-template-columns: repeat(4, 1fr);">
+        ${d.products.map(
+          (p) => html`
+            <div>${p.name}</div>
+            <div>${p.description}</div>
+            <div>${p.price}</div>
+            <div>${p.data?.x}</div>
+          `,
+        )}
+      </div>
     </div>
-    <div>
-      <product-form></product-form>
-    </div>
-    <div>
-      <div class="headline-medium">Products</div>
-    </div>
-    <div class="grid g12 w100" style="grid-template-columns: repeat(4, 1fr);">
-      ${d.products.map(p => html`
-        <div>${p.name}</div>
-        <div>${p.description}</div>
-        <div>${p.price}</div>
-        <div>${p.data?.x}</div>
-        `)}
-    </div>
-  </div>
   `
 }

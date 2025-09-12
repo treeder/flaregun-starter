@@ -1,13 +1,15 @@
-import { nanoid } from "nanoid"
-import { ConsoleLogger } from "console-logger"
-import { D1 } from "flaregun"
-import { Rend } from "rend"
-import { layout } from "./layout.js"
-import { once } from "./_once.js"
+import { nanoid } from 'nanoid'
+import { ConsoleLogger } from 'console-logger'
+import { D1, ErrorHandler } from 'flaregun'
+import { Rend } from 'rend'
+import { layout } from './layout.js'
+import { init } from './_once.js'
+import { once } from 'once'
+import { cors } from 'flaregun/middleware/cors.js'
+import { timer } from 'flaregun/middleware/timer.js'
 
-export async function onRequest(c) {
-  console.log("MIDDLEWARE")
-  c.data.startTime = Date.now()
+const errorHandler = new ErrorHandler()
+export async function wrap(c) {
   try {
     let req = c.request
 
@@ -19,14 +21,12 @@ export async function onRequest(c) {
       //   logger = new BetterstackLogger({ ...JSON.parse(c.env.BETTERSTACK), data: { requestID: rid, path: url.pathname } })
     }
     c.data.logger = logger
-    c.data.logger.log("start of request")
 
     if (url.pathname.includes('.')) {
       // skip static assets
       return await c.next()
     }
-
-    await once(c)
+    await once(init, c)
 
     // setup env vars
     c.data.env = c.env.ENV
@@ -43,18 +43,8 @@ export async function onRequest(c) {
     let r = await c.next()
     return r
   } catch (err) {
-    console.log("ERROR!!!!", err)
-    c.data.logger.log(err)
-    return Response.json({ error: err.message }, { status: err.status || 500 })
-  } finally {
-    c.waitUntil(finish(c))
+    return await errorHandler.handle(c, err)
   }
 }
 
-export async function finish(c) {
-  const duration = Date.now() - c.data.startTime
-  console.log("finish")
-  c.data.logger.log("end of request", { duration }) // to use Baselime's duration feature
-  await c.data.logger.flush()
-  // console.log("posted to baselime")
-}
+export const onRequest = [timer, cors, wrap]

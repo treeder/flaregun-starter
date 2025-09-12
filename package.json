@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "npm install && npx concurrently \"npx nodemon --watch functions --watch public --exec 'npx wrangler pages functions build --outdir=./dist/'\" \"npx wrangler dev --env dev --no-bundle --live-reload\"",
+    "start": "npm install && npx wrangler dev --env dev --live-reload",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "npx wrangler pages functions build --outdir=./dist/",
     "setup": "cd scripts && node --env-file ../.env ./setup.js",
@@ -13,15 +13,25 @@
     "deploy:upload": "npx wrangler versions upload --env dev"
   },
   "author": "",
-  "license": "ISC",
+  "license": "Apache-2.0",
   "description": "",
   "dependencies": {
     "api": "github:treeder/api",
     "console-logger": "github:treeder/console-logger",
     "flaregun": "github:treeder/flaregun",
-    "jsonc-parse": "^1.5.5",
     "migrations": "github:treeder/migrations",
     "nanoid": "^5.1.5",
+    "once": "github:treeder/once",
     "rend": "github:treeder/rend"
+  },
+  "devDependencies": {
+    "jsonc-parse": "^1.5.5"
+  },
+  "prettier": {
+    "semi": false,
+    "singleQuote": true,
+    "tabWidth": 2,
+    "trailingComma": "all",
+    "printWidth": 120
   }
 }

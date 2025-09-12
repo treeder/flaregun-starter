@@ -6,6 +6,11 @@
     "directory": "./public/",
     "binding": "ASSETS"
   },
+  "build": {
+    "command": "npx wrangler pages functions build --outdir=./dist/",
+    "cwd": ".",
+    "watch_dir": "functions"
+  },
   "env": {
     "dev": {
       "vars": {

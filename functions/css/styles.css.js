@@ -1,20 +1,19 @@
 /**
- * We have CSS in JS files so that they can be used in web components. 
+ * We have CSS in JS files so that they can be used in web components.
  */
 
 export async function onRequest(c) {
   return new Response(root({}), {
     headers: {
-      "content-type": "text/css;charset=UTF-8",
+      'content-type': 'text/css;charset=UTF-8',
     },
   })
 }
 
-
 export function root(d) {
   return `
 @import url(light.css) (prefers-color-scheme: light); 
-@import url(dark.css);
+@import url(dark.css)  (prefers-color-scheme: dark); 
   
 :root {
   --md-ref-typeface-brand: 'Roboto Flex', sans-serif;
