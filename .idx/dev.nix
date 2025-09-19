@@ -15,9 +15,9 @@
   idx = {
     # Search for the extensions you want on https://open-vsx.org/ and use "publisher.id"
     extensions = [
-      "qwtel.sqlite-viewer"
       "GitHub.vscode-pull-request-github"
       "esbenp.prettier-vscode"
+      "yy0931.vscode-sqlite3-editor"
     ];
 
     # Enable previews

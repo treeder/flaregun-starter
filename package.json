@@ -7,7 +7,11 @@
     "start": "npm install && npx wrangler dev --env dev --live-reload",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "npx treeder/flaregun build",
-    "setup": "npx treeder/flaregun setup"
+    "setup": "npx treeder/flaregun setup",
+    "deploy": "npx wrangler deploy --env dev",
+    "deploy:preview": "npx wrangler versions upload --env dev",
+    "deploy:prod": "npx wrangler deploy --env prod",
+    "deploy:prod:preview": "npx wrangler versions upload --env prod"
   },
   "author": "treeder",
   "license": "Apache-2.0",

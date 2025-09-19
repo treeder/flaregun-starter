@@ -1,6 +1,10 @@
 # Flaregun Starter Kit
 
-This is a starter kit for running a full-stack app quickly on Cloudflare without using a framework.
+This is a starter kit for running a full-stack app quickly on Cloudflare without a complex framework.
+
+Super lightweight, super fast, easy to understand, no magic (well, just a little). Uses the [flaregun](https://github.com/treeder/flaregun) library for an awesome Cloudflare experience.
+
+## Getting started
 
 First clone this repo then run it to start:
 
@@ -8,13 +12,13 @@ First clone this repo then run it to start:
 npm start
 ```
 
-Now you can modify things to make it your own.
+Then view the demo page, make some changes and see it change in real-time.
 
 ## Database
 
-### Schema
+### Schema / migrations
 
-Edit [models.js](./functions/models.js) to update your database schema. It uses mostly the same syntax as Lit properties.
+Define models [models](https://github.com/treeder/models) in the [data](./functions/data) folder, then add the class to [migrations.js](./functions/data/migrations.js) to automatically keep your database schema up to date.
 
 ### Using the database
 
@@ -33,16 +37,16 @@ To add a new route, just add a new file to the functions directory and that will
 For UI endpoints:
 
 ```js
-import { html } from "rend";
+import { html } from 'rend'
 
 export async function onRequestGet(c) {
   return await c.data.rend.html({
     main: render,
-  });
+  })
 }
 
 function render(d) {
-  return html` <div>Hello world!</div> `;
+  return html` <div>Hello world!</div> `
 }
 ```
 
@@ -51,8 +55,8 @@ For API endpoints:
 ```js
 export async function onRequestGet(c) {
   return Response.json({
-    hello: "world",
-  });
+    hello: 'world',
+  })
 }
 ```
 
@@ -60,8 +64,8 @@ export async function onRequestGet(c) {
 
 This is two steps.
 
-1. Run setup script to create resources.
-2. Manual deploy OR setup auto deploy
+1. Run setup script to create all the resources on Cloudflare.
+2. Setup auto deploys
 
 ### Setup
 
@@ -73,7 +77,7 @@ Choose "Edit Cloudflare Workers" template.
 
 ![alt text](docs/images/image.png)
 
-Keep all the same settings, but add `Write` access to D1.
+Keep all the same settings, but also add `Write` access to D1.
 
 Create a `.env` file with:
 
@@ -88,7 +92,7 @@ Then run:
 npm run setup
 ```
 
-### Deploy
+### Auto deploy
 
 Setup auto deploy in the Cloudflare Dashboard so every commit to main will deploy and other
 branches will get a preview URL.
@@ -105,18 +109,18 @@ Set deploy command to:
 npm run deploy
 ```
 
-Set deploy command to:
-
-```sh
-npx wrangler deploy --env dev
-```
-
 Set Non-production branch deploy command to:
 
 ```sh
-npx wrangler versions upload --env dev
+npm run deploy:preview
 ```
 
-### Deploying to prod
+### Deploying to production
 
-Create a new Worker app in cloudflare console and change the commands above to use `--env prod`.
+Create a new Worker app in the Cloudflare console, completely separate from your dev/staging one you already created.
+
+Then your auto deploy configuration should change to:
+
+- `npm run build` - same as above
+- `npm run deploy:prod`
+- Preview URLs: You may not want to do these on production, so either leave it blank or if you want them, use: `deploy:prod:preview`.

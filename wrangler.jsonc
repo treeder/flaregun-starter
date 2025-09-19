@@ -2,7 +2,6 @@
   "name": "flaregun-starter",
   "compatibility_date": "2025-09-01",
   "main": "./dist/index.js",
-  "preview_urls": true,
   "assets": {
     "directory": "./public/",
     "binding": "ASSETS",
@@ -17,6 +16,7 @@
       "vars": {
         "ENV": "dev",
       },
+      "preview_urls": true,
       "kv_namespaces": [
         {
           "binding": "KV",
@@ -55,7 +55,7 @@
         ],
       },
       "triggers": {
-        "crons": ["*/15 * * * *"],
+        "crons": ["* * * * *"],
       },
     },
     "prod": {
