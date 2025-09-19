@@ -1,10 +1,8 @@
 import { html } from 'rend'
-import { Product } from './models.js'
+import { Product } from './data/products.js'
 
 export async function onRequestGet(c) {
-  let products = await c.data.d1.query('products', {
-    model: Product,
-  })
+  let products = await c.data.d1.query(Product)
   console.log(products)
   return await c.data.rend.html({
     main: render,

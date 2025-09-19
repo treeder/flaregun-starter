@@ -6,13 +6,10 @@
   "scripts": {
     "start": "npm install && npx wrangler dev --env dev --live-reload",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "npx wrangler pages functions build --outdir=./dist/",
-    "setup": "cd scripts && node --env-file ../.env ./setup.js",
-    "deploy": "npx wrangler deploy --env prod --no-bundle --outdir=./dist/",
-    "deploy:dev": "npx wrangler deploy --env dev --no-bundle --outdir=./dist/",
-    "deploy:upload": "npx wrangler versions upload --env dev"
+    "build": "npx treeder/flaregun build",
+    "setup": "npx treeder/flaregun setup"
   },
-  "author": "",
+  "author": "treeder",
   "license": "Apache-2.0",
   "description": "",
   "dependencies": {
@@ -25,7 +22,7 @@
     "rend": "github:treeder/rend"
   },
   "devDependencies": {
-    "jsonc-parse": "^1.5.5"
+    "prettier": "^3.6.2"
   },
   "prettier": {
     "semi": false,

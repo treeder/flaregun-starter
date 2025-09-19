@@ -33,16 +33,16 @@ To add a new route, just add a new file to the functions directory and that will
 For UI endpoints:
 
 ```js
-import { html } from 'rend'
+import { html } from "rend";
 
 export async function onRequestGet(c) {
   return await c.data.rend.html({
     main: render,
-  })
+  });
 }
 
 function render(d) {
-  return html` <div>Hello world!</div> `
+  return html` <div>Hello world!</div> `;
 }
 ```
 
@@ -51,8 +51,8 @@ For API endpoints:
 ```js
 export async function onRequestGet(c) {
   return Response.json({
-    hello: 'world',
-  })
+    hello: "world",
+  });
 }
 ```
 
@@ -90,15 +90,8 @@ npm run setup
 
 ### Deploy
 
-To manually deploy:
-
-```sh
-npm run deploy
-```
-
-### Auto Deploy
-
-This is the better way to go so it's all automated and will deploy on every commit.
+Setup auto deploy in the Cloudflare Dashboard so every commit to main will deploy and other
+branches will get a preview URL.
 
 Set build command to:
 
@@ -106,18 +99,24 @@ Set build command to:
 npm run build
 ```
 
-If you've already deployed, go your work applications settings and connect your GitHub repository:
-
-![alt text](docs/images/image-1.png)
-
-If you haven't deployed yet, go to Workers section, click Create then choose "import a repository"
-
-![alt text](docs/images/image-2.png)
-
-### Deploying dev environment
-
-This will run a separate instance with separate database and other resources.
+Set deploy command to:
 
 ```sh
-npm run deploy:dev
+npm run deploy
 ```
+
+Set deploy command to:
+
+```sh
+npx wrangler deploy --env dev
+```
+
+Set Non-production branch deploy command to:
+
+```sh
+npx wrangler versions upload --env dev
+```
+
+### Deploying to prod
+
+Create a new Worker app in cloudflare console and change the commands above to use `--env prod`.
