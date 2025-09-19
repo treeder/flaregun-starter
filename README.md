@@ -60,6 +60,8 @@ export async function onRequestGet(c) {
 }
 ```
 
+## Scheduler
+
 ## Deploying to Production
 
 This is two steps.
