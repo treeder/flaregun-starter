@@ -2,7 +2,7 @@
 import { getProducts, Product } from './data/products.js'
 import { D1, Scheduler } from 'flaregun'
 import { globals } from './globals.js'
-import once from 'once'
+import { once } from 'once'
 import { init } from './_once.js'
 
 /**
