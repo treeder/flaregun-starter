@@ -14,7 +14,7 @@ export async function scheduled(c) {
   let st = new Date(c.controller.scheduledTime)
   console.log(c.controller.cron, c.controller.type, c.controller.scheduledTime, st)
 
-  await once(c, init)
+  await once(init, c)
 
   let d1 = new D1(c.env.D1)
   c.data.d1 = d1
