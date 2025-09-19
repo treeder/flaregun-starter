@@ -62,6 +62,11 @@ export async function onRequestGet(c) {
 
 ## Scheduler
 
+NOTE: There are some gotchas here since we're doing some tricks to get this to work:
+
+- To import something like a class or function, it must also be imported seomwhere else in a normal route.
+-
+
 ## Deploying to Production
 
 This is two steps.
