@@ -5,47 +5,44 @@
   "preview_urls": true,
   "assets": {
     "directory": "./public/",
-    "binding": "ASSETS"
+    "binding": "ASSETS",
   },
   "build": {
     "command": "npx treeder/flaregun build",
     "cwd": ".",
-    "watch_dir": [
-      "functions",
-      "public"
-    ]
+    "watch_dir": ["functions", "public"],
   },
   "env": {
     "dev": {
       "vars": {
-        "ENV": "dev"
+        "ENV": "dev",
       },
       "kv_namespaces": [
         {
           "binding": "KV",
           "title": "flaregun-dev",
-          "id": "0a5bdf2a494a4d8cb0d1d5d8e26827f7"
-        }
+          "id": "0a5bdf2a494a4d8cb0d1d5d8e26827f7",
+        },
       ],
       "d1_databases": [
         {
           "binding": "D1",
           "database_name": "flaregun-dev",
-          "database_id": "603a5bdc-a4b5-4b49-95b3-7e6817dc4bfc"
-        }
+          "database_id": "603a5bdc-a4b5-4b49-95b3-7e6817dc4bfc",
+        },
       ],
       "r2_buckets": [
         {
           "binding": "R2",
-          "bucket_name": "flaregun-dev"
-        }
+          "bucket_name": "flaregun-dev",
+        },
       ],
       "queues": {
         "producers": [
           {
             "queue": "flaregun-dev",
-            "binding": "QUEUE"
-          }
+            "binding": "QUEUE",
+          },
         ],
         "consumers": [
           {
@@ -53,46 +50,44 @@
             "max_batch_size": 10,
             "max_batch_timeout": 30,
             "max_retries": 3,
-            "retry_delay": 60
-          }
-        ]
+            "retry_delay": 60,
+          },
+        ],
       },
       "triggers": {
-        "crons": [
-          "* * * * *"
-        ]
-      }
+        "crons": ["*/15 * * * *"],
+      },
     },
     "prod": {
       "vars": {
-        "ENV": "prod"
+        "ENV": "prod",
       },
       "kv_namespaces": [
         {
           "binding": "KV",
           "title": "flaregun-prod",
-          "id": "98db8d8b30984b0fba3ce8d4fd6ec292"
-        }
+          "id": "98db8d8b30984b0fba3ce8d4fd6ec292",
+        },
       ],
       "d1_databases": [
         {
           "binding": "D1",
           "database_name": "flaregun-prod",
-          "database_id": "77fddcbc-fc0f-4bb0-8190-58b87de4af4b"
-        }
+          "database_id": "77fddcbc-fc0f-4bb0-8190-58b87de4af4b",
+        },
       ],
       "r2_buckets": [
         {
           "binding": "R2",
-          "bucket_name": "flaregun-prod"
-        }
+          "bucket_name": "flaregun-prod",
+        },
       ],
       "queues": {
         "producers": [
           {
             "queue": "flaregun-prod",
-            "binding": "QUEUE"
-          }
+            "binding": "QUEUE",
+          },
         ],
         "consumers": [
           {
@@ -100,22 +95,20 @@
             "max_batch_size": 10,
             "max_batch_timeout": 30,
             "max_retries": 3,
-            "retry_delay": 60
-          }
-        ]
+            "retry_delay": 60,
+          },
+        ],
       },
       "triggers": {
-        "crons": [
-          "* * * * *"
-        ]
-      }
-    }
+        "crons": ["* * * * *"],
+      },
+    },
   },
   "placement": {
-    "mode": "smart"
+    "mode": "smart",
   },
   "observability": {
     "enabled": true,
-    "head_sampling_rate": 1
-  }
+    "head_sampling_rate": 1,
+  },
 }
