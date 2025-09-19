@@ -5,6 +5,8 @@ import { globals } from './globals.js'
 export async function init(c) {
   await runMigrations(c)
 
+  globals.x = 'set one time configured things on the globals object here'
+
   globals.scheduler = new Scheduler()
   globals.scheduler.addEventListener('minute', scheduledFunction)
 }
