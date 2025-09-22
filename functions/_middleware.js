@@ -1,6 +1,6 @@
 import { nanoid } from 'nanoid'
 import { ConsoleLogger } from 'console-logger'
-import { D1, ErrorHandler } from 'flaregun'
+import { D1, ErrorHandler, CloudflareLogger } from 'flaregun'
 import { Rend } from 'rend'
 import { layout } from './layout.js'
 import { init } from './_once.js'
@@ -16,9 +16,10 @@ export async function wrap(c) {
     // setup logger
     let rid = nanoid()
     let url = new URL(req.url)
-    let logger = new ConsoleLogger({ data: { requestID: rid, path: url.pathname } })
-    if (c.env.BETTERSTACK) {
-      //   logger = new BetterstackLogger({ ...JSON.parse(c.env.BETTERSTACK), data: { requestID: rid, path: url.pathname } })
+    let logger = new ConsoleLogger({ data: { requestId: rid, path: url.pathname } })
+    if (c.env.ENV == 'prod') {
+      new CloudflareLogger()
+      logger = new CloudflareLogger({ data: { requestId: rid, path: url.pathname } })
     }
     c.data.logger = logger
 
