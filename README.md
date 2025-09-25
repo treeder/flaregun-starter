@@ -2,17 +2,21 @@
 
 This is a starter kit for running a full-stack app quickly on Cloudflare without a complex framework.
 
-Super lightweight, super fast, easy to understand, no magic (well, just a little). Uses the [flaregun](https://github.com/treeder/flaregun) library for an awesome Cloudflare experience.
+Super lightweight, super fast, easy to understand, no magic (well, just a little). Uses [flaregun](https://github.com/treeder/flaregun) for an awesome Cloudflare experience.
 
 ## Getting started
 
-First clone this repo then run it to start:
+Click `Use this template` button in the top right:
+
+<img width="182" height="124" alt="image" src="https://github.com/user-attachments/assets/cc9dfd42-8add-4e7a-9ba9-38b0107d268b" />
+
+Then clone and run your new repo:
 
 ```sh
 npm start
 ```
 
-Then view the demo page, make some changes and see it change in real-time.
+Now view the demo page at http://localhost:8787. Make some changes and see it change in real-time!
 
 ## Database
 
