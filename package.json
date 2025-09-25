@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "npm install && npx wrangler dev --env dev --live-reload",
+    "start": "npm install && npx -y wrangler dev --env dev --live-reload",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "npx treeder/flaregun build",
     "setup": "npx treeder/flaregun setup",
