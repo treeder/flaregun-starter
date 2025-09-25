@@ -13,6 +13,7 @@
   },
   "env": {
     "dev": {
+      "name": "flaregun-dev",
       "vars": {
         "ENV": "dev",
       },
@@ -59,6 +60,7 @@
       },
     },
     "prod": {
+      "name": "flaregun-prod",
       "vars": {
         "ENV": "prod",
       },

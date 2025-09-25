@@ -66,29 +66,36 @@ export async function onRequestGet(c) {
 
 ## Scheduler
 
-NOTE: There are some gotchas here since we're doing some tricks to get this to work:
+See [scheduled.js](functions/scheduled.js). This will run every minute with the default configuration.
 
-- To import something like a class or function, it must also be imported seomwhere else in a normal route.
--
+NOTE: There are some gotchas here:
 
-## Deploying to Production
+- This won't run any middleware, so you'll have to do any initialization you need in the scheduled function.
+- To import something like a class or function in scheduled.js, it must also be used elsewhere in your app.
+
+That's about it, otherwise, should work as is!
+
+## Queues
+
+TODO
+
+## Deploying
 
 This is two steps.
 
 1. Run setup script to create all the resources on Cloudflare.
-2. Setup auto deploys
+2. Deploy!
 
 ### Setup
 
 This will create all your cloudflare resources such as your database and file storage.
 
-First get an [API token for Cloudflare](https://developers.cloudflare.com/fundamentals/api/get-started/create-token/) and get your account ID.
-
-Choose "Edit Cloudflare Workers" template.
+- First get an [API token for Cloudflare](https://developers.cloudflare.com/fundamentals/api/get-started/create-token/) and get your account ID.
+- Choose "Edit Cloudflare Workers" template.
 
 ![alt text](docs/images/image.png)
 
-Keep all the same settings, but also add `Write` access to D1.
+Keep all the same settings, but also add D1 with write access.
 
 Create a `.env` file with:
 
@@ -101,6 +108,12 @@ Then run:
 
 ```sh
 npm run setup
+```
+
+### Manual deploy
+
+```sh
+npm run deploy
 ```
 
 ### Auto deploy
@@ -120,7 +133,7 @@ Set deploy command to:
 npm run deploy
 ```
 
-Set Non-production branch deploy command to:
+Set non-production branch deploy command to:
 
 ```sh
 npm run deploy:preview
@@ -128,10 +141,12 @@ npm run deploy:preview
 
 ### Deploying to production
 
-Create a new Worker app in the Cloudflare console, completely separate from your dev/staging one you already created.
+```sh
+npm run deploy:prod
+```
 
 Then your auto deploy configuration should change to:
 
-- `npm run build` - same as above
+- `npm run build`
 - `npm run deploy:prod`
-- Preview URLs: You may not want to do these on production, so either leave it blank or if you want them, use: `deploy:prod:preview`.
+- Preview URLs: You may not want to have preview URLs on production, but if you do, use: `npm run deploy:prod:preview`.
