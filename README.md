@@ -6,17 +6,21 @@ Super lightweight, super fast, easy to understand, no magic (well, just a little
 
 ## Getting started
 
+You can get up and running in seconds (literally).
+
 Click `Use this template` button in the top right:
 
 <img width="182" height="124" alt="image" src="https://github.com/user-attachments/assets/cc9dfd42-8add-4e7a-9ba9-38b0107d268b" />
 
-Then clone and run your new repo:
+Then clone and run your new repo with:
 
 ```sh
 npm start
 ```
 
-Now view the demo page at http://localhost:8787. Make some changes and see it change in real-time!
+Now view the demo page at http://localhost:8787.
+
+Try making some changes and see it update in real-time!
 
 ## Database
 
@@ -34,7 +38,7 @@ Edit [layout.js](./functions/layout.js) to update the layout of your app.
 
 ## Routes
 
-This uses file based routing from [Cloudflare Pages Functions](https://developers.cloudflare.com/pages/functions/routing/), but runs on Workers because Pages Functions are deprecated. We only use the routing from functions, otherwise, this is all Workers related.
+This uses file based routing from [Cloudflare Pages Functions](https://developers.cloudflare.com/pages/functions/routing/), but runs on Workers because Pages Functions are deprecated.
 
 To add a new route, just add a new file to the functions directory and that will be your route.
 

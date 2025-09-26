@@ -5,13 +5,14 @@
   "main": "index.js",
   "scripts": {
     "start": "npm install && npx -y wrangler dev --env dev --live-reload",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "npx treeder/flaregun build",
-    "setup": "npx treeder/flaregun setup",
-    "deploy": "npx wrangler deploy --env dev",
-    "deploy:preview": "npx wrangler versions upload --env dev",
-    "deploy:prod": "npx wrangler deploy --env prod",
-    "deploy:prod:preview": "npx wrangler versions upload --env prod"
+    "build": "npx -y treeder/flaregun build",
+    "test": "node test/test.js",
+    "testkit": "npx -y treeder/testkit --port=8787",
+    "setup": "npx -y treeder/flaregun setup",
+    "deploy": "npx -y wrangler deploy --env dev",
+    "deploy:preview": "npx -y wrangler versions upload --env dev",
+    "deploy:prod": "npx -y wrangler deploy --env prod",
+    "deploy:prod:preview": "npx -y wrangler versions upload --env prod"
   },
   "author": "treeder",
   "license": "Apache-2.0",
@@ -26,7 +27,8 @@
     "rend": "github:treeder/rend"
   },
   "devDependencies": {
-    "prettier": "^3.6.2"
+    "prettier": "^3.6.2",
+    "testkit": "github:treeder/testkit"
   },
   "prettier": {
     "semi": false,
