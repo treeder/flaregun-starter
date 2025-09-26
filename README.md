@@ -83,6 +83,10 @@ That's about it, otherwise, should work as is!
 
 TODO
 
+## Testing
+
+This is configured to do some basic API testing with [testkit](https://github.com/treeder/testkit). See [test/test.js](test/test/js) for more details. Run tests with `npm run testkit` and add that line to your CI.
+
 ## Deploying
 
 This is two steps.
