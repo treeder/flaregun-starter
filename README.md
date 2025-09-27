@@ -1,8 +1,10 @@
 # Flaregun Starter Kit
 
-This is a starter kit for running a full-stack app quickly on Cloudflare without a complex framework.
+This is a starter kit for running a full-stack app quickly on Cloudflare without a complex framework. Pure JavaScript and standard technology to prevent lock-in.
 
 Super lightweight, super fast, easy to understand, no magic (well, just a little). Uses [flaregun](https://github.com/treeder/flaregun) for an awesome Cloudflare experience.
+
+Out of the box, this includes: database, file storage, server side rendering, API endpoints, queues, scheduler and material 3 web components for the client side. 
 
 ## Getting started
 
