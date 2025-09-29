@@ -2,7 +2,7 @@ import { html, slot } from 'rend'
 
 export async function layout(d) {
   let title = d.title ? d.title + ' - Flaregun' : 'Flaregun Starter Kit'
-  return `<!DOCTYPE html>
+  return html`<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
