@@ -7,7 +7,7 @@
     "binding": "ASSETS",
   },
   "build": {
-    "command": "npx treeder/flaregun build",
+    "command": "npx -y treeder/flaregun build",
     "cwd": ".",
     "watch_dir": ["functions", "public"],
   },
