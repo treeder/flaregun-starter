@@ -18,7 +18,6 @@ export async function wrap(c) {
     let url = new URL(req.url)
     let logger = new ConsoleLogger({ data: { requestId: rid, path: url.pathname } })
     if (c.env.ENV == 'prod') {
-      new CloudflareLogger()
       logger = new CloudflareLogger({ data: { requestId: rid, path: url.pathname } })
     }
     c.data.logger = logger
