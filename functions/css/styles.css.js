@@ -2,7 +2,7 @@
  * We have CSS in JS files so that they can be used in web components.
  */
 
-export async function onRequest(c) {
+export async function onRequestGet(c) {
   return new Response(root({}), {
     headers: {
       'content-type': 'text/css;charset=UTF-8',
