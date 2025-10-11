@@ -24,6 +24,7 @@
     "migrations": "github:treeder/migrations",
     "nanoid": "^5.1.5",
     "once": "github:treeder/once",
+    "passkeys": "github:treeder/passkeys",
     "rend": "github:treeder/rend"
   },
   "devDependencies": {
