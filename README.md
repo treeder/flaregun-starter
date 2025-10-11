@@ -4,8 +4,18 @@ This is a starter kit for running a full-stack app quickly on Cloudflare without
 
 Super lightweight, super fast, easy to understand, no magic (well, just a little). Uses [flaregun](https://github.com/treeder/flaregun) for an awesome Cloudflare experience.
 
-Out of the box, this includes: database, file storage, server side rendering, API endpoints, queues, scheduler, tests and material 3 web components for the client side. It's easy to add and remove 
-things you need or don't since there it's mostly just standard JavaScript. 
+Out of the box, this includes:
+
+- database
+- file storage
+- server side rendering
+- API endpoints
+- queues
+- scheduler
+- material 3 web components
+- email and passkey authentication
+
+It's easy to add and remove things since it's mostly just standard JavaScript.
 
 ## Getting started
 
