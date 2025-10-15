@@ -1,7 +1,7 @@
 {
   "name": "flaregun-starter",
   "type": "module",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "index.js",
   "scripts": {
     "start": "npm install && npx -y wrangler dev --env dev --live-reload",
