@@ -53,7 +53,8 @@ Edit [layout.js](./functions/layout.js) to update the layout of your app.
 
 This uses file based routing from [Cloudflare Pages Functions](https://developers.cloudflare.com/pages/functions/routing/), but runs on Workers because Pages Functions are deprecated.
 
-To add a new route, just add a new file to the functions directory and that will be your route.
+To add a new route, just add a new file to the functions directory and that will be your route. For instance, if you add a file called `hello.js`, it will be available at
+`/hello`.
 
 For UI endpoints:
 
@@ -83,9 +84,11 @@ export async function onRequestGet(c) {
 
 ## Scheduler
 
-See [scheduled.js](functions/scheduled.js). This will run every minute with the default configuration.
+The [scheduled.js](functions/scheduled.js) file will run every minute by default (after your first deployment). 
 
-NOTE: There are some gotchas here:
+To disable scheduling, delete the scheduled.js file and remove the triggers from wrangler.jsonc.
+
+NOTE: There are some small gotchas here:
 
 - This won't run any middleware, so you'll have to do any initialization you need in the scheduled function.
 - To import something like a class or function in scheduled.js, it must also be used elsewhere in your app.
@@ -94,11 +97,27 @@ That's about it, otherwise, should work as is!
 
 ## Queues
 
-TODO
+The [queue.js](functions/queue.js) file will run whenever you post a message to the queue. 
+
+To post a message: 
+
+```js
+await c.env.QUEUE.send({message: 'Hello, world!'})
+```
+
+Your queue.js handler will get the message shortly. 
+
+To delay the message:
+
+```js
+await c.env.QUEUE.send({message: 'Hello, world!'}, {delaySeconds: 60})
+```
+
+That will delay the message for 60 seconds. 
 
 ## Testing
 
-This is configured to do some basic API testing with [testkit](https://github.com/treeder/testkit). See [test/test.js](test/test/js) for more details. Run tests with `npm run testkit` and add that line to your CI.
+This is configured to do some basic API testing with [testkit](https://github.com/treeder/testkit). See [tests/tests.js](tests/tests.js) for more details. Run tests with `npm run testkit` and you can add that to your CI.
 
 ## Deploying
 
@@ -133,8 +152,16 @@ npm run setup
 
 ### Manual deploy
 
+To deploy to dev environment:
+
 ```sh
 npm run deploy
+```
+
+To deploy to prod environment:
+
+```sh
+npm run deploy:prod
 ```
 
 ### Auto deploy
