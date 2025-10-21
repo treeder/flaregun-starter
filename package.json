@@ -12,7 +12,8 @@
     "deploy": "npx -y wrangler deploy --env dev",
     "deploy:preview": "npx -y wrangler versions upload --env dev",
     "deploy:prod": "npx -y wrangler deploy --env prod",
-    "deploy:prod:preview": "npx -y wrangler versions upload --env prod"
+    "deploy:prod:preview": "npx -y wrangler versions upload --env prod",
+    "pushdev": "git push origin --force `git symbolic-ref --short HEAD`:dev"
   },
   "author": "treeder",
   "license": "Apache-2.0",
