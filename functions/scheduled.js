@@ -12,18 +12,5 @@ import { init } from './_once.js'
  */
 export async function scheduled(c) {
   let st = new Date(c.controller.scheduledTime)
-  c.data.logger.log('scheduled:', c.controller.cron, c.controller.type, c.controller.scheduledTime, st)
-
-  await once(init, c)
-
-  let d1 = new D1(c.env.D1)
-  c.data.d1 = d1
-  let r = await d1.first(Product)
-  c.data.logger.log('first product in scheduled:', r)
-
-  // try functions:
-  let products = await getProducts(c, {})
-  c.data.logger.log('products:', products)
-  await globals.scheduler.run(c, c.controller)
-  // c.waitUntil(doSomeTaskOnASchedule());
+  console.log('scheduled:', c.controller.cron, c.controller.type, c.controller.scheduledTime, st)
 }
