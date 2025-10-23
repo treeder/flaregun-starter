@@ -133,7 +133,7 @@ This will create all your cloudflare resources such as your database and file st
 - First get an [API token for Cloudflare](https://developers.cloudflare.com/fundamentals/api/get-started/create-token/) and get your account ID.
 - Choose "Edit Cloudflare Workers" template.
 
-![alt text](docs/images/image.png)
+<img width="823" height="79" alt="image (2)" src="https://github.com/user-attachments/assets/c0a860b5-55e3-441c-a4da-a5b10dd6b248" />
 
 Keep all the same settings, but also add D1 with write access.
 
