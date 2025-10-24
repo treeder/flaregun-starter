@@ -6,7 +6,7 @@ Super lightweight, super fast, easy to understand, no magic (well, just a little
 
 Out of the box, this includes:
 
-- database
+- database with easy migrations
 - file storage
 - server side rendering
 - API endpoints
