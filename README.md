@@ -43,7 +43,26 @@ Define models [models](https://github.com/treeder/models) in the [data](./functi
 
 ### Using the database
 
-See the [D1 docs](https://github.com/treeder/flaregun/blob/main/README.md#d1-sqlite-database) in the flaregun repository.
+It's super easy to use the database:
+
+```sh
+let user = { name: 'John Wick', email: 'x@y.com' }
+await c.data.d1.insert('users', user)
+
+user.name = 'Jim Bean'
+// update a row
+await c.data.d1.update('users', user.id, user)
+
+// get object
+user = c.data.d1.get('users', user.id)
+
+// querying
+let users = await c.data.d1.query('users', {
+  where: { email: 'x@y.com' },
+})
+```
+
+See the [D1 docs](https://github.com/treeder/flaregun/blob/main/README.md#d1-sqlite-database) in the flaregun for more complex examples.
 
 ## Layout
 
