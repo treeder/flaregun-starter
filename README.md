@@ -45,7 +45,7 @@ Define models [models](https://github.com/treeder/models) in the [data](./functi
 
 It's super easy to use the database:
 
-```sh
+```js
 let user = { name: 'John Wick', email: 'x@y.com' }
 await c.data.d1.insert('users', user)
 
