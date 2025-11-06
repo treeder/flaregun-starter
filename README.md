@@ -21,11 +21,19 @@ It's easy to add and remove things since it's mostly just standard JavaScript.
 
 You can get up and running in seconds (literally).
 
+### Deploy to Cloudflare
+
+Want to deploy right now to see it in action?
+
+[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/treeder/flaregun-starter)
+
+### Run locally for development
+
 Click `Use this template` button in the top right:
 
 <img width="182" height="124" alt="image" src="https://github.com/user-attachments/assets/cc9dfd42-8add-4e7a-9ba9-38b0107d268b" />
 
-Then clone and run your new repo with:
+Then clone and run your new repo:
 
 ```sh
 npm start
