@@ -55,9 +55,10 @@
           },
         ],
       },
-      "triggers": {
-        "crons": ["* * * * *"],
-      },
+      // uncomment to enable scheduler:
+      // "triggers": {
+      //  "crons": ["* * * * *"],
+      // },
     },
     "prod": {
       "name": "flaregun-prod",
@@ -102,9 +103,10 @@
           },
         ],
       },
-      "triggers": {
-        "crons": ["* * * * *"],
-      },
+      // uncomment to enable scheduler:
+      // "triggers": {
+      //  "crons": ["* * * * *"],
+      // },
     },
   },
   "placement": {
