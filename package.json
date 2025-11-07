@@ -4,13 +4,13 @@
   "version": "1.0.2",
   "main": "index.js",
   "scripts": {
-    "start": "npm install && npx -y wrangler dev --env dev --live-reload",
+    "start": "npm install && npx -y wrangler dev --live-reload",
     "build": "npx -y treeder/flaregun build",
     "test": "node tests/tests.js",
     "testkit": "npx -y treeder/testkit --port=8787",
     "setup": "npx -y treeder/flaregun setup",
-    "deploy": "npx -y wrangler deploy --env dev",
-    "deploy:preview": "npx -y wrangler versions upload --env dev",
+    "deploy": "npx -y wrangler deploy",
+    "deploy:preview": "npx -y wrangler versions upload",
     "deploy:prod": "npx -y wrangler deploy --env prod",
     "deploy:prod:preview": "npx -y wrangler versions upload --env prod",
     "pushdev": "git push origin --force `git symbolic-ref --short HEAD`:dev"
