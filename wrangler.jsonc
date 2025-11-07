@@ -35,23 +35,23 @@
       "bucket_name": "flaregun-dev",
     },
   ],
-  "queues": {
-    "producers": [
-      {
-        "queue": "flaregun-dev",
-        "binding": "QUEUE",
-      },
-    ],
-    "consumers": [
-      {
-        "queue": "flaregun-dev",
-        "max_batch_size": 10,
-        "max_batch_timeout": 30,
-        "max_retries": 3,
-        "retry_delay": 60,
-      },
-    ],
-  },
+  // "queues": {
+  //   "producers": [
+  //     {
+  //       "queue": "flaregun-dev",
+  //       "binding": "QUEUE",
+  //     },
+  //   ],
+  //   "consumers": [
+  //     {
+  //       "queue": "flaregun-dev",
+  //       "max_batch_size": 10,
+  //       "max_batch_timeout": 30,
+  //       "max_retries": 3,
+  //       "retry_delay": 60,
+  //     },
+  //   ],
+  // },
   // uncomment to enable scheduler:
   // "triggers": {
   //  "crons": ["* * * * *"],
