@@ -25,6 +25,8 @@ You can get up and running in seconds (literally).
 
 Want to deploy right now to see it in action?
 
+DEPLOY TO CLOUDFLARE NOT WORKING AT THE MOMENT, CARRY ON. 
+
 [![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/treeder/flaregun-starter)
 
 ### Run locally for development
