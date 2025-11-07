@@ -23,9 +23,7 @@ You can get up and running in seconds (literally).
 
 ### Deploy to Cloudflare
 
-Want to deploy right now to see it in action?
-
-DEPLOY TO CLOUDFLARE NOT WORKING AT THE MOMENT, CARRY ON. 
+Want to deploy in seconds to see it in action?
 
 [![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/treeder/flaregun-starter)
 
@@ -113,7 +111,7 @@ export async function onRequestGet(c) {
 
 ## Scheduler
 
-The [scheduled.js](functions/scheduled.js) file will run every minute by default (after your first deployment). 
+The [scheduled.js](functions/scheduled.js) file will run every minute by default (after your first deployment).
 
 To disable scheduling, delete the scheduled.js file and remove the triggers from wrangler.jsonc.
 
@@ -126,23 +124,23 @@ That's about it, otherwise, should work as is!
 
 ## Queues
 
-The [queue.js](functions/queue.js) file will run whenever you post a message to the queue. 
+The [queue.js](functions/queue.js) file will run whenever you post a message to the queue.
 
-To post a message: 
+To post a message:
 
 ```js
-await c.env.QUEUE.send({message: 'Hello, world!'})
+await c.env.QUEUE.send({ message: 'Hello, world!' })
 ```
 
-Your queue.js handler will get the message shortly. 
+Your queue.js handler will get the message shortly.
 
 To delay the message:
 
 ```js
-await c.env.QUEUE.send({message: 'Hello, world!'}, {delaySeconds: 60})
+await c.env.QUEUE.send({ message: 'Hello, world!' }, { delaySeconds: 60 })
 ```
 
-That will delay the message for 60 seconds. 
+That will delay the message for 60 seconds.
 
 ## Testing
 
