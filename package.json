@@ -11,6 +11,7 @@
     "setup": "npx -y treeder/flaregun setup",
     "deploy": "npx -y wrangler deploy",
     "deploy:preview": "npx -y wrangler versions upload",
+    "deploy:dev": "npx -y wrangler deploy --env dev",
     "deploy:prod": "npx -y wrangler deploy --env prod",
     "deploy:prod:preview": "npx -y wrangler versions upload --env prod",
     "pushdev": "git push origin --force `git symbolic-ref --short HEAD`:dev"
