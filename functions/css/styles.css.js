@@ -292,36 +292,36 @@ export function all(d) {
 }
 
 function typography() {
-  return `
-.display-medium {
-  font-weight: 400;
-  font-size: 45px;
-  line-height: 52px;
-}
+  return css`
+    .display-medium {
+      font-weight: 400;
+      font-size: 45px;
+      line-height: 52px;
+    }
 
-.headline-small {
-  font-weight: 400;
-  font-size: 24px;
-  line-height: 32px;
-}
-.headline-medium {
-  font-weight: 400;
-  font-size: 28px;
-  line-height: 36px;
-}
+    .headline-small {
+      font-weight: 400;
+      font-size: 24px;
+      line-height: 32px;
+    }
+    .headline-medium {
+      font-weight: 400;
+      font-size: 28px;
+      line-height: 36px;
+    }
 
-  .title-medium {
-    font-size: 16px;
-    font-weight: 500;
-    letter-spacing: 0.15px;
-    line-height: 24px;
-  }
+    .title-medium {
+      font-size: 16px;
+      font-weight: 500;
+      letter-spacing: 0.15px;
+      line-height: 24px;
+    }
 
-  .title-large {
-    font-size: 22px;
-    font-weight: 400;
-    letter-spacing: 0px;
-    line-height: 28px;
-  }
+    .title-large {
+      font-size: 22px;
+      font-weight: 400;
+      letter-spacing: 0px;
+      line-height: 28px;
+    }
   `
 }

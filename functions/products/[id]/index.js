@@ -1,9 +1,11 @@
 import { html } from 'rend'
-import { getProducts, Product } from './data/products.js'
+import { Product } from '../../data/products.js'
 
 export async function onRequestGet(c) {
+  let product = await c.data.d1.get(Product, c.params.id)
   return await c.data.rend.html({
     main: render,
+    product,
   })
 }
 
@@ -15,18 +17,9 @@ function render(d) {
       import 'material/buttons/icon-button.js'
       import 'material/icon/icon.js'
     </script>
-    
+
     <div class="flex col g20">
-      <div>Hello World!</div>
-      <div>
-        <product-form></product-form>
-      </div>
-      <div>
-        <div class="headline-medium">Products</div>
-      </div>
-      <div>
-        <product-list></product-list>
-      </div>
+      <div class="headline-medium">${d.product.name}</div>
     </div>
   `
 }
