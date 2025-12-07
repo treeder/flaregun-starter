@@ -6,8 +6,9 @@
   "scripts": {
     "start": "npm install && npx -y wrangler dev --live-reload",
     "build": "npx -y treeder/flaregun build",
+    "run": "npx -y wrangler dev",
+    "test:run": "node tests/tests.js",
     "test": "npx -y treeder/testkit --port=8787",
-    "testdev": "node tests/tests.js",
     "setup": "npx -y treeder/flaregun setup",
     "deploy": "npx -y wrangler deploy",
     "deploy:preview": "npx -y wrangler versions upload",
