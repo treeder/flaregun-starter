@@ -3,6 +3,7 @@ import { User } from '../../../data/users.js'
 export async function onRequestGet(c) {
   let userId = c.params.user
   let user = await c.data.d1.get(User, userId)
+  user.name = 'test'
   return Response.json({ user })
 }
 export async function onRequestPost(c) {
