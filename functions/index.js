@@ -16,6 +16,23 @@ function render(d) {
   return html`
     <script type="module">
       import '/components/product-form.js'
+      import 'material/buttons/icon-button.js'
+      import 'material/icon/icon.js'
+    </script>
+    <script>
+      async function deleteProduct(id) {
+        if (confirm('Are you sure you want to delete this product?')) {
+          const response = await fetch(\`/v1/products/\${id}\`, {
+            method: 'DELETE',
+          });
+          if (response.ok) {
+            location.reload();
+          } else {
+            console.error('Failed to delete product');
+            alert('Failed to delete product.');
+          }
+        }
+      }
     </script>
 
     <div class="flex col g20">
@@ -26,13 +43,14 @@ function render(d) {
       <div>
         <div class="headline-medium">Products</div>
       </div>
-      <div class="grid g12 w100" style="grid-template-columns: repeat(4, 1fr);">
+      <div class="grid g12 w100 jcc aic" style="grid-template-columns: repeat(5, 1fr);">
         ${d.products.map(
           (p) => html`
             <div>${p.name}</div>
             <div>${p.description}</div>
             <div>${p.price}</div>
             <div>${p.data?.x}</div>
+            <md-icon-button onclick="deleteProduct('${p.id}')"><md-icon>delete</md-icon></md-icon-button>
           `,
         )}
       </div>
