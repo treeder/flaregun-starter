@@ -18,8 +18,8 @@ export function root(d) {
     @import url(dark.css) (prefers-color-scheme: dark);
 
     :root {
-      --md-ref-typeface-brand: 'Roboto Flex', sans-serif;
-      --md-ref-typeface-plain: 'Roboto Flex', sans-serif;
+      --md-ref-typeface-brand: 'Google Sans Flex', sans-serif;
+      --md-ref-typeface-plain: 'Google Sans Flex', sans-serif;
 
       font-family: var(--md-ref-typeface-plain);
       font-size: 14px;
@@ -184,6 +184,9 @@ export function all(d) {
     }
     .p12 {
       padding: 12px;
+    }
+    .p16 {
+      padding: 16px;
     }
 
     .pt12 {

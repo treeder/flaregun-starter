@@ -19,7 +19,7 @@ export async function layout(d) {
           onload="this.onload=null;this.rel='stylesheet'" />
         <link
           rel="preload"
-          href="https://fonts.googleapis.com/css2?family=Roboto+Flex:wght@400;500;700&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:wght@400;500;700&display=swap"
           as="style"
           onload="this.onload=null;this.rel='stylesheet'" />
 
@@ -36,7 +36,7 @@ export async function layout(d) {
               "lit-element/lit-element.js": "https://cdn.jsdelivr.net/npm/lit-element@4/lit-element.js",
               "lit-html": "https://cdn.jsdelivr.net/npm/lit-html@3/lit-html.js",
               "lit-html/": "https://cdn.jsdelivr.net/npm/lit-html@3/",
-              "material/": "https://cdn.jsdelivr.net/gh/material-esm/material@2.3/",
+              "material/": "https://cdn.jsdelivr.net/gh/material-esm/material@2.7.11/",
               "api": "https://cdn.jsdelivr.net/gh/treeder/api@0/api.js",
               "state": "https://cdn.jsdelivr.net/gh/treeder/state@1/state.js",
               "models": "https://cdn.jsdelivr.net/gh/treeder/models@1/index.js",

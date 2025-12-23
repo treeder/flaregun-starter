@@ -1,5 +1,5 @@
 import { LitElement, html, css } from 'lit'
-import 'material/text-field/text-field.js'
+import 'material/text/text-field.js'
 import 'material/buttons/button.js'
 import { styles } from '/css/styles.js'
 import { api } from 'api'
@@ -27,8 +27,6 @@ export class ProductForm extends LitElement {
     return html`
       <form id="product-form">
         <div class="flex col g16">
-          <div class="headline-medium">Product Form</div>
-          <div>This is a placeholder for the product form.</div>
           <md-text-field id="name" label="Name" value="${this.product.name}" required></md-text-field>
           <md-text-field id="description" label="Description" value="${this.product.description}"></md-text-field>
           <md-text-field

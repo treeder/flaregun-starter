@@ -15,9 +15,12 @@ function render(d) {
       import 'material/buttons/icon-button.js'
       import 'material/icon/icon.js'
     </script>
-    
+
     <div class="flex col g20">
       <div>Hello World!</div>
+      <div>
+        <div class="headline-medium">Product Form</div>
+      </div>
       <div>
         <product-form></product-form>
       </div>
