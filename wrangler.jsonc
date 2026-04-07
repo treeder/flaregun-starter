@@ -1,6 +1,6 @@
 {
   "name": "flaregun",
-  "compatibility_date": "2025-10-21",
+  "compatibility_date": "2026-04-07",
   "main": "./dist/index.js",
   "assets": {
     "directory": "./public/",
@@ -19,14 +19,12 @@
     {
       "binding": "KV",
       "title": "flaregun",
-      "id": "flaregun",
     },
   ],
   "d1_databases": [
     {
       "binding": "D1",
       "database_name": "flaregun",
-      "database_id": "flaregun",
     },
   ],
   "r2_buckets": [
@@ -56,7 +54,7 @@
   // },
   "env": {
     "dev": {
-      "name": "flaregun-dev",
+      "name": "flaregun-staging",
       "preview_urls": true,
       "vars": {
         "ENV": "dev",
@@ -81,20 +79,20 @@
           "bucket_name": "flaregun-dev",
         },
       ],
-      "queues": {
-        "producers": [
-          {
-            "queue": "flaregun-dev",
-            "binding": "QUEUE",
-          },
-        ],
-        "consumers": [
-          {
-            "queue": "flaregun-dev",
-            "retry_delay": 60,
-          },
-        ],
-      },
+      // "queues": {
+      //   "producers": [
+      //     {
+      //       "queue": "flaregun-dev",
+      //       "binding": "QUEUE",
+      //     },
+      //   ],
+      //   "consumers": [
+      //     {
+      //       "queue": "flaregun-dev",
+      //       "retry_delay": 60,
+      //     },
+      //   ],
+      // },
       // uncomment to enable scheduler:
       // "triggers": {
       //  "crons": ["* * * * *"],
@@ -126,20 +124,20 @@
           "bucket_name": "flaregun-prod",
         },
       ],
-      "queues": {
-        "producers": [
-          {
-            "queue": "flaregun-prod",
-            "binding": "QUEUE",
-          },
-        ],
-        "consumers": [
-          {
-            "queue": "flaregun-prod",
-            "retry_delay": 60,
-          },
-        ],
-      },
+      // "queues": {
+      //   "producers": [
+      //     {
+      //       "queue": "flaregun-prod",
+      //       "binding": "QUEUE",
+      //     },
+      //   ],
+      //   "consumers": [
+      //     {
+      //       "queue": "flaregun-prod",
+      //       "retry_delay": 60,
+      //     },
+      //   ],
+      // },
       // uncomment to enable scheduler:
       // "triggers": {
       //  "crons": ["* * * * *"],

@@ -148,34 +148,7 @@ This is configured to do some basic API testing with [testkit](https://github.co
 
 ## Deploying
 
-This is two steps.
-
-1. Run setup script to create all the resources on Cloudflare.
-2. Deploy!
-
-### Setup
-
-This will create all your cloudflare resources such as your database and file storage.
-
-- First get an [API token for Cloudflare](https://developers.cloudflare.com/fundamentals/api/get-started/create-token/) and get your account ID.
-- Choose "Edit Cloudflare Workers" template.
-
-<img width="823" height="79" alt="image (2)" src="https://github.com/user-attachments/assets/c0a860b5-55e3-441c-a4da-a5b10dd6b248" />
-
-Keep all the same settings, but also add D1 with write access.
-
-Create a `.env` file with:
-
-```sh
-CLOUDFLARE_API_TOKEN=X
-CLOUDFLARE_ACCOUNT_ID=Y
-```
-
-Then run:
-
-```sh
-npm run setup
-```
+Just one command or setup auto deploy and your live!
 
 ### Manual deploy
 
