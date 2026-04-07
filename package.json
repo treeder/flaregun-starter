@@ -21,18 +21,18 @@
   "license": "Apache-2.0",
   "description": "",
   "dependencies": {
-    "api": "github:treeder/api",
-    "console-logger": "github:treeder/console-logger",
-    "flaregun": "github:treeder/flaregun",
-    "migrations": "github:treeder/migrations",
+    "api": "github:treeder/api#semver:^1",
+    "console-logger": "github:treeder/console-logger#semver:^1",
+    "flaregun": "github:treeder/flaregun#semver:^3",
+    "migrations": "github:treeder/migrations#semver:^1",
     "nanoid": "^5.1.5",
-    "once": "github:treeder/once",
-    "passkeys": "github:treeder/passkeys",
-    "rend": "github:treeder/rend"
+    "once": "github:treeder/once#semver:^1",
+    "passkeys": "github:treeder/passkeys#semver:^3",
+    "rend": "github:treeder/rend#semver:^1"
   },
   "devDependencies": {
     "prettier": "^3.6.2",
-    "testkit": "github:treeder/testkit"
+    "testkit": "github:treeder/testkit#semver:^2"
   },
   "prettier": {
     "semi": false,
