@@ -63,14 +63,12 @@
         {
           "binding": "KV",
           "title": "flaregun-dev",
-          "id": "flaregun-dev",
         },
       ],
       "d1_databases": [
         {
           "binding": "D1",
           "database_name": "flaregun-dev",
-          "database_id": "flaregun-dev",
         },
       ],
       "r2_buckets": [
@@ -108,14 +106,12 @@
         {
           "binding": "KV",
           "title": "flaregun-prod",
-          "id": "flaregun-prod",
         },
       ],
       "d1_databases": [
         {
           "binding": "D1",
           "database_name": "flaregun-prod",
-          "database_id": "flaregun-prod",
         },
       ],
       "r2_buckets": [
