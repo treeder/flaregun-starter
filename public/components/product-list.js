@@ -37,19 +37,25 @@ export class ProductList extends LitElement {
 
   render() {
     return html`
-      <md-card class="p16">
-        <div class="grid g12 w100 jcc aic" style="grid-template-columns: repeat(5, 1fr);">
-          ${this.products.map(
-            (p) => html`
-              <div><a href="/products/${p.id}">${p.name}</a></div>
-              <div>${p.description}</div>
-              <div>${p.price}</div>
-              <div>${p.data?.x}</div>
-              <md-icon-button @click=${() => this.deleteProduct(p.id)}><md-icon>delete</md-icon></md-icon-button>
-            `,
-          )}
-        </div>
-      </md-card>
+      <div class="flex col g16 w100">
+        ${this.products.map(
+          (p) => html`
+            <md-card class="p16 flex col w100 g12" style="box-sizing: border-box;">
+              <div class="flex col g8">
+                <div class="flex aic jcsb">
+                  <div class="headline-medium"><a href="/products/${p.id}">${p.name}</a></div>
+                  <md-icon-button class="error" @click=${() => this.deleteProduct(p.id)}>
+                    <md-icon>delete</md-icon>
+                  </md-icon-button>
+                </div>
+                <div style="color: var(--md-sys-color-on-surface-variant);">${p.description}</div>
+                <div style="font-weight: bold; font-size: 1.2rem; color: var(--md-sys-color-primary);">$${p.price}</div>
+                ${p.data?.x ? html`<div>${p.data.x}</div>` : ''}
+              </div>
+            </md-card>
+          `,
+        )}
+      </div>
     `
   }
 

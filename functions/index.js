@@ -16,19 +16,17 @@ function render(d) {
       import 'material/icon/icon.js'
     </script>
 
-    <div class="flex col g20">
-      <div>Hello World!</div>
-      <div>
-        <div class="headline-medium">Product Form</div>
-      </div>
-      <div>
-        <product-form></product-form>
-      </div>
-      <div>
-        <div class="headline-medium">Products</div>
-      </div>
-      <div>
-        <product-list></product-list>
+    <div class="flex col g20 p16">
+      <div class="display-medium tac mt40 pb40">Hello World!</div>
+      <div class="flexr w100 g20" style="align-items: start;">
+        <div class="flex col g16" style="flex: 1;">
+          <div class="headline-medium">Product Form</div>
+          <product-form></product-form>
+        </div>
+        <div class="flex col g16" style="flex: 2;">
+          <div class="headline-medium">Products</div>
+          <product-list></product-list>
+        </div>
       </div>
     </div>
   `

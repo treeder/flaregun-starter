@@ -1,6 +1,6 @@
 :root {
-  --md-sys-color-primary: rgb(153 204 249);
-  --md-sys-color-surface-tint: rgb(153 204 249);
+  --md-sys-color-primary: rgb(187 134 252);
+  --md-sys-color-surface-tint: rgb(187 134 252);
   --md-sys-color-on-primary: rgb(0 51 81);
   --md-sys-color-primary-container: rgb(6 75 114);
   --md-sys-color-on-primary-container: rgb(204 229 255);
@@ -16,9 +16,9 @@
   --md-sys-color-on-error: rgb(105 0 5);
   --md-sys-color-error-container: rgb(147 0 10);
   --md-sys-color-on-error-container: rgb(255 218 214);
-  --md-sys-color-background: rgb(16 20 24);
+  --md-sys-color-background: rgb(18 18 18);
   --md-sys-color-on-background: rgb(224 226 232);
-  --md-sys-color-surface: rgb(16 20 24);
+  --md-sys-color-surface: rgb(18 18 18);
   --md-sys-color-on-surface: rgb(224 226 232);
   --md-sys-color-surface-variant: rgb(66 71 78);
   --md-sys-color-on-surface-variant: rgb(194 199 206);
