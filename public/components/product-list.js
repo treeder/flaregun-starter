@@ -37,12 +37,12 @@ export class ProductList extends LitElement {
 
   render() {
     return html`
-      <div class="flex col" style="gap: 16px; width: 100%;">
+      <div class="flex col g16 w100">
         ${this.products.map(
           (p) => html`
-            <md-card class="p16 flex col" style="width: 100%; gap: 12px; box-sizing: border-box;">
-              <div class="flex col" style="gap: 8px;">
-                <div class="flex aic" style="justify-content: space-between;">
+            <md-card class="p16 flex col w100 g12" style="box-sizing: border-box;">
+              <div class="flex col g8">
+                <div class="flex aic jcsb">
                   <div class="headline-medium"><a href="/products/${p.id}">${p.name}</a></div>
                   <md-icon-button class="error" @click=${() => this.deleteProduct(p.id)}>
                     <md-icon>delete</md-icon>
