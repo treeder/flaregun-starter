@@ -25,23 +25,25 @@ export class ProductForm extends LitElement {
 
   render() {
     return html`
-      <form id="product-form">
-        <div class="flex col g16">
-          <md-text-field id="name" label="Name" value="${this.product.name}" required></md-text-field>
-          <md-text-field id="description" label="Description" value="${this.product.description}"></md-text-field>
-          <md-text-field
-            id="price"
-            label="Price"
-            value="${this.product.price}"
-            required
-            type="number"
-            placeholder="1.0"
-            step="0.01"
-            min="1"
-            max="1000000"></md-text-field>
-          <md-button type="button" @click=${this.submit}>Save</md-button>
-        </div>
-      </form>
+      <md-card class="p16 w100" style="margin-bottom: 24px; box-sizing: border-box;">
+        <form id="product-form" style="width: 100%;">
+          <div class="flex col g16">
+            <md-text-field id="name" label="Name" value="${this.product.name}" required></md-text-field>
+            <md-text-field id="description" label="Description" value="${this.product.description}"></md-text-field>
+            <md-text-field
+              id="price"
+              label="Price"
+              value="${this.product.price}"
+              required
+              type="number"
+              placeholder="1.0"
+              step="0.01"
+              min="1"
+              max="1000000"></md-text-field>
+            <md-button type="button" @click=${this.submit} style="margin-top: 16px;">Save</md-button>
+          </div>
+        </form>
+      </md-card>
     `
   }
 
