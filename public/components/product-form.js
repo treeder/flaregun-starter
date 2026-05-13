@@ -40,7 +40,7 @@ export class ProductForm extends LitElement {
               step="0.01"
               min="1"
               max="1000000"></md-text-field>
-            <md-button type="button" @click=${this.submit} style="margin-top: 16px;">Save</md-button>
+            <md-button type="button" @click=${this.submit} class="mt16">Save</md-button>
           </div>
         </form>
       </md-card>
