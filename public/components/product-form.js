@@ -25,8 +25,8 @@ export class ProductForm extends LitElement {
 
   render() {
     return html`
-      <md-card class="p16 w100" style="margin-bottom: 24px; box-sizing: border-box;">
-        <form id="product-form" style="width: 100%;">
+      <md-card class="p16 w100 mb24" style="box-sizing: border-box;">
+        <form id="product-form" class="w100">
           <div class="flex col g16">
             <md-text-field id="name" label="Name" value="${this.product.name}" required></md-text-field>
             <md-text-field id="description" label="Description" value="${this.product.description}"></md-text-field>
