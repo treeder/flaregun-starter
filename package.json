@@ -4,17 +4,17 @@
   "version": "1.0.2",
   "main": "index.js",
   "scripts": {
-    "start": "npm install && npx -y wrangler dev --live-reload",
-    "build": "npx -y treeder/flaregun build",
-    "run": "npx -y wrangler dev",
+    "start": "vite --port 8787",
+    "build": "vite build",
+    "run": "vite --port 8787",
     "test:run": "node tests/tests.js",
     "test": "npx -y treeder/testkit --port=8787",
     "setup": "npx -y treeder/flaregun setup",
-    "deploy": "npx -y wrangler deploy",
-    "deploy:preview": "npx -y wrangler versions upload",
-    "deploy:dev": "npx -y wrangler deploy --env dev",
-    "deploy:prod": "npx -y wrangler deploy --env prod",
-    "deploy:prod:preview": "npx -y wrangler versions upload --env prod",
+    "deploy": "npm run build && wrangler deploy",
+    "deploy:preview": "npm run build && wrangler versions upload",
+    "deploy:dev": "npm run build && wrangler deploy --env dev",
+    "deploy:prod": "npm run build && wrangler deploy --env prod",
+    "deploy:prod:preview": "npm run build && wrangler versions upload --env prod",
     "pushdev": "git push origin --force `git symbolic-ref --short HEAD`:dev"
   },
   "author": "treeder",
@@ -31,8 +31,12 @@
     "rend": "github:treeder/rend#semver:^1"
   },
   "devDependencies": {
+    "@cloudflare/vite-plugin": "^1.42.3",
+    "cross-env": "^7.0.3",
     "prettier": "^3.6.2",
-    "testkit": "github:treeder/testkit#semver:^2"
+    "testkit": "github:treeder/testkit#semver:^2",
+    "vite": "^8.1.0",
+    "wrangler": "^4.105.0"
   },
   "prettier": {
     "semi": false,
