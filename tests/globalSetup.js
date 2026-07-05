@@ -8,6 +8,7 @@ export async function setup() {
   serverProcess = spawn('npm', ['run', 'run'], {
     shell: true,
     stdio: 'inherit',
+    detached: process.platform !== 'win32',
   })
 
   const start = Date.now()
@@ -17,10 +18,15 @@ export async function setup() {
     if (Date.now() - start > timeout) {
       throw new Error('Timeout waiting for dev server to start')
     }
+
+    if (serverProcess && serverProcess.exitCode !== null) {
+      throw new Error('Dev server process exited prematurely with code ' + serverProcess.exitCode)
+    }
     
     try {
       await new Promise((resolve, reject) => {
         const req = http.get('http://localhost:8787/', (res) => {
+          res.resume()
           resolve()
         })
         req.on('error', reject)
@@ -40,7 +46,11 @@ export async function teardown() {
     if (process.platform === 'win32') {
       spawn('taskkill', ['/pid', serverProcess.pid, '/f', '/t'], { shell: true })
     } else {
-      serverProcess.kill()
+      try {
+        process.kill(-serverProcess.pid, 'SIGTERM')
+      } catch (e) {
+        serverProcess.kill()
+      }
     }
   }
 }
