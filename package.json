@@ -6,8 +6,9 @@
   "scripts": {
     "start": "vite dev",
     "build": "vite build",
-    "test:run": "node tests/tests.js",
-    "test": "npx -y treeder/testkit --port=8787",
+    "run": "vite --port 8787",
+    "test:run": "vitest run",
+    "test": "vitest run",
     "setup": "npx -y treeder/flaregun setup",
     "deploy": "npm run build && wrangler deploy",
     "deploy:preview": "npm run build && wrangler versions upload",
@@ -35,8 +36,8 @@
     "@cloudflare/vite-plugin": "^1.42.3",
     "cross-env": "^7.0.3",
     "prettier": "^3.9.4",
-    "testkit": "github:treeder/testkit#semver:^2",
     "vite": "^8.1.0",
+    "vitest": "^4.1.9",
     "wrangler": "^4.106.0"
   },
   "prettier": {
