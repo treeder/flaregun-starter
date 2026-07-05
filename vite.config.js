@@ -8,10 +8,10 @@ export default defineConfig({
     hmr: {
       port: 8787,
     },
-  },
-  cors: {
-    origin: true,
-    credentials: true,
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    cors: {
+      origin: true,
+      credentials: true,
+      methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    },
   },
 })
