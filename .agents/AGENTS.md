@@ -7,10 +7,12 @@ Guidelines and instructions for using the `flaregun` library on Cloudflare.
 The `D1` class wraps the native Cloudflare D1 Database binding to add advanced object mapping, query builders, and automated field formatting.
 
 ### Instantiation
+
 - Instantiate with `new D1(env.D1)` or retrieve from context if pre-initialized (e.g. `c.data.d1`).
 - You can enable debugging by setting `d1.debug = true`.
 
 ### Table Names and Models
+
 - Database operations accept either a string table name or a model class (using the `models` npm library):
   ```js
   import { User } from './models/User.js'
@@ -20,6 +22,7 @@ The `D1` class wraps the native Cloudflare D1 Database binding to add advanced o
 - Always prefer using model classes when retrieving or querying data. This ensures date strings, booleans, and JSON properties are parsed into native JavaScript types based on the model's static properties.
 
 ### Database Operations
+
 - **Get**: `await d1.get(table, id, q = {})` retrieves a single record by ID.
 - **Delete**: `await d1.delete(table, id)` deletes a record by ID.
 - **Insert**: `await d1.insert(table, obj)` inserts a new record.
@@ -32,7 +35,9 @@ The `D1` class wraps the native Cloudflare D1 Database binding to add advanced o
 - **First**: `await d1.first(table, q = {})` retrieves the first matching record.
 
 ### Advanced Querying (`d1.query(table, q)`)
+
 The query method accepts a query options object `q` with the following parameters:
+
 - `where`: Filters the query.
   - **Equality Object**: `{ email: 'user@example.com', status: 'active' }` (creates `WHERE email = ? AND status = ?`).
   - **Operator Array**: `[['createdAt', '>', date], ['orgId', '=', orgId]]`.

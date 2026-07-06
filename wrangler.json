@@ -91,7 +91,5 @@
       "enabled": true
     }
   },
-  "compatibility_flags": [
-    "global_fetch_strictly_public"
-  ]
+  "compatibility_flags": ["global_fetch_strictly_public"]
 }

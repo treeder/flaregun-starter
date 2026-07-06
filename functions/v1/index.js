@@ -1,3 +1,3 @@
 export async function onRequestGet(c) {
-  return Response.json({ message: "Hello, world!" });
+  return Response.json({ message: 'Hello, world!' })
 }

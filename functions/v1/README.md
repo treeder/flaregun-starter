@@ -1,3 +1,3 @@
 # API
 
-This is where you can put API endpoints. 
+This is where you put API endpoints.
