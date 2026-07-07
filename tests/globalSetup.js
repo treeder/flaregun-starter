@@ -13,7 +13,7 @@ export async function setup() {
 
   const start = Date.now()
   const timeout = 30000 // 30 seconds
-  
+
   while (true) {
     if (Date.now() - start > timeout) {
       throw new Error('Timeout waiting for dev server to start')
@@ -22,7 +22,7 @@ export async function setup() {
     if (serverProcess && serverProcess.exitCode !== null) {
       throw new Error('Dev server process exited prematurely with code ' + serverProcess.exitCode)
     }
-    
+
     try {
       await new Promise((resolve, reject) => {
         const req = http.get('http://localhost:8787/', (res) => {
