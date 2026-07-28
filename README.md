@@ -113,7 +113,7 @@ export async function onRequestGet(c) {
 
 The [scheduled.js](functions/scheduled.js) file will run every minute by default (after your first deployment).
 
-To disable scheduling, delete the scheduled.js file and remove the triggers from wrangler.jsonc.
+To disable scheduling, delete the scheduled.js file and remove the triggers from wrangler.json.
 
 NOTE: There are some small gotchas here:
 
