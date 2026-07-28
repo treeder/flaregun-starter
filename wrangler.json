@@ -11,6 +11,11 @@
   "vars": {
     "ENV": "dev"
   },
+  "triggers": {
+    "crons": [
+      "* * * * *"
+    ]
+  },
   "kv_namespaces": [
     {
       "binding": "KV",
