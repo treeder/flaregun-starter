@@ -37,10 +37,10 @@ export async function layout(d) {
               "lit-html": "https://cdn.jsdelivr.net/npm/lit-html@3/lit-html.js",
               "lit-html/": "https://cdn.jsdelivr.net/npm/lit-html@3/",
               "material/": "https://cdn.jsdelivr.net/gh/material-esm/material@2.12/",
-              "api": "https://cdn.jsdelivr.net/gh/treeder/api@0/api.js",
+              "api": "https://cdn.jsdelivr.net/gh/treeder/api@1/api.js",
               "state": "https://cdn.jsdelivr.net/gh/treeder/state@3/state.js",
               "models": "https://cdn.jsdelivr.net/gh/treeder/models@1/index.js",
-              "passkeys/": "https://cdn.jsdelivr.net/gh/treeder/passkeys@3/"
+              "passkeys/": "https://cdn.jsdelivr.net/gh/treeder/passkeys@4/"
             }
           }
         </script>
