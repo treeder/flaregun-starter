@@ -104,6 +104,8 @@ Triggers scheduled functions at custom intervals using a single Cloudflare minut
   ```js
   const scheduler = new Scheduler()
   scheduler.addEventListener('hour', myHourlyJob)
+  // Daily tasks default to hour 0 (midnight UTC), or specify target hour (0-23):
+  scheduler.addEventListener('day', myDailyJob, { hour: 2 }) // runs at 2:00 AM
   ```
 - **Execution**: Trigger the scheduler inside the worker `scheduled` handler:
   ```js
