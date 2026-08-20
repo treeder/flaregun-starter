@@ -43,7 +43,7 @@ The query method accepts a query options object `q` with the following parameter
   - **Operator Array**: `[['createdAt', '>', date], ['orgId', '=', orgId]]`.
   - **OR Conditions**: `[[['status', '=', 'pending'], 'or', ['status', '=', 'failed']]]`.
   - **JSON Path Querying**: Query nested JSON properties using dot notation: `[['data.role', '=', 'admin']]` (compiles to SQL `json_extract(data, '$.role')`).
-- `order`: Array specifying the field and order, e.g. `['createdAt', 'desc']`.
+- `order`: Specifies ordering. Accepts a single order `['createdAt', 'desc']`, multiple orders `[['lastName', 'asc'], ['firstName', 'asc']]`, an object `{ lastName: 'asc', firstName: 'asc' }`, or a string `'createdAt desc'`. Supports JSON paths and table prefixes.
 - `limit`: Maximum number of records to return, e.g., `100`.
 - `offset`: Query offset.
 - `columns`: Array of specific columns to retrieve.

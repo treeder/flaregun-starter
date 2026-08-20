@@ -33,12 +33,12 @@
     "rend": "github:treeder/rend#semver:^1"
   },
   "devDependencies": {
-    "@cloudflare/vite-plugin": "^1.51.1",
+    "@cloudflare/vite-plugin": "^1.53.1",
     "cross-env": "^10.1.0",
     "prettier": "^3.9.6",
-    "vite": "^8.2.1",
-    "vitest": "^4.1.10",
-    "wrangler": "^4.120.0"
+    "vite": "^8.2.2",
+    "vitest": "^4.1.11",
+    "wrangler": "^4.125.0"
   },
   "prettier": {
     "semi": false,
