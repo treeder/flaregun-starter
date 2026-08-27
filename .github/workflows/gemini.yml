@@ -31,7 +31,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           # Automatically checks out the head ref for PR events,
           # and pulls the PR head branch for comment-based triggers
