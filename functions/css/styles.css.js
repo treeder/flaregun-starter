@@ -49,12 +49,12 @@ export function all(d) {
 
     .green,
     .success {
-      color: var(--success-color);
+      color: var(--success-color, #2e7d32);
     }
 
     .red,
     .error {
-      color: var(--error-color);
+      color: var(--error-color, var(--md-sys-color-error, #ba1a1a));
     }
 
     .flex {
@@ -188,6 +188,12 @@ export function all(d) {
     .p16 {
       padding: 16px;
     }
+    .p20 {
+      padding: 20px;
+    }
+    .p24 {
+      padding: 24px;
+    }
 
     .pt12 {
       padding-top: 12px;
@@ -198,6 +204,10 @@ export function all(d) {
 
     .pb40 {
       padding-bottom: 40px;
+    }
+
+    .mt8 {
+      margin-top: 8px;
     }
 
     .mt12 {

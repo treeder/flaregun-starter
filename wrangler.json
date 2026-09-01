@@ -12,9 +12,7 @@
     "ENV": "dev"
   },
   "triggers": {
-    "crons": [
-      "* * * * *"
-    ]
+    "crons": ["* * * * *"]
   },
   "kv_namespaces": [
     {
