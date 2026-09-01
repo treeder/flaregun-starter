@@ -3,6 +3,7 @@ import 'material/buttons/button.js'
 import 'material/buttons/icon-button.js'
 import 'material/icon/icon.js'
 import 'material/card/card.js'
+import '/components/confirm-dialog.js'
 import { styles } from '/css/styles.js'
 import { api } from 'api'
 
@@ -37,6 +38,7 @@ export class ProductList extends LitElement {
 
   render() {
     return html`
+      <confirm-dialog id="confirmDialog"></confirm-dialog>
       <div class="flex col g16 w100">
         ${this.products.map(
           (p) => html`
@@ -60,16 +62,24 @@ export class ProductList extends LitElement {
   }
 
   async deleteProduct(id) {
-    if (confirm('Are you sure you want to delete this product?')) {
-      const response = await fetch(`/v1/products/${id}`, {
-        method: 'DELETE',
-      })
-      if (response.ok) {
-        location.reload()
-      } else {
-        console.error('Failed to delete product')
-        alert('Failed to delete product.')
-      }
+    const dialog = this.renderRoot.querySelector('#confirmDialog')
+    const confirmed = await dialog.confirm({
+      headline: 'Delete Product',
+      message: 'Are you sure you want to delete this product?',
+      confirmText: 'Delete',
+      destructive: true,
+      icon: 'delete',
+    })
+    if (!confirmed) return
+
+    const response = await fetch(`/v1/products/${id}`, {
+      method: 'DELETE',
+    })
+    if (response.ok) {
+      location.reload()
+    } else {
+      console.error('Failed to delete product')
+      alert('Failed to delete product.')
     }
   }
 }

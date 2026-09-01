@@ -12,6 +12,7 @@ function render(d) {
     <script type="module">
       import '/components/product-form.js'
       import '/components/product-list.js'
+      import '/components/confirm-dialog.js'
       import 'material/buttons/icon-button.js'
       import 'material/icon/icon.js'
     </script>
