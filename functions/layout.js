@@ -40,7 +40,7 @@ export async function layout(d) {
               "api": "https://cdn.jsdelivr.net/gh/treeder/api@1/api.js",
               "state": "https://cdn.jsdelivr.net/gh/treeder/state@3/state.js",
               "models": "https://cdn.jsdelivr.net/gh/treeder/models@1/index.js",
-              "passkeys/": "https://cdn.jsdelivr.net/gh/treeder/passkeys@4/"
+              "passkeys/": "https://cdn.jsdelivr.net/gh/treeder/passkeys@5/"
             }
           }
         </script>
@@ -48,6 +48,7 @@ export async function layout(d) {
       <body>
         <script type="module">
           import 'passkeys/public/components/sign-in-button.js'
+          import '/components/avatar-menu.js'
         </script>
         <div class="flex g12 jcsb mb20 topnav">
           <a href="/">
@@ -58,7 +59,11 @@ export async function layout(d) {
           </a>
           <div class="flex g8 jcc aic">
             <div>
-              <sign-in-button href="/signin">Sign In</sign-in-button>
+              ${
+                d.user
+                  ? html`<avatar-menu user="${JSON.stringify(d.user).replace(/"/g, '&quot;')}"></avatar-menu>`
+                  : html`<sign-in-button href="/signin">Sign In</sign-in-button>`
+              }
             </div>
           </div>
         </div>

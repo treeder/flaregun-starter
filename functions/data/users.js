@@ -21,6 +21,9 @@ export class User {
     age: {
       type: Number,
     },
+    image: {
+      type: String,
+    },
     data: {
       type: Object,
     },

@@ -29,7 +29,7 @@
     "migrations": "github:treeder/migrations#semver:^2",
     "nanoid": "^6.0.1",
     "once": "github:treeder/once#semver:^1",
-    "passkeys": "github:treeder/passkeys#semver:^4",
+    "passkeys": "github:treeder/passkeys#semver:^5",
     "rend": "github:treeder/rend#semver:^1"
   },
   "devDependencies": {

@@ -17,8 +17,28 @@ export async function wrap(c) {
     const sess = await getSession({ request: c.request, kv: c.env.KV })
     if (sess && sess.userId) {
       let user = await c.data.d1.get(User, sess.userId)
+      let kvUser = null
+      if (!user || !user.email) {
+        try {
+          const rawKvUser = await c.env.KV.get(`users-${sess.userId}`)
+          if (rawKvUser) {
+            kvUser = JSON.parse(rawKvUser)
+          }
+        } catch (e) {}
+      }
+
+      const email = user?.email || sess.email || kvUser?.email || (sess.userId.includes('@') ? sess.userId : null)
+
       if (!user) {
-        user = { id: sess.userId, email: sess.email }
+        user = { id: sess.userId, email }
+        try {
+          await c.data.d1.insert(User, user)
+        } catch (e) {}
+      } else if (!user.email && email) {
+        user.email = email
+        try {
+          await c.data.d1.update(User, user.id, { email })
+        } catch (e) {}
       }
       c.data.user = user
     }
