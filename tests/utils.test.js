@@ -44,6 +44,11 @@ describe('utils', () => {
       expect(domainLevels(c)).toBe(3)
     })
 
+    it('returns 2 for custom domains ending with workers.dev without dot', () => {
+      const c = { request: { headers: new Headers({ host: 'myworkers.dev' }) } }
+      expect(domainLevels(c)).toBe(2)
+    })
+
     it('returns 2 for standard custom domains', () => {
       const c = { request: { headers: new Headers({ host: 'app.example.com' }) } }
       expect(domainLevels(c)).toBe(2)
@@ -60,3 +65,4 @@ describe('utils', () => {
     })
   })
 })
+
