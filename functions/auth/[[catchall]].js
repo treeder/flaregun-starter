@@ -2,6 +2,7 @@ import { Passkeys } from 'passkeys'
 import { hostURL } from '../utils.js'
 import { globals } from '../globals.js'
 import { isoBase64URL } from '@simplewebauthn/server/helpers'
+import { User } from '../data/users.js'
 
 export async function onRequest(c) {
   let p = c.params.catchall
@@ -12,6 +13,17 @@ export async function onRequest(c) {
     kv: c.env.KV,
     // mailer: globals.mailer, // replace with your own mailer instance with send() function
     logger: c.data.logger,
+    emailStart: async ({ email }) => {
+      let normalized = (email || '').toLowerCase().trim()
+      let user = await c.data.d1.first(User, { where: { email: normalized } })
+      if (!user) {
+        user = await c.data.d1.insert(User, {
+          email: normalized,
+          name: normalized.split('@')[0],
+        })
+      }
+      return { userId: user.id }
+    },
   })
 
   if (p[0] == 'email') {

@@ -62,6 +62,8 @@ test('Settings page and Avatar menu integration tests', async () => {
   const meData = await meRes.json()
   expect(meData.user.name).toBe('Jane Antigravity')
   expect(meData.user.email).toBe(email)
+  expect(meData.user.id).not.toBe(email)
+  expect(meData.user.id.length).toBeGreaterThanOrEqual(10)
 
   // 6. Upload avatar image to R2 under users/{userId}/...
   const samplePng = new Uint8Array([
