@@ -219,7 +219,10 @@ export class SettingsPage extends LitElement {
       this.avatarMessage = { type: 'error', text: err.message || 'Failed to upload avatar' }
     } finally {
       this.loadingAvatar = false
-      e.target.value = ''
+      const input = this.renderRoot?.querySelector('#avatar-file-input')
+      if (input) {
+        input.value = ''
+      }
     }
   }
 
