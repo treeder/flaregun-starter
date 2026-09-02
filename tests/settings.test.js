@@ -126,7 +126,7 @@ test('Settings page and Avatar menu integration tests', async () => {
   const listPasskeysData = await listPasskeysRes.json()
   expect(Array.isArray(listPasskeysData.passkeys)).toBe(true)
 
-  // Test passkey delete endpoint
+  // Test passkey delete endpoint with non-existent ID (should return 404)
   const deletePasskeyRes = await fetch(`${baseURL}/auth/passkeys/delete`, {
     method: 'POST',
     headers: {
@@ -135,7 +135,9 @@ test('Settings page and Avatar menu integration tests', async () => {
     },
     body: JSON.stringify({ id: 'non-existent-pk-id' }),
   })
-  expect(deletePasskeyRes.status).toBe(200)
+  expect(deletePasskeyRes.status).toBe(404)
+  const deletePasskeyData = await deletePasskeyRes.json()
+  expect(deletePasskeyData.error).toBeDefined()
 
   // 8. Remove avatar
   const removeAvatarRes = await fetch(`${baseURL}/v1/users/avatar`, {

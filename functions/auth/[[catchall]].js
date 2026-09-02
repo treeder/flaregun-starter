@@ -125,14 +125,19 @@ export async function onRequest(c) {
         return Response.json({ error: { message: 'Passkey ID is required' } }, { status: 400 })
       }
 
-      await c.env.KV.delete(`passkeys-${passkeyId}`)
-
       let userRaw = await c.env.KV.get(`users-${sess.id}`)
-      if (userRaw) {
-        let userObj = JSON.parse(userRaw)
-        userObj.passkeys = (userObj.passkeys || []).filter((pk) => pk.id !== passkeyId)
-        await c.env.KV.put(`users-${sess.id}`, JSON.stringify(userObj))
+      if (!userRaw) {
+        return Response.json({ error: { message: 'User not found' } }, { status: 404 })
       }
+      let userObj = JSON.parse(userRaw)
+      let existingList = userObj.passkeys || []
+      if (!existingList.some((pk) => pk.id === passkeyId)) {
+        return Response.json({ error: { message: 'Passkey not found for user' } }, { status: 404 })
+      }
+
+      await c.env.KV.delete(`passkeys-${passkeyId}`)
+      userObj.passkeys = existingList.filter((pk) => pk.id !== passkeyId)
+      await c.env.KV.put(`users-${sess.id}`, JSON.stringify(userObj))
       return Response.json({ success: true, message: 'Passkey deleted' })
     }
   }

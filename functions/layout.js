@@ -61,7 +61,7 @@ export async function layout(d) {
             <div>
               ${
                 d.user
-                  ? html`<avatar-menu user="${JSON.stringify(d.user)}"></avatar-menu>`
+                  ? html`<avatar-menu user="${JSON.stringify(d.user).replace(/"/g, '&quot;')}"></avatar-menu>`
                   : html`<sign-in-button href="/signin">Sign In</sign-in-button>`
               }
             </div>

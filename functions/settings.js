@@ -23,7 +23,7 @@ function render(d) {
     </script>
 
     <div class="flex col aic jcc p16 mt20">
-      <settings-page user="${JSON.stringify(d.user)}"></settings-page>
+      <settings-page user="${JSON.stringify(d.user).replace(/"/g, '&quot;')}"></settings-page>
     </div>
   `
 }
