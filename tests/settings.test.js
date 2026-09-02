@@ -94,6 +94,28 @@ test('Settings page and Avatar menu integration tests', async () => {
   const r2Buffer = await r2Res.arrayBuffer()
   expect(r2Buffer.byteLength).toBe(samplePng.byteLength)
 
+  // 6b. Upload AVIF avatar image to R2
+  const sampleAvif = new Uint8Array([0x00, 0x00, 0x00, 0x1c, 0x66, 0x74, 0x79, 0x70, 0x61, 0x76, 0x69, 0x66])
+  const avifFormData = new FormData()
+  const avifFile = new File([sampleAvif], 'avatar.avif', { type: 'image/avif' })
+  avifFormData.append('file', avifFile)
+
+  const avifUploadRes = await fetch(`${baseURL}/v1/users/avatar`, {
+    method: 'POST',
+    headers: {
+      Cookie: cookieHeader,
+    },
+    body: avifFormData,
+  })
+  expect(avifUploadRes.status).toBe(200)
+  const avifUploadData = await avifUploadRes.json()
+  expect(avifUploadData.success).toBe(true)
+  expect(avifUploadData.image).toMatch(/^\/r2\/users\/[^/]+\/avatar-[^/]+\.avif$/)
+
+  const avifR2Res = await fetch(`${baseURL}${avifUploadData.image}`)
+  expect(avifR2Res.status).toBe(200)
+  expect(avifR2Res.headers.get('content-type')).toBe('image/avif')
+
   // 7. Passkeys listing and deletion endpoints
   const listPasskeysRes = await fetch(`${baseURL}/auth/passkeys/list`, {
     headers: { Cookie: cookieHeader },

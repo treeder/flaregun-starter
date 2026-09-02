@@ -33,6 +33,7 @@ export async function onRequestPost(c) {
   let ext = 'jpg'
   if (file.type === 'image/png') ext = 'png'
   else if (file.type === 'image/webp') ext = 'webp'
+  else if (file.type === 'image/avif') ext = 'avif'
   else if (file.type === 'image/gif') ext = 'gif'
   else if (file.type === 'image/svg+xml') ext = 'svg'
   else {

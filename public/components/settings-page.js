@@ -373,7 +373,7 @@ export class SettingsPage extends LitElement {
                 <input
                   type="file"
                   id="avatar-file-input"
-                  accept="image/png,image/jpeg,image/webp,image/gif"
+                  accept="image/png,image/jpeg,image/webp,image/avif,image/gif"
                   style="display: none;"
                   @change=${this.handleAvatarChange} />
                 <div class="flex g8 flexw">
@@ -397,7 +397,7 @@ export class SettingsPage extends LitElement {
                       : ''
                   }
                 </div>
-                <div class="text-muted small">Allowed formats: JPG, PNG, WEBP, GIF. Max size 10MB.</div>
+                <div class="text-muted small">Allowed formats: JPG, PNG, WEBP, AVIF, GIF. Max size 10MB.</div>
               </div>
             </div>
 
@@ -487,12 +487,12 @@ export class SettingsPage extends LitElement {
                                     >${pk.deviceType === 'multiDevice' ? 'Synced Passkey' : 'Security Key'}</span
                                   >
                                   ${
-                                  pk.createdAt
-                                    ? html`<span class="text-muted small"
-                                        >Added on ${new Date(pk.createdAt).toLocaleDateString()}</span
-                                      >`
-                                    : ''
-                                }
+                                    pk.createdAt
+                                      ? html`<span class="text-muted small"
+                                          >Added on ${new Date(pk.createdAt).toLocaleDateString()}</span
+                                        >`
+                                      : ''
+                                  }
                                 </div>
                               </div>
                             </div>
