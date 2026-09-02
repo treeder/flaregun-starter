@@ -9,7 +9,8 @@ export function hostname(c) {
 
 export function hostURL(c) {
   let h = hostname(c)
-  if (h.includes('localhost')) {
+  if (!h) return ''
+  if (h.includes('localhost') || h.includes('127.0.0.1')) {
     let req = c.request
     let h2 = req.headers.get('x-forwarded-host') || req.headers.get('host')
     let port = ''
@@ -23,4 +24,10 @@ export function hostURL(c) {
   }
   h = 'https://' + h
   return h
+}
+
+export function domainLevels(c) {
+  const host = hostname(c)
+  if (!host) return 2
+  return host.endsWith('workers.dev') || host.endsWith('pages.dev') ? 3 : 2
 }
