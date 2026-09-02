@@ -129,10 +129,27 @@ export class SettingsPage extends LitElement {
     this.passkeyMessage = null
   }
 
-  connectedCallback() {
+  async connectedCallback() {
     super.connectedCallback()
     this.initUser()
     this.fetchPasskeys()
+    if (!this.user?.email) {
+      await this.fetchUser()
+    }
+  }
+
+  async fetchUser() {
+    try {
+      const res = await api('/v1/users/me')
+      if (res?.user) {
+        this.user = {
+          ...this.user,
+          ...res.user,
+        }
+      }
+    } catch (e) {
+      console.error('Failed to fetch user profile', e)
+    }
   }
 
   initUser() {

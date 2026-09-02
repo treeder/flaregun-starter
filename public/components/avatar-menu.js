@@ -84,6 +84,21 @@ export class AvatarMenu extends LitElement {
     this.user = {}
   }
 
+  async connectedCallback() {
+    super.connectedCallback()
+    if (!this.getUser().email) {
+      try {
+        const res = await api('/v1/users/me')
+        if (res?.user) {
+          this.user = {
+            ...this.getUser(),
+            ...res.user,
+          }
+        }
+      } catch (e) {}
+    }
+  }
+
   getUser() {
     if (typeof this.user === 'string') {
       try {
