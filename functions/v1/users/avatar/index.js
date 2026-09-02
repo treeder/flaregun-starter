@@ -42,7 +42,7 @@ export async function onRequestPost(c) {
     }
   }
 
-  const filename = `${nanoid()}.${ext}`
+  const filename = `avatar-${nanoid()}.${ext}`
   const key = `users/${c.data.user.id}/${filename}`
 
   await c.env.R2.put(key, buffer, {

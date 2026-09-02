@@ -84,7 +84,7 @@ test('Settings page and Avatar menu integration tests', async () => {
   expect(uploadRes.status).toBe(200)
   const uploadData = await uploadRes.json()
   expect(uploadData.success).toBe(true)
-  expect(uploadData.image).toMatch(/^\/r2\/users\//)
+  expect(uploadData.image).toMatch(/^\/r2\/users\/[^/]+\/avatar-[^/]+\.png$/)
   expect(uploadData.user.image).toBe(uploadData.image)
 
   // Verify avatar image can be retrieved from R2 endpoint
