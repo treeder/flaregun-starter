@@ -40,7 +40,7 @@ export async function layout(d) {
               "api": "https://cdn.jsdelivr.net/gh/treeder/api@1/api.js",
               "state": "https://cdn.jsdelivr.net/gh/treeder/state@3/state.js",
               "models": "https://cdn.jsdelivr.net/gh/treeder/models@1/index.js",
-              "passkeys/": "https://cdn.jsdelivr.net/gh/treeder/passkeys@4/"
+              "passkeys/": "https://cdn.jsdelivr.net/gh/treeder/passkeys@5/"
             }
           }
         </script>
