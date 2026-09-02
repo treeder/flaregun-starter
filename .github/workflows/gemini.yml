@@ -2,6 +2,7 @@ name: "🔎 Dazbo's Gemini Code Review"
 
 on:
   pull_request:
+    types: [opened]
     branches:
       - main
     # Optional: restrict trigger paths (supports inclusions & exclusions)
@@ -14,7 +15,7 @@ on:
 
 jobs:
   review:
-    # Run on PR updates, OR on issue comment starting with /gemini-review by repo owners/members
+    # Run on PR opened, OR on issue comment starting with /gemini-review by repo owners/members
     if: |
       github.event_name == 'pull_request' ||
       (
