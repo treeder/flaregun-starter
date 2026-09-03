@@ -48,4 +48,9 @@ test('styles define white card on off-white background', async () => {
   expect(lightText).toContain('--md-sys-color-background: #f8f9fa')
   expect(lightText).toContain('--md-sys-color-surface: #ffffff')
   expect(lightText).toContain('--md-card-container-color: #ffffff')
+
+  const darkRes = await fetch(`${baseUrl}/css/dark.css`)
+  expect(darkRes.status).toBe(200)
+  const darkText = await darkRes.text()
+  expect(darkText).toContain('--md-card-container-color: rgb(18 18 18)')
 })
