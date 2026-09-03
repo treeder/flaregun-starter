@@ -1,7 +1,8 @@
 import { test, expect } from 'vitest'
+import { baseUrl } from './helper.js'
 
 test('confirm-dialog component is served and structured properly', async () => {
-  const res = await fetch('http://localhost:8787/components/confirm-dialog.js')
+  const res = await fetch(`${baseUrl}/components/confirm-dialog.js`)
   expect(res.status).toBe(200)
   const code = await res.text()
 
@@ -17,7 +18,7 @@ test('confirm-dialog component is served and structured properly', async () => {
 })
 
 test('product-list component uses confirm-dialog for delete confirmation', async () => {
-  const res = await fetch('http://localhost:8787/components/product-list.js')
+  const res = await fetch(`${baseUrl}/components/product-list.js`)
   expect(res.status).toBe(200)
   const code = await res.text()
 
@@ -28,7 +29,7 @@ test('product-list component uses confirm-dialog for delete confirmation', async
 })
 
 test('index page includes confirm-dialog component script', async () => {
-  const res = await fetch('http://localhost:8787/')
+  const res = await fetch(`${baseUrl}/`)
   expect(res.status).toBe(200)
   const html = await res.text()
 

@@ -14,7 +14,7 @@ export async function onRequestGet(c) {
 
 export function root(d) {
   return css`
-    @import url(light.css) (prefers-color-scheme: light);
+    @import url(light.css);
     @import url(dark.css) (prefers-color-scheme: dark);
 
     :root {
@@ -26,6 +26,14 @@ export function root(d) {
 
       background: var(--md-sys-color-background);
       color: var(--md-sys-color-on-background);
+
+      --md-card-container-color: var(--md-sys-color-surface, #ffffff);
+    }
+
+    body {
+      background: var(--md-sys-color-background, #f8f9fa);
+      margin: 0;
+      min-height: 100vh;
     }
 
     .topnav a {
@@ -297,7 +305,15 @@ export function all(d) {
     }
 
     .card {
-      color: var(--md-sys-color-on-primary);
+      background-color: var(--md-card-container-color, var(--md-sys-color-surface, #ffffff));
+      color: var(--md-sys-color-on-surface);
+      border-radius: var(--md-card-container-shape, 12px);
+      border: var(--md-card-outline-width, 1px) solid
+        var(--md-card-outline-color, var(--md-sys-color-outline-variant, #cac4d0));
+    }
+
+    md-card {
+      --md-card-container-color: var(--md-sys-color-surface, #ffffff);
     }
 
     ${typography()}
