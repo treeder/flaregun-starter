@@ -36,6 +36,10 @@ export function root(d) {
       min-height: 100vh;
     }
 
+    .topnav {
+      padding: 16px;
+    }
+
     .topnav a {
       color: var(--md-sys-color-on-background);
     }

@@ -54,3 +54,16 @@ test('styles define white card on off-white background', async () => {
   const darkText = await darkRes.text()
   expect(darkText).toContain('--md-card-container-color: rgb(18 18 18)')
 })
+
+test('navbar includes padding for demo', async () => {
+  const res = await fetch(`${baseUrl}/`)
+  expect(res.status).toBe(200)
+  const html = await res.text()
+  expect(html).toMatch(/class="[^"]*topnav[^"]*p16[^"]*"/)
+
+  const cssRes = await fetch(`${baseUrl}/css/styles.css`)
+  expect(cssRes.status).toBe(200)
+  const cssText = await cssRes.text()
+  expect(cssText).toMatch(/\.topnav\s*\{[^}]*padding:\s*16px;/)
+})
+

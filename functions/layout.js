@@ -50,7 +50,7 @@ export async function layout(d) {
           import 'passkeys/public/components/sign-in-button.js'
           import '/components/avatar-menu.js'
         </script>
-        <div class="flex g12 jcsb mb20 topnav">
+        <div class="flex g12 jcsb mb20 topnav p16">
           <a href="/">
             <div class="flex g8 jcc aic">
               <img src="/images/flaregun2.png" style="height: 40px;" />
