@@ -1,7 +1,8 @@
 import { test, expect } from 'vitest'
+import { baseUrl as defaultBaseURL } from './helper.js'
 
 test('Settings page and Avatar menu integration tests', async () => {
-  const baseURL = 'http://localhost:8787'
+  const baseURL = defaultBaseURL
 
   // 1. Unauthenticated request to /settings redirects to signin
   const unauthRes = await fetch(`${baseURL}/settings`, { redirect: 'manual' })

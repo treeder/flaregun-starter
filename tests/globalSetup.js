@@ -4,8 +4,9 @@ import http from 'http'
 let serverProcess
 
 export async function setup() {
-  console.log('🚀 Starting dev server in globalSetup...')
-  serverProcess = spawn('npm', ['run', 'run'], {
+  const port = process.env.PORT || 8787
+  console.log(`🚀 Starting dev server on port ${port} in globalSetup...`)
+  serverProcess = spawn('npm', ['run', 'run', '--', '--port', String(port)], {
     shell: true,
     stdio: 'inherit',
     detached: process.platform !== 'win32',
@@ -25,7 +26,7 @@ export async function setup() {
 
     try {
       await new Promise((resolve, reject) => {
-        const req = http.get('http://localhost:8787/', (res) => {
+        const req = http.get(`http://localhost:${port}/`, (res) => {
           res.resume()
           resolve()
         })
