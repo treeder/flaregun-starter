@@ -26,19 +26,19 @@
     "api": "github:treeder/api#semver:^1",
     "console-logger": "github:treeder/console-logger#semver:^1",
     "flaregun": "github:treeder/flaregun#semver:^4",
-    "migrations": "github:treeder/migrations#semver:^2",
+    "migrations": "github:treeder/migrations#semver:^3",
     "nanoid": "^6.0.1",
     "once": "github:treeder/once#semver:^1",
     "passkeys": "github:treeder/passkeys#semver:^5",
     "rend": "github:treeder/rend#semver:^1"
   },
   "devDependencies": {
-    "@cloudflare/vite-plugin": "^1.53.1",
+    "@cloudflare/vite-plugin": "^1.57.1",
     "cross-env": "^10.1.0",
-    "prettier": "^3.9.6",
-    "vite": "^8.2.2",
-    "vitest": "^4.1.11",
-    "wrangler": "^4.125.0"
+    "prettier": "^3.9.8",
+    "vite": "^8.3.0",
+    "vitest": "^5.0.1",
+    "wrangler": "^4.136.1"
   },
   "prettier": {
     "semi": false,
