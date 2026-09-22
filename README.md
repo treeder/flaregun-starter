@@ -148,26 +148,30 @@ This is configured to do some basic API testing with [testkit](https://github.co
 
 ## Deploying
 
-Just one command or setup auto deploy and your live!
+Just one command or setup auto deploy and you're live!
 
 ### Manual deploy
 
-To deploy to dev environment:
+To deploy to production:
 
 ```sh
 npm run deploy
 ```
 
-To deploy to prod environment:
+To create or update a preview for your current branch:
 
 ```sh
-npm run deploy:prod
+npm run deploy:preview
 ```
+
+Previews give each branch an isolated, production-like environment with its own URL, variables, and preview-safe bindings configured in the `previews` block of `wrangler.json`.
 
 ### Auto deploy
 
-Setup auto deploy in the Cloudflare Dashboard so every commit to main will deploy and other
-branches will get a preview URL.
+Connect your Git repository in the Cloudflare Dashboard with [Workers Builds](https://developers.cloudflare.com/workers/ci-cd/builds/):
+
+- Production branch (`main`): deploys automatically on push with production settings.
+- Other branches and pull requests: automatically build and deploy to isolated [Worker Previews](https://developers.cloudflare.com/workers/previews/).
 
 Set build command to:
 
@@ -180,21 +184,3 @@ Set deploy command to:
 ```sh
 npm run deploy
 ```
-
-Set non-production branch deploy command to:
-
-```sh
-npm run deploy:preview
-```
-
-### Deploying to production
-
-```sh
-npm run deploy:prod
-```
-
-Then your auto deploy configuration should change to:
-
-- `npm run build`
-- `npm run deploy:prod`
-- Preview URLs: You may not want to have preview URLs on production, but if you do, use: `npm run deploy:prod:preview`.
