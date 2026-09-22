@@ -2,9 +2,10 @@ name: "🔎 Dazbo's Gemini Code Review"
 
 on:
   pull_request:
-    types: [opened]
     branches:
       - main
+    # uncomment below to only do it once when the pull request is opened
+    # types: [opened]
     # Optional: restrict trigger paths (supports inclusions & exclusions)
     # paths:
     #   - 'src/**'
