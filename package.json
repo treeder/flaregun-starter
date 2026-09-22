@@ -11,7 +11,7 @@
     "test": "vitest run",
     "setup": "npx -y treeder/flaregun setup",
     "deploy": "npm run build && wrangler deploy",
-    "deploy:preview": "npm run build && wrangler preview",
+    "preview": "npm run build && wrangler preview",
     "format": "prettier --write ."
   },
   "author": "treeder",

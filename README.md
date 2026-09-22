@@ -161,7 +161,7 @@ npm run deploy
 To create or update a preview for your current branch:
 
 ```sh
-npm run deploy:preview
+npm run preview
 ```
 
 Previews give each branch an isolated, production-like environment with its own URL, variables, and preview-safe bindings configured in the `previews` block of `wrangler.json`.
