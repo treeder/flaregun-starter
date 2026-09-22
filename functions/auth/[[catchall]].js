@@ -50,13 +50,13 @@ export async function onRequest(c) {
     if (p[1] == 'check') {
       return await passkeys.check(c)
     }
-    if (p[1] == 'list') {
+    if (p[1] == 'list' && c.request.method === 'GET') {
       return await passkeys.list(c)
     }
-    if (p[1] == 'delete' || p[1] == 'remove') {
+    if ((p[1] == 'delete' || p[1] == 'remove') && (c.request.method === 'POST' || c.request.method === 'DELETE')) {
       return await passkeys.delete(c)
     }
   }
 
-  return Response.json({})
+  return Response.json({ error: { message: 'Not found' } }, { status: 404 })
 }
