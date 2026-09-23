@@ -56,7 +56,8 @@ export async function initRequest(c) {
   let isDev =
     !c.env.ENV ||
     c.env.ENV === 'dev' ||
-    (c.request && (c.request.url.includes('localhost') || c.request.url.includes('127.0.0.1')))
+    (c.request &&
+      (c.request.url.includes('localhost') || c.request.url.includes('127.0.0.1') || c.request.url.includes('[::1]')))
   let logger = isDev ? new ConsoleLogger({ data: ldata }) : new CloudflareLogger({ data: ldata })
   c.data.logger = logger
   const errorHandler = new ErrorHandler({
