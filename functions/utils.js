@@ -31,4 +31,3 @@ export function domainLevels(c) {
   if (!host) return 2
   return host.endsWith('.workers.dev') || host.endsWith('.pages.dev') ? 3 : 2
 }
-

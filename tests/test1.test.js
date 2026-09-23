@@ -66,4 +66,3 @@ test('navbar includes padding for demo', async () => {
   const cssText = await cssRes.text()
   expect(cssText).toMatch(/\.topnav\s*\{[^}]*padding:\s*16px;/)
 })
-

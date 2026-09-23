@@ -53,17 +53,18 @@ export async function initRequest(c) {
     ldata.method = req.method
     ldata.path = url.pathname
   }
-  let logger = new ConsoleLogger({ data: ldata })
-  if (c.env.ENV == 'prod') {
-    logger = new CloudflareLogger({ data: ldata })
-  }
+  let isDev =
+    !c.env.ENV ||
+    c.env.ENV === 'dev' ||
+    (c.request && (c.request.url.includes('localhost') || c.request.url.includes('127.0.0.1')))
+  let logger = isDev ? new ConsoleLogger({ data: ldata }) : new CloudflareLogger({ data: ldata })
   c.data.logger = logger
   const errorHandler = new ErrorHandler({
     logger,
   })
   c.data.errorHandler = errorHandler
 
-  c.data.env = c.env.ENV
+  c.data.env = isDev ? 'dev' : c.env.ENV
   c.data.d1 = new D1(c.env.D1)
   c.data.kv = new KV(c.env.KV)
   c.data.r2 = c.env.R2

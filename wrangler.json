@@ -1,7 +1,7 @@
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
   "name": "flaregun",
-  "compatibility_date": "2026-06-29",
+  "compatibility_date": "2026-09-22",
   "main": "./src/worker.js",
   "assets": {
     "directory": "./public/",
@@ -9,7 +9,7 @@
   },
   "preview_urls": true,
   "vars": {
-    "ENV": "dev"
+    "ENV": "prod"
   },
   "triggers": {
     "crons": ["* * * * *"]
@@ -31,55 +31,27 @@
       "bucket_name": "flaregun"
     }
   ],
-  "env": {
-    "staging": {
-      "name": "flaregun-staging",
-      "preview_urls": true,
-      "vars": {
-        "ENV": "staging"
-      },
-      "kv_namespaces": [
-        {
-          "binding": "KV"
-        }
-      ],
-      "d1_databases": [
-        {
-          "binding": "D1",
-          "database_name": "flaregun-staging"
-        }
-      ],
-      "r2_buckets": [
-        {
-          "binding": "R2",
-          "bucket_name": "flaregun-staging"
-        }
-      ]
+  "previews": {
+    "vars": {
+      "ENV": "preview"
     },
-    "prod": {
-      "name": "flaregun-prod",
-      "preview_urls": true,
-      "vars": {
-        "ENV": "prod"
-      },
-      "kv_namespaces": [
-        {
-          "binding": "KV"
-        }
-      ],
-      "d1_databases": [
-        {
-          "binding": "D1",
-          "database_name": "flaregun-prod"
-        }
-      ],
-      "r2_buckets": [
-        {
-          "binding": "R2",
-          "bucket_name": "flaregun-prod"
-        }
-      ]
-    }
+    "kv_namespaces": [
+      {
+        "binding": "KV"
+      }
+    ],
+    "d1_databases": [
+      {
+        "binding": "D1",
+        "database_name": "flaregun-preview"
+      }
+    ],
+    "r2_buckets": [
+      {
+        "binding": "R2",
+        "bucket_name": "flaregun-preview"
+      }
+    ]
   },
   "placement": {
     "mode": "smart"
