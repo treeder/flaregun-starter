@@ -16,8 +16,7 @@
   },
   "kv_namespaces": [
     {
-      "binding": "KV",
-      "id": "fd0d7d7074d541b1af07f55f038daecc"
+      "binding": "KV"
     }
   ],
   "d1_databases": [
@@ -38,8 +37,7 @@
     },
     "kv_namespaces": [
       {
-        "binding": "KV",
-        "id": "fd0d7d7074d541b1af07f55f038daecc"
+        "binding": "KV"
       }
     ],
     "d1_databases": [
