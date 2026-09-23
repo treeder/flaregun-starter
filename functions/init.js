@@ -47,17 +47,14 @@ export async function initRequest(c) {
   let ldata = {
     requestId: rid,
   }
+  let url
   if (c.request) {
     let req = c.request
-    let url = new URL(req.url)
+    url = new URL(req.url)
     ldata.method = req.method
     ldata.path = url.pathname
   }
-  let isDev =
-    !c.env.ENV ||
-    c.env.ENV === 'dev' ||
-    (c.request &&
-      (c.request.url.includes('localhost') || c.request.url.includes('127.0.0.1') || c.request.url.includes('[::1]')))
+  let isDev = !c.env.ENV || c.env.ENV === 'dev' || (url && ['localhost', '127.0.0.1', '[::1]'].includes(url.hostname))
   let logger = isDev ? new ConsoleLogger({ data: ldata }) : new CloudflareLogger({ data: ldata })
   c.data.logger = logger
   const errorHandler = new ErrorHandler({

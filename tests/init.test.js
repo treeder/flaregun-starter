@@ -58,4 +58,33 @@ describe('initRequest', () => {
     expect(c.data.env).toBe('prod')
     expect(c.data.logger).toBeInstanceOf(CloudflareLogger)
   })
+
+  it('does not falsely detect dev when production URL contains loopback in query or path', async () => {
+    const c1 = {
+      env: { ENV: 'prod' },
+      request: new Request('https://myapp.com/search?q=localhost'),
+      data: {},
+    }
+    await initRequest(c1)
+    expect(c1.data.env).toBe('prod')
+    expect(c1.data.logger).toBeInstanceOf(CloudflareLogger)
+
+    const c2 = {
+      env: { ENV: 'prod' },
+      request: new Request('https://myapp.com/docs/127.0.0.1'),
+      data: {},
+    }
+    await initRequest(c2)
+    expect(c2.data.env).toBe('prod')
+    expect(c2.data.logger).toBeInstanceOf(CloudflareLogger)
+
+    const c3 = {
+      env: { ENV: 'prod' },
+      request: new Request('https://myapp.com/api/test?ref=[::1]'),
+      data: {},
+    }
+    await initRequest(c3)
+    expect(c3.data.env).toBe('prod')
+    expect(c3.data.logger).toBeInstanceOf(CloudflareLogger)
+  })
 })
