@@ -1,12 +1,13 @@
 import { bindings, defineConfig, triggers } from 'cf/config'
 
 export default defineConfig((ctx) => {
+  const name = 'flaregun'
   const isPreview = ctx.isPreview
   const suffix = isPreview ? '-preview' : ''
 
   return {
     worker: {
-      name: 'flaregun',
+      name,
       compatibilityDate: '2026-09-22',
       compatibilityFlags: ['global_fetch_strictly_public'],
       entrypoint: './src/worker.js',
@@ -31,11 +32,11 @@ export default defineConfig((ctx) => {
       env: {
         ENV: bindings.text(isPreview ? 'preview' : 'prod'),
         D1: bindings.d1({
-          name: `flaregun${suffix}`,
+          name: `${name}${suffix}`,
         }),
         KV: bindings.kv({}),
         R2: bindings.r2({
-          name: `flaregun${suffix}`,
+          name: `${name}${suffix}`,
         }),
         ASSETS: bindings.assets(),
       },
