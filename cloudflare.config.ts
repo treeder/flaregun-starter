@@ -1,43 +1,9 @@
 import { bindings, defineConfig, triggers } from 'cf/config'
 
 export default defineConfig((ctx) => {
-  if (ctx.isPreview) {
-    return {
-      worker: {
-        name: 'flaregun',
-        compatibilityDate: '2026-09-22',
-        compatibilityFlags: ['global_fetch_strictly_public'],
-        entrypoint: './src/worker.js',
-        previewUrls: true,
-        placement: {
-          mode: 'smart',
-        },
-        observability: {
-          enabled: true,
-          headSamplingRate: 1,
-          traces: {
-            enabled: true,
-          },
-        },
-        triggers: [
-          triggers.scheduled({
-            schedule: '* * * * *',
-          }),
-        ],
-        env: {
-          ENV: bindings.text('preview'),
-          D1: bindings.d1({
-            name: 'flaregun-preview',
-          }),
-          KV: bindings.kv({}),
-          R2: bindings.r2({
-            name: 'flaregun-preview',
-          }),
-          ASSETS: bindings.assets(),
-        },
-      },
-    }
-  }
+  const isPreview = ctx.isPreview
+  const suffix = isPreview ? '-preview' : ''
+
   return {
     worker: {
       name: 'flaregun',
@@ -61,13 +27,13 @@ export default defineConfig((ctx) => {
         }),
       ],
       env: {
-        ENV: bindings.text('prod'),
+        ENV: bindings.text(isPreview ? 'preview' : 'prod'),
         D1: bindings.d1({
-          name: 'flaregun',
+          name: `flaregun${suffix}`,
         }),
         KV: bindings.kv({}),
         R2: bindings.r2({
-          name: 'flaregun',
+          name: `flaregun${suffix}`,
         }),
         ASSETS: bindings.assets(),
       },
