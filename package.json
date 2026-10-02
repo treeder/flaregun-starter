@@ -10,8 +10,8 @@
     "test:run": "vitest run",
     "test": "vitest run",
     "setup": "npx -y treeder/flaregun setup",
-    "deploy": "npm run build && wrangler deploy",
-    "preview": "npm run build && wrangler preview",
+    "deploy": "cf deploy",
+    "preview": "cf previews deploy",
     "format": "prettier --write ."
   },
   "author": "treeder",
@@ -28,11 +28,11 @@
     "rend": "github:treeder/rend#semver:^1"
   },
   "devDependencies": {
-    "@cloudflare/vite-plugin": "^1.57.1",
+    "@cloudflare/vite-plugin": "^2.0.0-beta.sha-52b0dc0e9",
+    "cf": "^1.0.0-beta.12",
     "prettier": "^3.9.8",
     "vite": "^8.3.0",
-    "vitest": "^5.0.1",
-    "wrangler": "^4.136.1"
+    "vitest": "^5.0.1"
   },
   "prettier": {
     "semi": false,
