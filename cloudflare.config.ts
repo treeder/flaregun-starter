@@ -21,11 +21,13 @@ export default defineConfig((ctx) => {
           enabled: true,
         },
       },
-      triggers: [
-        triggers.scheduled({
-          schedule: '* * * * *',
-        }),
-      ],
+      triggers: isPreview
+        ? undefined
+        : [
+            triggers.scheduled({
+              schedule: '* * * * *',
+            }),
+          ],
       env: {
         ENV: bindings.text(isPreview ? 'preview' : 'prod'),
         D1: bindings.d1({
