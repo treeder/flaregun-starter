@@ -113,7 +113,7 @@ export async function onRequestGet(c) {
 
 The [scheduled.js](functions/scheduled.js) file will run every minute by default (after your first deployment).
 
-To disable scheduling, delete the scheduled.js file and remove the triggers from wrangler.json.
+To disable scheduling, delete the scheduled.js file and remove the triggers from cloudflare.config.ts.
 
 NOTE: There are some small gotchas here:
 
@@ -164,7 +164,7 @@ To create or update a preview for your current branch:
 npm run preview
 ```
 
-Previews give each branch an isolated, production-like environment with its own URL, variables, and preview-safe bindings configured in the `previews` block of `wrangler.json`.
+Previews give each branch an isolated, production-like environment with its own URL, variables, and preview-safe bindings configured for previews (`ctx.isPreview`) in `cloudflare.config.ts`.
 
 ### Auto deploy
 
