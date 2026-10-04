@@ -58,7 +58,9 @@ export async function layout(d) {
           </a>
           <div class="flex g8 jcc aic">
             <div>
-              <avatar-menu user="${d.user ? JSON.stringify(d.user).replace(/"/g, '&quot;') : ''}"></avatar-menu>
+              ${d.user
+                ? html`<avatar-menu user="${JSON.stringify(d.user).replace(/"/g, '&quot;')}"></avatar-menu>`
+                : html`<avatar-menu></avatar-menu>`}
             </div>
           </div>
         </div>
