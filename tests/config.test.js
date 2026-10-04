@@ -8,8 +8,8 @@ describe('cloudflare.config.ts', () => {
 
     expect(workerName).toBe('flaregun')
     expect(config.worker.env.D1.name).toBe(workerName)
-    expect(config.worker.env.D1.id).toBe('d915d5c1-80b6-4485-849c-41226ee2c3d9')
-    expect(config.worker.env.KV.id).toBe('5a3c82cd08ff4f3e9ccf2f581e029a96')
+    expect(config.worker.env.D1.id).toBeUndefined()
+    expect(config.worker.env.KV.id).toBeUndefined()
     expect(config.worker.env.R2.name).toBe(workerName)
     expect(config.worker.env.ENV.value).toBe('prod')
   })
