@@ -151,7 +151,30 @@ test('Settings page and Avatar menu integration tests', async () => {
   expect(removeAvatarData.user.image).toBeNull()
 
   // 9. Signout endpoint clears cookies and redirects home
-  const signoutRes = await fetch(`${baseURL}/signout`, { redirect: 'manual' })
+  const signoutRes = await fetch(`${baseURL}/signout`, {
+    headers: { Cookie: cookieHeader },
+    redirect: 'manual',
+  })
   expect(signoutRes.status).toBe(302)
   expect(signoutRes.headers.get('location')).toBe('/')
+
+  const signoutSetCookies =
+    signoutRes.headers.getSetCookie?.() || [signoutRes.headers.get('set-cookie')].filter(Boolean)
+  const signoutCookieStr = signoutSetCookies.join('; ')
+  expect(signoutCookieStr).toContain('session=')
+  expect(signoutCookieStr).toContain('userId=')
+
+  // Subsequent request to /settings using previous cookie should be unauthenticated and redirect
+  const postSignoutRes = await fetch(`${baseURL}/settings`, {
+    headers: { Cookie: cookieHeader },
+    redirect: 'manual',
+  })
+  expect(postSignoutRes.status).toBe(302)
+  expect(postSignoutRes.headers.get('location')).toBe('/signin?redirect=/settings')
+
+  // Verify avatar-menu.js component renders signout anchor linking to /signout
+  const avatarMenuRes = await fetch(`${baseURL}/components/avatar-menu.js`)
+  expect(avatarMenuRes.status).toBe(200)
+  const avatarMenuJs = await avatarMenuRes.text()
+  expect(avatarMenuJs).toContain('href="/signout"')
 })

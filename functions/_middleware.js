@@ -27,7 +27,7 @@ export async function wrap(c) {
         } catch (e) {}
       }
 
-      const email = user?.email || sess.email || kvUser?.email || (sess.userId.includes('@') ? sess.userId : null)
+      const email = user?.email || sess?.email || kvUser?.email || (sess.userId.includes('@') ? sess.userId : null)
 
       if (!user) {
         user = { id: sess.userId, email }

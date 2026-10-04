@@ -3,6 +3,8 @@ import 'material/menu/menu.js'
 import 'material/menu/menu-item.js'
 import 'material/divider/divider.js'
 import 'material/icon/icon.js'
+import 'material/buttons/button.js'
+import { api } from 'api'
 import { signOut } from 'passkeys/public/js/signout.js'
 import { styles } from '/css/styles.js'
 
@@ -86,17 +88,20 @@ export class AvatarMenu extends LitElement {
 
   async connectedCallback() {
     super.connectedCallback()
-    if (!this.getUser().email) {
+    if (!this.isLoggedIn()) {
       try {
         const res = await api('/v1/users/me')
         if (res?.user) {
-          this.user = {
-            ...this.getUser(),
-            ...res.user,
-          }
+          this.user = res.user
+          this.requestUpdate()
         }
       } catch (e) {}
     }
+  }
+
+  isLoggedIn() {
+    const user = this.getUser()
+    return !!(user.id || user.email)
   }
 
   getUser() {
@@ -119,12 +124,23 @@ export class AvatarMenu extends LitElement {
   }
 
   async handleSignOut(e) {
-    e?.preventDefault()
-    signOut()
-    window.location.href = '/'
+    try {
+      signOut()
+    } catch (err) {}
+    document.cookie = 'session=; expires=Thu, 01 Jan 1970 00:00:01 UTC; Path=/;'
+    document.cookie = 'userId=; expires=Thu, 01 Jan 1970 00:00:01 UTC; Path=/;'
+    window.location.href = '/signout'
   }
 
   render() {
+    if (!this.isLoggedIn()) {
+      return html`
+        <a href="/signin" class="menu-link">
+          <md-button color="outlined">Sign In</md-button>
+        </a>
+      `
+    }
+
     const user = this.getUser()
     const imageUrl = user.image || user.avatarUrl || user.data?.image || user.data?.avatarUrl
     const initial = (user.name || user.email || 'U').charAt(0).toUpperCase()
@@ -157,10 +173,12 @@ export class AvatarMenu extends LitElement {
             </md-menu-item>
           </a>
           <md-divider></md-divider>
-          <md-menu-item @click=${this.handleSignOut}>
-            <md-icon slot="start">logout</md-icon>
-            <div slot="headline">Sign out</div>
-          </md-menu-item>
+          <a href="/signout" class="menu-link" @click=${this.handleSignOut}>
+            <md-menu-item>
+              <md-icon slot="start">logout</md-icon>
+              <div slot="headline">Sign out</div>
+            </md-menu-item>
+          </a>
         </md-menu>
       </div>
     `

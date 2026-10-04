@@ -47,7 +47,6 @@ export async function layout(d) {
       </head>
       <body>
         <script type="module">
-          import 'passkeys/public/components/sign-in-button.js'
           import '/components/avatar-menu.js'
         </script>
         <div class="flex g12 jcsb mb20 topnav p16">
@@ -59,11 +58,7 @@ export async function layout(d) {
           </a>
           <div class="flex g8 jcc aic">
             <div>
-              ${
-                d.user
-                  ? html`<avatar-menu user="${JSON.stringify(d.user).replace(/"/g, '&quot;')}"></avatar-menu>`
-                  : html`<sign-in-button href="/signin">Sign In</sign-in-button>`
-              }
+              <avatar-menu user="${d.user ? JSON.stringify(d.user).replace(/"/g, '&quot;') : ''}"></avatar-menu>
             </div>
           </div>
         </div>
