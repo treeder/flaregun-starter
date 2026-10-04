@@ -88,7 +88,7 @@ export class AvatarMenu extends LitElement {
 
   async connectedCallback() {
     super.connectedCallback()
-    if (!this.isLoggedIn()) {
+    if (!this.isLoggedIn() && (document.cookie.includes('session=') || document.cookie.includes('userId='))) {
       try {
         const res = await api('/v1/users/me')
         if (res?.user) {
@@ -124,6 +124,7 @@ export class AvatarMenu extends LitElement {
   }
 
   async handleSignOut(e) {
+    e?.preventDefault()
     try {
       signOut()
     } catch (err) {}
