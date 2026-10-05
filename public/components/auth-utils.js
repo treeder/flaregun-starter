@@ -1,0 +1,61 @@
+export function getCookieDomainCandidates(hostname) {
+  if (!hostname) return []
+  const cleanHost = hostname.split(':')[0].toLowerCase()
+  if (
+    cleanHost === 'localhost' ||
+    cleanHost === '127.0.0.1' ||
+    cleanHost.includes('::1') ||
+    /^[\d.]+$/.test(cleanHost)
+  ) {
+    return []
+  }
+  const parts = cleanHost.split('.')
+  const isWorkersOrPages = cleanHost.endsWith('.workers.dev') || cleanHost.endsWith('.pages.dev')
+  const isTwoPartTld = /\.(co|com|org|net|edu|gov)\.[a-z]{2}$/.test(cleanHost)
+  const minLevels = isWorkersOrPages || isTwoPartTld ? 3 : 2
+
+  const domains = []
+  for (let i = parts.length; i >= minLevels; i--) {
+    const domain = parts.slice(parts.length - i).join('.')
+    domains.push(domain)
+    domains.push(`.${domain}`)
+  }
+  return [...new Set(domains)]
+}
+
+export const AUTH_COOKIE_NAMES = ['session', 'userId']
+
+export function clearClientCookies() {
+  if (typeof document === 'undefined') return
+
+  const host = typeof window !== 'undefined' && window.location ? window.location.hostname : ''
+  const domainCandidates = getCookieDomainCandidates(host)
+  const isLocal =
+    host.includes('localhost') ||
+    host.includes('127.0.0.1') ||
+    host.includes('::1') ||
+    /^[\d.]+$/.test(host.split(':')[0])
+
+  for (const name of AUTH_COOKIE_NAMES) {
+    // 1. Host-only (no domain specified)
+    document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:01 UTC; path=/; max-age=0;`
+    if (!isLocal) {
+      document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:01 UTC; path=/; max-age=0; Secure;`
+    }
+
+    // 2. Clear across all candidate domains (preview URL subdomains, .orgname.workers.dev, etc.)
+    for (const domain of domainCandidates) {
+      document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:01 UTC; path=/; domain=${domain}; max-age=0;`
+      if (!isLocal) {
+        document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:01 UTC; path=/; domain=${domain}; max-age=0; Secure;`
+      }
+    }
+  }
+}
+
+export function signOut() {
+  clearClientCookies()
+  if (typeof window !== 'undefined') {
+    window.location.href = '/signout'
+  }
+}

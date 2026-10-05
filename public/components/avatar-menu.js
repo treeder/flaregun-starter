@@ -5,7 +5,7 @@ import 'material/divider/divider.js'
 import 'material/icon/icon.js'
 import 'material/buttons/button.js'
 import { api } from 'api'
-import { signOut } from 'passkeys/public/js/signout.js'
+import { signOut } from './auth-utils.js'
 import { styles } from '/css/styles.js'
 
 export class AvatarMenu extends LitElement {
@@ -125,12 +125,7 @@ export class AvatarMenu extends LitElement {
 
   async handleSignOut(e) {
     e?.preventDefault()
-    try {
-      signOut()
-    } catch (err) {}
-    document.cookie = 'session=; expires=Thu, 01 Jan 1970 00:00:01 UTC; Path=/;'
-    document.cookie = 'userId=; expires=Thu, 01 Jan 1970 00:00:01 UTC; Path=/;'
-    window.location.href = '/signout'
+    signOut()
   }
 
   render() {

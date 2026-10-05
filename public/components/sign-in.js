@@ -5,7 +5,7 @@ import 'material/card/card.js'
 import { api } from 'api'
 import { startRegistration, startAuthentication } from 'passkeys/public/js/auth.js'
 import { styles } from '/css/styles.js'
-import { signOut } from 'passkeys/public/js/signout.js'
+import { signOut } from './auth-utils.js'
 
 export class SignIn extends LitElement {
   static styles = [
