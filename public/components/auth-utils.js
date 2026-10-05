@@ -18,23 +18,16 @@ export function getCookieDomainCandidates(hostname) {
   return [...new Set(domains)]
 }
 
+export const AUTH_COOKIE_NAMES = ['session', 'userId']
+
 export function clearClientCookies() {
   if (typeof document === 'undefined') return
-
-  const defaultCookieNames = ['session', 'userId']
-  const documentCookieNames = document.cookie
-    ? document.cookie
-        .split(';')
-        .map((c) => c.split('=')[0].trim())
-        .filter(Boolean)
-    : []
-  const cookieNames = Array.from(new Set([...defaultCookieNames, ...documentCookieNames]))
 
   const host = typeof window !== 'undefined' && window.location ? window.location.hostname : ''
   const domainCandidates = getCookieDomainCandidates(host)
   const isLocal = host.includes('localhost') || host.includes('127.0.0.1') || host === '::1'
 
-  for (const name of cookieNames) {
+  for (const name of AUTH_COOKIE_NAMES) {
     // 1. Host-only (no domain specified)
     document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:01 UTC; path=/; max-age=0;`
     if (!isLocal) {

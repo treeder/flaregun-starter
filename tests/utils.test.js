@@ -129,7 +129,8 @@ describe('utils', () => {
       expect(setCookies.some((sc) => sc.includes('Domain=treeder.workers.dev'))).toBe(true)
       expect(setCookies.some((sc) => sc.includes('Domain=.treeder.workers.dev'))).toBe(true)
       expect(setCookies.some((sc) => sc.includes('Domain=starter-preview-123.treeder.workers.dev'))).toBe(true)
-      expect(setCookies.some((sc) => sc.startsWith('custom_cookie=;'))).toBe(true)
+      // Should NOT clear unrelated cookies
+      expect(setCookies.some((sc) => sc.startsWith('custom_cookie=;'))).toBe(false)
     })
   })
 })

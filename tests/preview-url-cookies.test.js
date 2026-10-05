@@ -55,13 +55,14 @@ describe('Preview URL Cookie Clearing', () => {
 
       try {
         clearClientCookies()
-        // Should have set cookies for session, userId, other_cookie
+        // Should have set cookies for session, userId
         expect(setCookies.length).toBeGreaterThan(0)
         expect(setCookies.some((c) => c.startsWith('session=;') && c.includes('treeder.workers.dev'))).toBe(true)
-        expect(setCookies.some((c) => c.startsWith('other_cookie=;') && c.includes('treeder.workers.dev'))).toBe(true)
         expect(setCookies.some((c) => c.startsWith('userId=;') && c.includes('my-preview.treeder.workers.dev'))).toBe(
           true,
         )
+        // Should NOT clear unrelated cookies
+        expect(setCookies.some((c) => c.startsWith('other_cookie=;'))).toBe(false)
 
         // Test signOut redirects to /signout
         signOut()

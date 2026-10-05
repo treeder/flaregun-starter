@@ -53,24 +53,14 @@ export function getCookieDomainCandidates(cOrHost) {
   return [...new Set(domains)]
 }
 
+export const AUTH_COOKIE_NAMES = ['session', 'userId']
+
 export function clearAuthCookies(c, headers = new Headers()) {
   const host = hostname(c) || ''
   const domainCandidates = getCookieDomainCandidates(host)
-
-  // Standard app cookies to clear
-  const defaultCookieNames = ['session', 'userId']
-
-  // Also include any cookie names present in the incoming Cookie header
-  const cookieHeader = c.request?.headers?.get?.('cookie') || ''
-  const requestCookieNames = cookieHeader
-    .split(';')
-    .map((item) => item.split('=')[0].trim())
-    .filter(Boolean)
-
-  const cookieNames = Array.from(new Set([...defaultCookieNames, ...requestCookieNames]))
   const isLocal = host.includes('localhost') || host.includes('127.0.0.1') || host === '::1'
 
-  for (const name of cookieNames) {
+  for (const name of AUTH_COOKIE_NAMES) {
     // 1. Host-only (no domain specified)
     headers.append('Set-Cookie', `${name}=; Path=/; expires=Thu, 01 Jan 1970 00:00:01 UTC; Max-Age=0; SameSite=Lax`)
     if (!isLocal) {
