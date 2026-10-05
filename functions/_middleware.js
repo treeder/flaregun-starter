@@ -49,6 +49,9 @@ export async function wrap(c) {
         get user() {
           return c.data.user
         },
+        get path() {
+          return c.url ? c.url.pathname : (c.request ? new URL(c.request.url).pathname : '')
+        },
       },
     })
 

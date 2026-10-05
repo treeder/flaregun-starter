@@ -44,6 +44,26 @@ export function root(d) {
       color: var(--md-sys-color-on-background);
     }
 
+    .nav-item {
+      font-weight: 500;
+      font-size: 14px;
+      color: var(--md-sys-color-on-surface-variant);
+      padding: 6px 12px;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: background-color 0.15s ease, color 0.15s ease;
+    }
+
+    .nav-item:hover {
+      background: var(--md-sys-color-surface-container-high, rgba(0, 0, 0, 0.05));
+      color: var(--md-sys-color-on-surface);
+    }
+
+    .nav-item.active {
+      background: var(--md-sys-color-secondary-container, #e8def8);
+      color: var(--md-sys-color-on-secondary-container, #1d192b);
+    }
+
     ${all(d)}
   `
 }
