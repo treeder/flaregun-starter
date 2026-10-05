@@ -113,3 +113,44 @@ Triggers scheduled functions at custom intervals using a single Cloudflare minut
     await c.data.globals.scheduler.run(c, c.controller)
   }
   ```
+
+---
+
+## Material 3 Web Components (`material-esm`)
+
+The starter app uses standard Material 3 ESM web components via [material-esm/material](https://github.com/material-esm/material) mapped to `material/` in the import map.
+
+### Critical Rule for AI
+- **NEVER hand-roll custom UI controls** using standard HTML tags (`<button>`, `<select>`, `<input type="checkbox">`, `<input type="radio">`, custom modal `<div>`s, custom alerts, or custom switch toggle divs) when building or modifying user interfaces.
+- **ALWAYS use Material 3 components** via `import 'material/...'`.
+- Demo reference: [https://material-esm.github.io/material/demo/](https://material-esm.github.io/material/demo/) and `/demo` in the local app.
+
+### Components Reference & Imports
+
+| Component | HTML Tag | Import Path | Common Attributes / Slots |
+| :--- | :--- | :--- | :--- |
+| **Buttons** | `<md-button>` | `material/buttons/button.js` | `color="filled|outlined|tonal|elevated|text"`, `size="extra-small|small|medium|large"`, `shape="square"`, `<md-icon slot="icon">` |
+| **Button Groups** | `<md-button-group>` | `material/buttons/button-group.js` | `connected`, `checkmark` |
+| **Split Buttons** | `<md-split-button>` | `material/buttons/split-button.js` | `color="filled|outlined"`, slot `menu` with `<md-menu-item>` |
+| **FAB** | `<md-fab>` | `material/buttons/fab.js` | `variant="primary|secondary"`, `extended`, `lowered`, slot `icon` |
+| **Icon Buttons** | `<md-icon-button>` | `material/buttons/icon-button.js` | `color="tonal|filled"`, contains `<md-icon>` |
+| **Icons** | `<md-icon>` | `material/icon/icon.js` | Text content is Material Symbol ligature, e.g. `<md-icon>check</md-icon>` |
+| **Text Fields** | `<md-text-field>` | `material/text/text-field.js` | `label`, `value`, `color="outlined|filled"`, `type="text|email|password|number|textarea"`, `error`, `error-text`, `required` |
+| **Dropdown Select** | `<md-select>` | `material/select/select.js`<br>`material/select/select-option.js` | Contains `<md-select-option value="...">` with `<div slot="headline">` |
+| **Switches** | `<md-switch>` | `material/switch/switch.js` | `selected`, `icons`, `value` |
+| **Checkboxes** | `<md-checkbox>` | `material/checkbox/checkbox.js` | `checked`, `indeterminate` |
+| **Radio Buttons** | `<md-radio>` | `material/radio/radio.js` | `name`, `value`, `checked` |
+| **Sliders** | `<md-slider>` | `material/slider/slider.js` | `labeled`, `ticks`, `min`, `max`, `step`, `value`, `range`, `value-start`, `value-end` |
+| **Tabs** | `<md-tabs>`<br>`<md-tab>` | `material/tabs/tabs.js`<br>`material/tabs/tab.js` | `@change`, `<md-tab type="primary|secondary">` with `<md-icon slot="icon">` |
+| **Cards** | `<md-card>` | `material/card/card.js` | `type="outlined|filled|elevated"` |
+| **Chips** | `<md-chip-set>`<br>`<md-chip>` | `material/chips/chip-set.js`<br>`material/chips/chip.js` | `type="assist|filter|input|suggestion"`, `label`, `selected`, `avatar`, slot `icon` |
+| **Badges** | `<md-badge>` | `material/badge/badge.js` | `value="3"`, or empty for status dot |
+| **Tooltips** | `<md-tooltip>` | `material/tooltip/tooltip.js` | `text="..."` (plain), or `type="rich"` with slots `headline`, `text`, `actions` |
+| **Dialogs** | `<md-dialog>` | `material/dialog/dialog.js` | Slots: `headline`, `content` (form with `method="dialog"`), `actions`. Call `.show()` and `.close()` |
+| **Snackbars** | `snack()`<br>`<md-snackbar>` | `material/snackbar/snackbar.js` | `snack('Message', { action: { label: 'Undo', onClick }, showCloseIcon: true })` |
+| **Loading & Progress** | `<md-loading>`<br>`<md-progress>` | `material/indicators/loading.js`<br>`material/indicators/progress.js` | `<md-loading contained size="...">`, `<md-progress type="circular|linear" indeterminate shape="wavy">` |
+| **Lists** | `<md-list>`<br>`<md-list-item>` | `material/list/list.js`<br>`material/list/list-item.js` | `headline`, `supporting-text`, slot `start`, slot `end` |
+| **Search** | `<md-search>` | `material/search/search.js` | `@input`, `placeholder` |
+| **Carousels** | `<md-carousel>`<br>`<md-carousel-item>` | `material/carousel/carousel.js`<br>`material/carousel/carousel-item.js` | `layout="multi-browse"`, `indicators`, `loop`, contains `<md-carousel-item interactive headline="...">` |
+| **Dividers** | `<md-divider>` | `material/divider/divider.js` | Clean Material surface divider line |
+

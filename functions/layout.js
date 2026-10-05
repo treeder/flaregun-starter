@@ -50,12 +50,18 @@ export async function layout(d) {
           import '/components/avatar-menu.js'
         </script>
         <div class="flex g12 jcsb mb20 topnav p16">
-          <a href="/">
-            <div class="flex g8 jcc aic">
-              <img src="/images/flaregun2.png" style="height: 40px;" />
-              <div class="title-large">Flaregun Starter Kit</div>
+          <div class="flex g16 aic flexw">
+            <a href="/">
+              <div class="flex g8 jcc aic">
+                <img src="/images/flaregun2.png" style="height: 40px;" />
+                <div class="title-large">Flaregun Starter Kit</div>
+              </div>
+            </a>
+            <div class="flex g8 aic">
+              <a href="/" class="nav-item ${d.path === '/' ? 'active' : ''}">Products</a>
+              <a href="/demo" class="nav-item ${d.path === '/demo' ? 'active' : ''}">Components Demo</a>
             </div>
-          </a>
+          </div>
           <div class="flex g8 jcc aic">
             <div>
               ${d.user

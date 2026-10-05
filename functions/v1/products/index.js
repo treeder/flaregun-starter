@@ -10,6 +10,7 @@ export async function onRequestPost(c) {
   let product = input.product
   product.data = {
     x: 'y', // just to show using JSON fields
+    ...(product.data || {}),
   }
   await c.data.d1.insert('products', product)
   return Response.json({ product })
