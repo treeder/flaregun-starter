@@ -454,7 +454,7 @@ export class MaterialDemo extends LitElement {
               <div slot="headline">Rich Tooltip Headline</div>
               <div slot="text">Provides contextual information with optional interactive actions.</div>
               <div slot="actions" class="flex g8">
-                <md-button color="text" size="x-small" @click=${() => snack('Action clicked!')}>Action</md-button>
+                <md-button color="text" size="extra-small" @click=${() => snack('Action clicked!')}>Action</md-button>
               </div>
             </md-tooltip>
           </div>

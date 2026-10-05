@@ -170,10 +170,20 @@ export class ProductForm extends LitElement {
       // Dispatch event for in-page updates
       window.dispatchEvent(new CustomEvent('product-saved', { detail: r.product }))
 
-      // Reset form if on main page
-      setTimeout(() => {
-        window.location.href = `/`
-      }, 500)
+      // Reset form and preserve reactive update if already on main page
+      if (window.location.pathname !== '/') {
+        window.location.href = '/'
+      } else {
+        f.reset()
+        const nameEl = this.renderRoot.getElementById('name')
+        if (nameEl) nameEl.value = ''
+        const descEl = this.renderRoot.getElementById('description')
+        if (descEl) descEl.value = ''
+        const priceEl = this.renderRoot.getElementById('price')
+        if (priceEl) priceEl.value = ''
+        this.product = {}
+        this.discount = 0
+      }
     } catch (err) {
       console.error(err)
       snack(err.message || 'Failed to save product', { showCloseIcon: true })
