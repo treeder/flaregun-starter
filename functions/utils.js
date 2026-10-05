@@ -85,7 +85,7 @@ export function clearAuthCookies(c, headers = new Headers()) {
       )
     }
 
-    // 2. Clear for all candidate domains (e.g. preview URL, parent domain .treeder.workers.dev, etc.)
+    // 2. Clear for all candidate domains (e.g. preview URL, parent domain .orgname.workers.dev, etc.)
     for (const domain of domainCandidates) {
       headers.append(
         'Set-Cookie',

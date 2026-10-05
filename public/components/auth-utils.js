@@ -43,7 +43,7 @@ export function clearClientCookies() {
       document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:01 UTC; path=/; max-age=0; Secure;`
     }
 
-    // 2. Clear across all candidate domains (preview URL subdomains, .treeder.workers.dev, etc.)
+    // 2. Clear across all candidate domains (preview URL subdomains, .orgname.workers.dev, etc.)
     for (const domain of domainCandidates) {
       document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:01 UTC; path=/; domain=${domain}; max-age=0;`
       if (!isLocal) {

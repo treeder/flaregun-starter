@@ -5,12 +5,12 @@ import { getCookieDomainCandidates, clearClientCookies, signOut } from '../publi
 describe('Preview URL Cookie Clearing', () => {
   describe('auth-utils getCookieDomainCandidates', () => {
     it('generates preview subdomain and parent domain candidates for workers.dev', () => {
-      const candidates = getCookieDomainCandidates('feature-branch.treeder.workers.dev')
+      const candidates = getCookieDomainCandidates('feature-branch.orgname.workers.dev')
       expect(candidates).toEqual([
-        'feature-branch.treeder.workers.dev',
-        '.feature-branch.treeder.workers.dev',
-        'treeder.workers.dev',
-        '.treeder.workers.dev',
+        'feature-branch.orgname.workers.dev',
+        '.feature-branch.orgname.workers.dev',
+        'orgname.workers.dev',
+        '.orgname.workers.dev',
       ])
       // PSL suffix workers.dev must NOT be included
       expect(candidates).not.toContain('workers.dev')
@@ -18,10 +18,10 @@ describe('Preview URL Cookie Clearing', () => {
     })
 
     it('handles nested preview subdomains correctly', () => {
-      const candidates = getCookieDomainCandidates('v2.feature.treeder.workers.dev')
-      expect(candidates).toContain('v2.feature.treeder.workers.dev')
-      expect(candidates).toContain('feature.treeder.workers.dev')
-      expect(candidates).toContain('treeder.workers.dev')
+      const candidates = getCookieDomainCandidates('v2.feature.orgname.workers.dev')
+      expect(candidates).toContain('v2.feature.orgname.workers.dev')
+      expect(candidates).toContain('feature.orgname.workers.dev')
+      expect(candidates).toContain('orgname.workers.dev')
       expect(candidates).not.toContain('workers.dev')
     })
 
@@ -46,7 +46,7 @@ describe('Preview URL Cookie Clearing', () => {
 
       globalThis.window = {
         location: {
-          hostname: 'my-preview.treeder.workers.dev',
+          hostname: 'my-preview.orgname.workers.dev',
           href: '',
         },
       }
@@ -63,8 +63,8 @@ describe('Preview URL Cookie Clearing', () => {
         clearClientCookies()
         // Should have set cookies for session, userId
         expect(setCookies.length).toBeGreaterThan(0)
-        expect(setCookies.some((c) => c.startsWith('session=;') && c.includes('treeder.workers.dev'))).toBe(true)
-        expect(setCookies.some((c) => c.startsWith('userId=;') && c.includes('my-preview.treeder.workers.dev'))).toBe(
+        expect(setCookies.some((c) => c.startsWith('session=;') && c.includes('orgname.workers.dev'))).toBe(true)
+        expect(setCookies.some((c) => c.startsWith('userId=;') && c.includes('my-preview.orgname.workers.dev'))).toBe(
           true,
         )
         // Should NOT clear unrelated cookies
@@ -83,9 +83,9 @@ describe('Preview URL Cookie Clearing', () => {
   describe('functions/signout.js endpoint', () => {
     it('clears preview url cookies and parent workers.dev cookies on GET', async () => {
       const c = {
-        request: new Request('https://my-preview.treeder.workers.dev/signout', {
+        request: new Request('https://my-preview.orgname.workers.dev/signout', {
           headers: {
-            host: 'my-preview.treeder.workers.dev',
+            host: 'my-preview.orgname.workers.dev',
             cookie: 'session=secret123; userId=user_abc',
           },
         }),
@@ -98,12 +98,12 @@ describe('Preview URL Cookie Clearing', () => {
       const setCookies = res.headers.getSetCookie?.() || []
       expect(setCookies.length).toBeGreaterThan(0)
 
-      // Must include deletion for parent domain .treeder.workers.dev and treeder.workers.dev
-      expect(setCookies.some((c) => c.includes('Domain=treeder.workers.dev'))).toBe(true)
-      expect(setCookies.some((c) => c.includes('Domain=.treeder.workers.dev'))).toBe(true)
+      // Must include deletion for parent domain .orgname.workers.dev and orgname.workers.dev
+      expect(setCookies.some((c) => c.includes('Domain=orgname.workers.dev'))).toBe(true)
+      expect(setCookies.some((c) => c.includes('Domain=.orgname.workers.dev'))).toBe(true)
 
       // Must include deletion for preview subdomain
-      expect(setCookies.some((c) => c.includes('Domain=my-preview.treeder.workers.dev'))).toBe(true)
+      expect(setCookies.some((c) => c.includes('Domain=my-preview.orgname.workers.dev'))).toBe(true)
 
       // Must include host-only deletion
       expect(setCookies.some((c) => c.startsWith('session=;') && !c.includes('Domain='))).toBe(true)
@@ -116,10 +116,10 @@ describe('Preview URL Cookie Clearing', () => {
 
     it('handles POST requests identically to GET', async () => {
       const c = {
-        request: new Request('https://my-preview.treeder.workers.dev/signout', {
+        request: new Request('https://my-preview.orgname.workers.dev/signout', {
           method: 'POST',
           headers: {
-            host: 'my-preview.treeder.workers.dev',
+            host: 'my-preview.orgname.workers.dev',
           },
         }),
       }
@@ -128,7 +128,7 @@ describe('Preview URL Cookie Clearing', () => {
       expect(res.status).toBe(302)
       expect(res.headers.get('Location')).toBe('/')
       const setCookies = res.headers.getSetCookie?.() || []
-      expect(setCookies.some((c) => c.includes('Domain=treeder.workers.dev'))).toBe(true)
+      expect(setCookies.some((c) => c.includes('Domain=orgname.workers.dev'))).toBe(true)
     })
   })
 })

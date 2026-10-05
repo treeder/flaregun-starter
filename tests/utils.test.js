@@ -67,20 +67,20 @@ describe('utils', () => {
 
   describe('getCookieDomainCandidates', () => {
     it('returns domain candidates for preview URL on workers.dev', () => {
-      const candidates = getCookieDomainCandidates('stackrank-preview-123.treeder.workers.dev')
-      expect(candidates).toContain('stackrank-preview-123.treeder.workers.dev')
-      expect(candidates).toContain('.stackrank-preview-123.treeder.workers.dev')
-      expect(candidates).toContain('treeder.workers.dev')
-      expect(candidates).toContain('.treeder.workers.dev')
+      const candidates = getCookieDomainCandidates('stackrank-preview-123.orgname.workers.dev')
+      expect(candidates).toContain('stackrank-preview-123.orgname.workers.dev')
+      expect(candidates).toContain('.stackrank-preview-123.orgname.workers.dev')
+      expect(candidates).toContain('orgname.workers.dev')
+      expect(candidates).toContain('.orgname.workers.dev')
       expect(candidates).not.toContain('workers.dev')
       expect(candidates).not.toContain('.workers.dev')
     })
 
     it('returns domain candidates for nested preview URL', () => {
-      const candidates = getCookieDomainCandidates('pr-123.stackrank.treeder.workers.dev')
-      expect(candidates).toContain('pr-123.stackrank.treeder.workers.dev')
-      expect(candidates).toContain('stackrank.treeder.workers.dev')
-      expect(candidates).toContain('treeder.workers.dev')
+      const candidates = getCookieDomainCandidates('pr-123.stackrank.orgname.workers.dev')
+      expect(candidates).toContain('pr-123.stackrank.orgname.workers.dev')
+      expect(candidates).toContain('stackrank.orgname.workers.dev')
+      expect(candidates).toContain('orgname.workers.dev')
       expect(candidates).not.toContain('workers.dev')
     })
 
@@ -111,9 +111,9 @@ describe('utils', () => {
     })
 
     it('accepts context object', () => {
-      const c = { request: { headers: new Headers({ host: 'my-app.treeder.workers.dev' }) } }
+      const c = { request: { headers: new Headers({ host: 'my-app.orgname.workers.dev' }) } }
       const candidates = getCookieDomainCandidates(c)
-      expect(candidates).toContain('treeder.workers.dev')
+      expect(candidates).toContain('orgname.workers.dev')
     })
   })
 
@@ -129,25 +129,25 @@ describe('utils', () => {
 
     it('handles host string and falsy input without throwing', () => {
       expect(() => clearAuthCookies(null)).not.toThrow()
-      const headers = clearAuthCookies('my-preview.treeder.workers.dev')
+      const headers = clearAuthCookies('my-preview.orgname.workers.dev')
       const setCookies = headers.getSetCookie?.() || []
-      expect(setCookies.some((sc) => sc.includes('Domain=treeder.workers.dev'))).toBe(true)
+      expect(setCookies.some((sc) => sc.includes('Domain=orgname.workers.dev'))).toBe(true)
     })
 
     it('appends domain-specific clearing headers for preview URL', () => {
       const c = {
         request: {
           headers: new Headers({
-            host: 'starter-preview-123.treeder.workers.dev',
+            host: 'starter-preview-123.orgname.workers.dev',
             cookie: 'custom_cookie=value123',
           }),
         },
       }
       const headers = clearAuthCookies(c)
       const setCookies = headers.getSetCookie?.() || []
-      expect(setCookies.some((sc) => sc.includes('Domain=treeder.workers.dev'))).toBe(true)
-      expect(setCookies.some((sc) => sc.includes('Domain=.treeder.workers.dev'))).toBe(true)
-      expect(setCookies.some((sc) => sc.includes('Domain=starter-preview-123.treeder.workers.dev'))).toBe(true)
+      expect(setCookies.some((sc) => sc.includes('Domain=orgname.workers.dev'))).toBe(true)
+      expect(setCookies.some((sc) => sc.includes('Domain=.orgname.workers.dev'))).toBe(true)
+      expect(setCookies.some((sc) => sc.includes('Domain=starter-preview-123.orgname.workers.dev'))).toBe(true)
       // Should NOT clear unrelated cookies
       expect(setCookies.some((sc) => sc.startsWith('custom_cookie=;'))).toBe(false)
     })
