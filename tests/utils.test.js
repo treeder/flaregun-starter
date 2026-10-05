@@ -93,9 +93,21 @@ describe('utils', () => {
       expect(candidates).not.toContain('com')
     })
 
-    it('returns empty array for localhost', () => {
+    it('returns empty array for localhost and IP addresses', () => {
       expect(getCookieDomainCandidates('localhost:8787')).toEqual([])
       expect(getCookieDomainCandidates('127.0.0.1')).toEqual([])
+      expect(getCookieDomainCandidates('192.168.1.5:8787')).toEqual([])
+      expect(getCookieDomainCandidates('10.0.0.1')).toEqual([])
+      expect(getCookieDomainCandidates('[::1]:8787')).toEqual([])
+    })
+
+    it('handles falsy input gracefully', () => {
+      expect(getCookieDomainCandidates(null)).toEqual([])
+      expect(getCookieDomainCandidates(undefined)).toEqual([])
+      expect(getCookieDomainCandidates('')).toEqual([])
+      expect(domainLevels(null)).toBe(2)
+      expect(domainLevels(undefined)).toBe(2)
+      expect(hostname(null)).toBe('')
     })
 
     it('accepts context object', () => {
@@ -113,6 +125,13 @@ describe('utils', () => {
       expect(setCookies.length).toBeGreaterThan(0)
       expect(setCookies.some((sc) => sc.startsWith('session=;') && sc.includes('Max-Age=0'))).toBe(true)
       expect(setCookies.some((sc) => sc.startsWith('userId=;') && sc.includes('Max-Age=0'))).toBe(true)
+    })
+
+    it('handles host string and falsy input without throwing', () => {
+      expect(() => clearAuthCookies(null)).not.toThrow()
+      const headers = clearAuthCookies('my-preview.treeder.workers.dev')
+      const setCookies = headers.getSetCookie?.() || []
+      expect(setCookies.some((sc) => sc.includes('Domain=treeder.workers.dev'))).toBe(true)
     })
 
     it('appends domain-specific clearing headers for preview URL', () => {

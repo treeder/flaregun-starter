@@ -25,9 +25,15 @@ describe('Preview URL Cookie Clearing', () => {
       expect(candidates).not.toContain('workers.dev')
     })
 
-    it('returns empty array for localhost', () => {
+    it('returns empty array for localhost and IP addresses', () => {
       expect(getCookieDomainCandidates('localhost')).toEqual([])
       expect(getCookieDomainCandidates('localhost:8787')).toEqual([])
+      expect(getCookieDomainCandidates('127.0.0.1')).toEqual([])
+      expect(getCookieDomainCandidates('192.168.1.5:8787')).toEqual([])
+      expect(getCookieDomainCandidates('10.0.0.1')).toEqual([])
+      expect(getCookieDomainCandidates('[::1]:8787')).toEqual([])
+      expect(getCookieDomainCandidates(null)).toEqual([])
+      expect(getCookieDomainCandidates(undefined)).toEqual([])
     })
   })
 

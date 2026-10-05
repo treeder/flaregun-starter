@@ -1,7 +1,12 @@
 export function getCookieDomainCandidates(hostname) {
   if (!hostname) return []
   const cleanHost = hostname.split(':')[0].toLowerCase()
-  if (cleanHost === 'localhost' || cleanHost === '127.0.0.1' || cleanHost === '::1') {
+  if (
+    cleanHost === 'localhost' ||
+    cleanHost === '127.0.0.1' ||
+    cleanHost.includes('::1') ||
+    /^[\d.]+$/.test(cleanHost)
+  ) {
     return []
   }
   const parts = cleanHost.split('.')
@@ -25,7 +30,11 @@ export function clearClientCookies() {
 
   const host = typeof window !== 'undefined' && window.location ? window.location.hostname : ''
   const domainCandidates = getCookieDomainCandidates(host)
-  const isLocal = host.includes('localhost') || host.includes('127.0.0.1') || host === '::1'
+  const isLocal =
+    host.includes('localhost') ||
+    host.includes('127.0.0.1') ||
+    host.includes('::1') ||
+    /^[\d.]+$/.test(host.split(':')[0])
 
   for (const name of AUTH_COOKIE_NAMES) {
     // 1. Host-only (no domain specified)
