@@ -22,10 +22,15 @@ export async function onRequestPost(c) {
 async function handleUpdate(c) {
   if (!c.data.user) throw new APIError('Unauthorized', { status: 401 })
   const input = await c.request.json()
+  const user = input?.user
+  if (!user || typeof user !== 'object' || Array.isArray(user)) {
+    throw new APIError('Bad Request: user payload required', { status: 400 })
+  }
   const updates = {}
-  if (input.name !== undefined) updates.name = input.name
-  if (input.image !== undefined) updates.image = input.image
-  if (input.data !== undefined) updates.data = input.data
+  if (user.name !== undefined) updates.name = user.name
+  if (user.image !== undefined) updates.image = user.image
+  if (user.age !== undefined) updates.age = user.age
+  if (user.data !== undefined) updates.data = user.data
 
   const existing = await c.data.d1.get(User, c.data.user.id)
   if (!existing) {

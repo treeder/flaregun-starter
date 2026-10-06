@@ -278,7 +278,7 @@ export class SettingsPage extends LitElement {
     try {
       const res = await api('/v1/users/me', {
         method: 'POST',
-        body: { name },
+        body: { user: { name } },
       })
 
       this.user = {
