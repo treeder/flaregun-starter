@@ -45,8 +45,8 @@ test('Settings page and Avatar menu integration tests', async () => {
   expect(settingsHtml).toContain('/components/settings-page.js')
   expect(settingsHtml).toContain('/components/avatar-menu.js')
 
-  // 4. Update full name (user.name) via /v1/users/me
-  const updateRes = await fetch(`${baseURL}/v1/users/me`, {
+  // 4a. Unwrapped request to /v1/users/me returns 400 Bad Request
+  const unwrappedRes = await fetch(`${baseURL}/v1/users/me`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -54,12 +54,23 @@ test('Settings page and Avatar menu integration tests', async () => {
     },
     body: JSON.stringify({ name: 'Jane Antigravity' }),
   })
+  expect(unwrappedRes.status).toBe(400)
+
+  // 4b. Update full name (user.name) via /v1/users/me with wrapped payload
+  const updateRes = await fetch(`${baseURL}/v1/users/me`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Cookie: cookieHeader,
+    },
+    body: JSON.stringify({ user: { name: 'Jane Antigravity' } }),
+  })
   expect(updateRes.status).toBe(200)
   const updateData = await updateRes.json()
   expect(updateData.user).toBeDefined()
   expect(updateData.user.name).toBe('Jane Antigravity')
 
-  // 4b. Test PATCH with wrapped payload and age
+  // 4c. Test PATCH with wrapped payload and age
   const patchRes = await fetch(`${baseURL}/v1/users/me`, {
     method: 'PATCH',
     headers: {
