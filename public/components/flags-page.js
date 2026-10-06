@@ -293,7 +293,7 @@ export class FlagsPage extends LitElement {
                 ?disabled=${this.loading}
                 @keydown=${this.handleKeydown}>
               </md-text-field>
-              <md-button type="submit" ?disabled=${this.loading}>
+              <md-button type="button" ?disabled=${this.loading} @click=${this.addFlag}>
                 <md-icon slot="icon">add</md-icon>
                 Add Flag
               </md-button>
