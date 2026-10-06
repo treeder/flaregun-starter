@@ -23,7 +23,9 @@ async function handleUpdate(c) {
   if (!c.data.user) throw new APIError('Unauthorized', { status: 401 })
   const input = await c.request.json()
   const user = input?.user
-  if (!user || typeof user !== 'object') throw new APIError('Bad Request: user payload required', { status: 400 })
+  if (!user || typeof user !== 'object' || Array.isArray(user)) {
+    throw new APIError('Bad Request: user payload required', { status: 400 })
+  }
   const updates = {}
   if (user.name !== undefined) updates.name = user.name
   if (user.image !== undefined) updates.image = user.image

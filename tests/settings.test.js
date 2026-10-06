@@ -56,6 +56,17 @@ test('Settings page and Avatar menu integration tests', async () => {
   })
   expect(unwrappedRes.status).toBe(400)
 
+  // 4a2. Array user payload to /v1/users/me returns 400 Bad Request
+  const arrayPayloadRes = await fetch(`${baseURL}/v1/users/me`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Cookie: cookieHeader,
+    },
+    body: JSON.stringify({ user: [] }),
+  })
+  expect(arrayPayloadRes.status).toBe(400)
+
   // 4b. Update full name (user.name) via /v1/users/me with wrapped payload
   const updateRes = await fetch(`${baseURL}/v1/users/me`, {
     method: 'POST',
