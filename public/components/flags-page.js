@@ -143,19 +143,19 @@ export class FlagsPage extends LitElement {
 
   get flags() {
     const rawFlags = this.user?.data?.flags
+    if (rawFlags && typeof rawFlags === 'object' && !Array.isArray(rawFlags)) {
+      return Object.keys(rawFlags).filter((k) => rawFlags[k])
+    }
     if (Array.isArray(rawFlags)) {
       return rawFlags
-    }
-    if (rawFlags && typeof rawFlags === 'object') {
-      return Object.keys(rawFlags).filter((k) => rawFlags[k])
     }
     if (typeof rawFlags === 'string') {
       try {
         const parsed = JSON.parse(rawFlags)
-        if (Array.isArray(parsed)) return parsed
-        if (parsed && typeof parsed === 'object') {
+        if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) {
           return Object.keys(parsed).filter((k) => parsed[k])
         }
+        if (Array.isArray(parsed)) return parsed
       } catch (e) {}
     }
     return []
@@ -187,20 +187,31 @@ export class FlagsPage extends LitElement {
     this.message = null
 
     try {
-      const res = await api('/v1/users/me/flags', {
+      const res = await api('/v1/users/me', {
         method: 'POST',
-        body: { flag: flagName },
+        body: {
+          user: {
+            data: {
+              flags: {
+                [flagName]: true,
+              },
+            },
+          },
+        },
       })
 
       if (res?.user) {
         this.user = res.user
       } else {
-        const updatedFlags = [...this.flags, flagName]
+        const currentFlags =
+          this.user?.data?.flags && typeof this.user.data.flags === 'object' && !Array.isArray(this.user.data.flags)
+            ? { ...this.user.data.flags, [flagName]: true }
+            : { [flagName]: true }
         this.user = {
           ...this.user,
           data: {
             ...(this.user?.data || {}),
-            flags: updatedFlags,
+            flags: currentFlags,
           },
         }
       }
@@ -235,20 +246,30 @@ export class FlagsPage extends LitElement {
     this.message = null
 
     try {
-      const res = await api(`/v1/users/me/flags?flag=${encodeURIComponent(flagName)}`, {
-        method: 'DELETE',
-        body: { flag: flagName },
+      const res = await api('/v1/users/me', {
+        method: 'POST',
+        body: {
+          user: {
+            data: {
+              flags: {
+                [flagName]: null,
+              },
+            },
+          },
+        },
       })
 
       if (res?.user) {
         this.user = res.user
       } else {
-        const updatedFlags = this.flags.filter((f) => f !== flagName)
+        const currentFlags =
+          this.user?.data?.flags && typeof this.user.data.flags === 'object' ? { ...this.user.data.flags } : {}
+        delete currentFlags[flagName]
         this.user = {
           ...this.user,
           data: {
             ...(this.user?.data || {}),
-            flags: updatedFlags,
+            flags: currentFlags,
           },
         }
       }

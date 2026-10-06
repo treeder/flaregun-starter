@@ -22,7 +22,7 @@ export async function onRequestPost(c) {
 async function handleUpdate(c) {
   if (!c.data.user) throw new APIError('Unauthorized', { status: 401 })
   const input = await c.request.json()
-  const user = input?.user
+  const user = input?.user || (input?.data !== undefined ? input : null)
   if (!user || typeof user !== 'object' || Array.isArray(user)) {
     throw new APIError('Bad Request: user payload required', { status: 400 })
   }
