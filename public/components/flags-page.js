@@ -170,6 +170,7 @@ export class FlagsPage extends LitElement {
 
   async addFlag(e) {
     if (e) e.preventDefault()
+    if (this.loading) return
     const input = this.renderRoot.querySelector('#new-flag-input')
     const flagName = (input?.value || '').trim()
 
@@ -230,6 +231,7 @@ export class FlagsPage extends LitElement {
   }
 
   async deleteFlag(flagName) {
+    if (this.loading) return
     const dialog = this.renderRoot.querySelector('#confirmDialog')
     if (dialog) {
       const confirmed = await dialog.confirm({
