@@ -9,6 +9,10 @@ test('Settings page and Avatar menu integration tests', async () => {
   expect(unauthRes.status).toBe(302)
   expect(unauthRes.headers.get('location')).toBe('/signin?redirect=/settings')
 
+  // 1b. Unauthenticated request to /v1/users/me returns 401
+  const unauthMeRes = await fetch(`${baseURL}/v1/users/me`)
+  expect(unauthMeRes.status).toBe(401)
+
   // 2. Authenticate user via email magic link flow
   const email = `test-${Date.now()}@example.com`
   const startRes = await fetch(`${baseURL}/auth/email/start`, {
@@ -54,6 +58,20 @@ test('Settings page and Avatar menu integration tests', async () => {
   const updateData = await updateRes.json()
   expect(updateData.user).toBeDefined()
   expect(updateData.user.name).toBe('Jane Antigravity')
+
+  // 4b. Test PATCH with wrapped payload and age
+  const patchRes = await fetch(`${baseURL}/v1/users/me`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      Cookie: cookieHeader,
+    },
+    body: JSON.stringify({ user: { age: 30 } }),
+  })
+  expect(patchRes.status).toBe(200)
+  const patchData = await patchRes.json()
+  expect(patchData.user.age).toBe(30)
+  expect(patchData.user.name).toBe('Jane Antigravity')
 
   // 5. Get current user profile via /v1/users/me
   const meRes = await fetch(`${baseURL}/v1/users/me`, {

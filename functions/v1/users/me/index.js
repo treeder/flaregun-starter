@@ -22,10 +22,12 @@ export async function onRequestPost(c) {
 async function handleUpdate(c) {
   if (!c.data.user) throw new APIError('Unauthorized', { status: 401 })
   const input = await c.request.json()
+  const payload = input?.user || input || {}
   const updates = {}
-  if (input.name !== undefined) updates.name = input.name
-  if (input.image !== undefined) updates.image = input.image
-  if (input.data !== undefined) updates.data = input.data
+  if (payload.name !== undefined) updates.name = payload.name
+  if (payload.image !== undefined) updates.image = payload.image
+  if (payload.age !== undefined) updates.age = payload.age
+  if (payload.data !== undefined) updates.data = payload.data
 
   const existing = await c.data.d1.get(User, c.data.user.id)
   if (!existing) {
