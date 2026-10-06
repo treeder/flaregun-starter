@@ -57,14 +57,14 @@ test('Settings Flags page and user.data.flags json_patch integration tests', asy
   const initialMeData = await initialMeRes.json()
   expect(initialMeData.user.data?.flags || {}).toEqual({})
 
-  // 6. Add a flag "beta_feature" via POST /v1/users/me with { data: { flags: { beta_feature: true } } }
+  // 6. Add a flag "beta_feature" via POST /v1/users/me with { user: { data: { flags: { beta_feature: true } } } }
   const addFlagRes = await fetch(`${baseURL}/v1/users/me`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       Cookie: cookieHeader,
     },
-    body: JSON.stringify({ data: { flags: { beta_feature: true } } }),
+    body: JSON.stringify({ user: { data: { flags: { beta_feature: true } } } }),
   })
   expect(addFlagRes.status).toBe(200)
   const addFlagData = await addFlagRes.json()
@@ -77,7 +77,7 @@ test('Settings Flags page and user.data.flags json_patch integration tests', asy
       'Content-Type': 'application/json',
       Cookie: cookieHeader,
     },
-    body: JSON.stringify({ data: { flags: { dark_mode: true } } }),
+    body: JSON.stringify({ user: { data: { flags: { dark_mode: true } } } }),
   })
   expect(addSecondFlagRes.status).toBe(200)
   const addSecondFlagData = await addSecondFlagRes.json()
@@ -98,7 +98,7 @@ test('Settings Flags page and user.data.flags json_patch integration tests', asy
       'Content-Type': 'application/json',
       Cookie: cookieHeader,
     },
-    body: JSON.stringify({ data: { flags: { beta_feature: null } } }),
+    body: JSON.stringify({ user: { data: { flags: { beta_feature: null } } } }),
   })
   expect(deleteFlagRes.status).toBe(200)
   const deleteFlagData = await deleteFlagRes.json()
@@ -111,7 +111,7 @@ test('Settings Flags page and user.data.flags json_patch integration tests', asy
       'Content-Type': 'application/json',
       Cookie: cookieHeader,
     },
-    body: JSON.stringify({ data: { flags: { dark_mode: null } } }),
+    body: JSON.stringify({ user: { data: { flags: { dark_mode: null } } } }),
   })
   expect(deleteSecondFlagRes.status).toBe(200)
   const deleteSecondFlagData = await deleteSecondFlagRes.json()
@@ -138,7 +138,18 @@ test('Settings Flags page and user.data.flags json_patch integration tests', asy
   const wrappedData = await wrappedRes.json()
   expect(wrappedData.user.data.flags).toEqual({ my_flag: true })
 
-  // 13. Verify no separate /v1/users/me/flags endpoint exists
+  // 13. Verify unwrapped payload returns 400 Bad Request
+  const unwrappedRes = await fetch(`${baseURL}/v1/users/me`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Cookie: cookieHeader,
+    },
+    body: JSON.stringify({ data: { flags: { fail: true } } }),
+  })
+  expect(unwrappedRes.status).toBe(400)
+
+  // 14. Verify no separate /v1/users/me/flags endpoint exists
   const noSeparateEndpointRes = await fetch(`${baseURL}/v1/users/me/flags`, {
     headers: { Cookie: cookieHeader },
   })
