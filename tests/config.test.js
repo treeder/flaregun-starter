@@ -25,4 +25,14 @@ describe('cloudflare.config.ts', () => {
     expect(config.worker.env.R2.name).toBe(`${workerName}-preview`)
     expect(config.worker.env.ENV.value).toBe('preview')
   })
+
+  it('configures observability with issue detection enabled', () => {
+    const config = configFn({ isPreview: false })
+    expect(config.worker.observability).toEqual({
+      enabled: true,
+      headSamplingRate: 1,
+      traces: { enabled: true },
+      issues: { enabled: true },
+    })
+  })
 })
