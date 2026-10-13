@@ -121,9 +121,12 @@ Triggers scheduled functions at custom intervals using a single Cloudflare minut
 The starter app uses standard Material 3 ESM web components via [material-esm/material](https://github.com/material-esm/material) mapped to `material/` in the import map.
 
 ### Critical Rule for AI
+- **Always use Material components from [https://github.com/material-esm/material/](https://github.com/material-esm/material/) if they are available before making our own.** Only build custom UI controls or components if a suitable component does not exist in `material-esm/material`.
 - **NEVER hand-roll custom UI controls** using standard HTML tags (`<button>`, `<select>`, `<input type="checkbox">`, `<input type="radio">`, custom modal `<div>`s, custom alerts, or custom switch toggle divs) when building or modifying user interfaces.
 - **ALWAYS use Material 3 components** via `import 'material/...'`.
-- Demo reference: [https://material-esm.github.io/material/demo/](https://material-esm.github.io/material/demo/) and `/demo` in the local app.
+- **References**:
+  - GitHub repository: [https://github.com/material-esm/material/](https://github.com/material-esm/material/)
+  - Demo reference: [https://material-esm.github.io/material/demo/](https://material-esm.github.io/material/demo/) and `/demo` in the local app.
 
 ### Components Reference & Imports
 
