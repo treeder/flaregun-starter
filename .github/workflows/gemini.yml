@@ -16,13 +16,13 @@ on:
 
 jobs:
   review:
-    # Run on PR opened, OR on issue comment starting with /gemini-review by repo owners/members
+    # Run on PR opened, OR on issue comment starting with /gemini-review or /review by repo owners/members
     if: |
       github.event_name == 'pull_request' ||
       (
         github.event_name == 'issue_comment' &&
         github.event.issue.pull_request &&
-        startsWith(github.event.comment.body, '/gemini-review') &&
+        (startsWith(github.event.comment.body, '/gemini-review') || startsWith(github.event.comment.body, '/review')) &&
         contains(fromJSON('["OWNER", "MEMBER", "COLLABORATOR"]'), github.event.comment.author_association)
       )
     runs-on: ubuntu-latest
