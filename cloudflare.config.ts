@@ -21,6 +21,9 @@ export default defineConfig((ctx) => {
         traces: {
           enabled: true,
         },
+        issues: {
+          enabled: true,
+        },
       },
       triggers: isPreview
         ? undefined
