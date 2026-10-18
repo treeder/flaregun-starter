@@ -6,8 +6,13 @@ export async function onRequestGet(c) {
     try {
       const url = new URL(c.request.url)
       const redirect = url.searchParams.get('redirect')
-      if (redirect && redirect.startsWith('/') && !redirect.startsWith('//')) {
-        afterLoginHref = redirect
+      if (
+        redirect &&
+        redirect.startsWith('/') &&
+        !redirect.startsWith('//') &&
+        !redirect.startsWith('/\\')
+      ) {
+        afterLoginHref = redirect.replace(/"/g, '&quot;')
       }
     } catch (e) {}
   }

@@ -12,8 +12,8 @@ export async function onRequestPost(c) {
 
   let input = await c.request.json()
   let product = input?.product
-  if (!product || typeof product !== 'object' || Array.isArray(product) || !product.name) {
-    return Response.json({ error: { message: 'Valid product payload is required' } }, { status: 400 })
+  if (!product || typeof product !== 'object' || Array.isArray(product) || !String(product.name || '').trim()) {
+    return Response.json({ error: { message: 'Valid product payload with a name is required' } }, { status: 400 })
   }
 
   const record = {

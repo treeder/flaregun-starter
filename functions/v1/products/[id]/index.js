@@ -26,10 +26,16 @@ async function handleUpdate(c) {
   }
 
   const updates = {}
-  if (payload.name !== undefined) updates.name = String(payload.name).trim()
+  if (payload.name !== undefined) {
+    const trimmed = String(payload.name).trim()
+    if (!trimmed) {
+      return Response.json({ error: { message: 'Product name cannot be empty' } }, { status: 400 })
+    }
+    updates.name = trimmed
+  }
   if (payload.description !== undefined) updates.description = String(payload.description).trim()
   if (payload.price !== undefined) updates.price = Number(payload.price) || 0
-  if (payload.data && typeof payload.data === 'object') {
+  if (payload.data && typeof payload.data === 'object' && !Array.isArray(payload.data)) {
     updates.data = {
       ...(existing.data || {}),
       ...payload.data,

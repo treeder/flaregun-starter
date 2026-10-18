@@ -255,7 +255,7 @@ export class ProductDetail extends LitElement {
             <span style="font-weight: 700; font-size: 1.75rem; color: var(--md-sys-color-primary);">
               $${Number(p.price).toFixed(2)}
             </span>
-            ${discount > 0
+            ${discount > 0 && discount < 100
               ? html`
                   <span style="text-decoration: line-through; color: var(--md-sys-color-outline); font-size: 1.1rem;">
                     $${(p.price / (1 - discount / 100)).toFixed(2)}

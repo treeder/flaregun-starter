@@ -390,7 +390,7 @@ export class ProductList extends LitElement {
                             <span style="font-weight: 700; font-size: 1.25rem; color: var(--md-sys-color-primary);">
                               $${Number(p.price).toFixed(2)}
                             </span>
-                            ${discount > 0
+                            ${discount > 0 && discount < 100
                               ? html`
                                   <span
                                     style="text-decoration: line-through; color: var(--md-sys-color-outline); font-size: 0.9rem;">

@@ -142,6 +142,7 @@ function render(d) {
 
         <product-list
           user="${userAttr}"
+          limit="6"
           ${d.user ? 'can-manage' : ''}></product-list>
       </div>
     </div>
