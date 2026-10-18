@@ -40,6 +40,7 @@ export class SignIn extends LitElement {
   static properties = {
     baseURL: { type: String },
     afterLoginHref: { type: String },
+    user: { type: Object },
     capable: { type: Boolean },
     hasPasskey: { type: Boolean },
     error: { type: Object },
@@ -50,6 +51,7 @@ export class SignIn extends LitElement {
     super()
     this.baseURL = ''
     this.afterLoginHref = '/'
+    this.user = null
     this.capable = false
     this.hasPasskey = false
     this.error = null
@@ -176,7 +178,15 @@ export class SignIn extends LitElement {
   }
 
   isLoggedIn() {
-    return document.cookie.includes('userId=')
+    let user = this.user || (typeof window !== 'undefined' ? window.user : null)
+    if (typeof user === 'string') {
+      try {
+        user = JSON.parse(user)
+      } catch (e) {
+        user = null
+      }
+    }
+    return !!(user && (user.id || user.email))
   }
 
   signOut() {

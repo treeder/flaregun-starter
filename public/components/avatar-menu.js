@@ -88,7 +88,7 @@ export class AvatarMenu extends LitElement {
 
   async connectedCallback() {
     super.connectedCallback()
-    if (!this.isLoggedIn() && (document.cookie.includes('session=') || document.cookie.includes('userId='))) {
+    if (!this.isLoggedIn() && document.cookie.includes('session=')) {
       try {
         const res = await api('/v1/users/me')
         if (res?.user) {
@@ -105,14 +105,21 @@ export class AvatarMenu extends LitElement {
   }
 
   getUser() {
-    if (typeof this.user === 'string') {
+    let u = this.user
+    if (typeof u === 'string') {
       try {
-        return JSON.parse(this.user)
+        u = JSON.parse(u)
       } catch (e) {
-        return {}
+        u = {}
       }
     }
-    return this.user || {}
+    if (u && (u.id || u.email)) {
+      return u
+    }
+    if (typeof window !== 'undefined' && window.user) {
+      return window.user
+    }
+    return u || {}
   }
 
   toggleMenu(e) {

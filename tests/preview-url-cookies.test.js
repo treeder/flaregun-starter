@@ -61,10 +61,10 @@ describe('Preview URL Cookie Clearing', () => {
 
       try {
         clearClientCookies()
-        // Should have set cookies for session, userId
+        // Should have set cookies for session
         expect(setCookies.length).toBeGreaterThan(0)
         expect(setCookies.some((c) => c.startsWith('session=;') && c.includes('orgname.workers.dev'))).toBe(true)
-        expect(setCookies.some((c) => c.startsWith('userId=;') && c.includes('my-preview.orgname.workers.dev'))).toBe(
+        expect(setCookies.some((c) => c.startsWith('session=;') && c.includes('my-preview.orgname.workers.dev'))).toBe(
           true,
         )
         // Should NOT clear unrelated cookies
@@ -86,7 +86,7 @@ describe('Preview URL Cookie Clearing', () => {
         request: new Request('https://my-preview.orgname.workers.dev/signout', {
           headers: {
             host: 'my-preview.orgname.workers.dev',
-            cookie: 'session=secret123; userId=user_abc',
+            cookie: 'session=secret123',
           },
         }),
       }
@@ -109,7 +109,7 @@ describe('Preview URL Cookie Clearing', () => {
       expect(setCookies.some((c) => c.startsWith('session=;') && !c.includes('Domain='))).toBe(true)
 
       // Must clear all target cookies
-      for (const name of ['session', 'userId']) {
+      for (const name of ['session']) {
         expect(setCookies.some((c) => c.startsWith(`${name}=;`))).toBe(true)
       }
     })
