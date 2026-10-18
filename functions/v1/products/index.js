@@ -1,17 +1,32 @@
-import { Product } from '../../data/products.js'
+import { Product, getProducts } from '../../data/products.js'
 
 export async function onRequestGet(c) {
-  let products = await c.data.d1.query(Product, {})
+  let products = await getProducts(c)
   return Response.json({ products })
 }
 
 export async function onRequestPost(c) {
-  let input = await c.request.json()
-  let product = input.product
-  product.data = {
-    x: 'y', // just to show using JSON fields
-    ...(product.data || {}),
+  if (!c.data.user) {
+    return Response.json({ error: { message: 'Authentication required to create products' } }, { status: 401 })
   }
-  await c.data.d1.insert('products', product)
-  return Response.json({ product })
+
+  let input = await c.request.json()
+  let product = input?.product
+  if (!product || typeof product !== 'object' || Array.isArray(product) || !product.name) {
+    return Response.json({ error: { message: 'Valid product payload is required' } }, { status: 400 })
+  }
+
+  const record = {
+    name: String(product.name).trim(),
+    description: product.description ? String(product.description).trim() : '',
+    price: Number(product.price) || 0,
+    data: {
+      x: 'y', // just to show using JSON fields
+      ...(product.data || {}),
+      createdBy: c.data.user.id,
+    },
+  }
+
+  await c.data.d1.insert(Product, record)
+  return Response.json({ product: record })
 }

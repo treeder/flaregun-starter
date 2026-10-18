@@ -9,9 +9,11 @@ import 'material/chips/chip.js'
 import 'material/badge/badge.js'
 import 'material/tooltip/tooltip.js'
 import 'material/divider/divider.js'
+import 'material/dialog/dialog.js'
 import 'material/indicators/loading.js'
 import { snack } from 'material/snackbar/snackbar.js'
 import '/components/confirm-dialog.js'
+import '/components/product-form.js'
 import { styles } from '/css/styles.js'
 import { api } from 'api'
 
@@ -27,6 +29,19 @@ export class ProductList extends LitElement {
         flex-direction: column;
         gap: 12px;
         margin-bottom: 8px;
+      }
+      .toolbar-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+      .products-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 16px;
+        width: 100%;
       }
       .card-header {
         display: flex;
@@ -66,6 +81,9 @@ export class ProductList extends LitElement {
         background: #ffebee;
         color: #c62828;
       }
+      md-dialog {
+        --md-dialog-container-min-width: min(520px, 92vw);
+      }
     `,
   ]
 
@@ -74,6 +92,10 @@ export class ProductList extends LitElement {
     searchQuery: { type: String },
     activeFilter: { type: String },
     loading: { type: Boolean },
+    user: { type: Object },
+    canManage: { type: Boolean, attribute: 'can-manage' },
+    limit: { type: Number },
+    editingProduct: { type: Object },
   }
 
   constructor() {
@@ -82,11 +104,16 @@ export class ProductList extends LitElement {
     this.searchQuery = ''
     this.activeFilter = 'all'
     this.loading = true
+    this.user = {}
+    this.canManage = false
+    this.limit = 0
+    this.editingProduct = {}
   }
 
   connectedCallback() {
     super.connectedCallback()
     this.fetchData()
+    this.checkAuth()
     this.onProductSaved = () => this.fetchData()
     window.addEventListener('product-saved', this.onProductSaved)
   }
@@ -94,6 +121,39 @@ export class ProductList extends LitElement {
   disconnectedCallback() {
     super.disconnectedCallback()
     window.removeEventListener('product-saved', this.onProductSaved)
+  }
+
+  async checkAuth() {
+    if (
+      !this.isLoggedIn() &&
+      typeof document !== 'undefined' &&
+      (document.cookie.includes('session=') || document.cookie.includes('userId='))
+    ) {
+      try {
+        const res = await api('/v1/users/me')
+        if (res?.user) {
+          this.user = res.user
+          this.canManage = true
+        }
+      } catch (e) {}
+    }
+  }
+
+  getUser() {
+    if (typeof this.user === 'string') {
+      if (!this.user) return {}
+      try {
+        return JSON.parse(this.user)
+      } catch (e) {
+        return {}
+      }
+    }
+    return this.user || {}
+  }
+
+  isLoggedIn() {
+    const u = this.getUser()
+    return Boolean(this.canManage || u.id || u.email)
   }
 
   async fetchData() {
@@ -117,7 +177,7 @@ export class ProductList extends LitElement {
   }
 
   get filteredProducts() {
-    return this.products.filter((p) => {
+    const filtered = this.products.filter((p) => {
       // Query filter
       if (this.searchQuery) {
         const nameMatch = (p.name || '').toLowerCase().includes(this.searchQuery)
@@ -135,45 +195,116 @@ export class ProductList extends LitElement {
       }
       return true
     })
+
+    if (this.limit > 0) {
+      return filtered.slice(0, this.limit)
+    }
+    return filtered
+  }
+
+  openCreateDialog() {
+    this.editingProduct = {}
+    const form = this.renderRoot.querySelector('#dialogProductForm')
+    if (form) form.resetForm()
+    const dialog = this.renderRoot.querySelector('#productDialog')
+    if (dialog) dialog.show()
+  }
+
+  openEditDialog(product) {
+    this.editingProduct = {
+      ...product,
+      data: { ...(product.data || {}) },
+    }
+    const dialog = this.renderRoot.querySelector('#productDialog')
+    if (dialog) dialog.show()
+  }
+
+  closeProductDialog() {
+    const dialog = this.renderRoot.querySelector('#productDialog')
+    if (dialog) dialog.close()
+  }
+
+  handleFormSaved() {
+    this.closeProductDialog()
+    this.fetchData()
   }
 
   render() {
     const list = this.filteredProducts
+    const loggedIn = this.isLoggedIn()
+    const isEditing = Boolean(this.editingProduct?.id)
 
     return html`
       <confirm-dialog id="confirmDialog"></confirm-dialog>
 
+      ${loggedIn
+        ? html`
+            <md-dialog id="productDialog">
+              <div slot="headline">${isEditing ? 'Edit Product' : 'New Product'}</div>
+              <div slot="content" style="padding-top: 8px;">
+                <product-form
+                  id="dialogProductForm"
+                  embedded
+                  show-cancel
+                  .product=${this.editingProduct}
+                  @saved=${this.handleFormSaved}
+                  @cancel=${this.closeProductDialog}></product-form>
+              </div>
+            </md-dialog>
+          `
+        : ''}
+
       <div class="flex col g16 w100">
-        <!-- Search and Filter Chips -->
+        <!-- Search, Filter Chips, and Primary Action -->
         <div class="filter-toolbar">
           <md-search
             placeholder="Search products by title, category, or description..."
             @input=${this.handleSearch}
             class="w100"></md-search>
 
-          <md-chip-set>
-            <md-chip
-              type="filter"
-              label="All (${this.products.length})"
-              ?selected=${this.activeFilter === 'all'}
-              @click=${() => this.setFilter('all')}>
-              <md-icon slot="icon">view_list</md-icon>
-            </md-chip>
-            <md-chip
-              type="filter"
-              label="In Stock"
-              ?selected=${this.activeFilter === 'instock'}
-              @click=${() => this.setFilter('instock')}>
-              <md-icon slot="icon">check_circle</md-icon>
-            </md-chip>
-            <md-chip
-              type="filter"
-              label="On Sale"
-              ?selected=${this.activeFilter === 'sale'}
-              @click=${() => this.setFilter('sale')}>
-              <md-icon slot="icon">local_offer</md-icon>
-            </md-chip>
-          </md-chip-set>
+          <div class="toolbar-row">
+            <md-chip-set>
+              <md-chip
+                type="filter"
+                label="All (${this.products.length})"
+                ?selected=${this.activeFilter === 'all'}
+                @click=${() => this.setFilter('all')}>
+                <md-icon slot="icon">view_list</md-icon>
+              </md-chip>
+              <md-chip
+                type="filter"
+                label="In Stock"
+                ?selected=${this.activeFilter === 'instock'}
+                @click=${() => this.setFilter('instock')}>
+                <md-icon slot="icon">check_circle</md-icon>
+              </md-chip>
+              <md-chip
+                type="filter"
+                label="On Sale"
+                ?selected=${this.activeFilter === 'sale'}
+                @click=${() => this.setFilter('sale')}>
+                <md-icon slot="icon">local_offer</md-icon>
+              </md-chip>
+            </md-chip-set>
+
+            <div class="flex aic g8">
+              ${loggedIn
+                ? html`
+                    <md-button color="filled" @click=${() => this.openCreateDialog()}>
+                      <md-icon slot="icon">add</md-icon>
+                      New Product
+                    </md-button>
+                  `
+                : html`
+                    <a href="/signin">
+                      <md-button color="tonal">
+                        <md-icon slot="icon">login</md-icon>
+                        Sign in to add or edit
+                      </md-button>
+                    </a>
+                  `}
+            </div>
+          </div>
         </div>
 
         ${this.loading
@@ -186,67 +317,100 @@ export class ProductList extends LitElement {
           : list.length === 0
             ? html`
                 <md-card class="p24 text-center">
-                  <div class="text-muted p16">
-                    ${this.searchQuery || this.activeFilter !== 'all'
-                      ? 'No products match your search or filter.'
-                      : 'No products yet. Use the form to add your first product!'}
+                  <div class="flex col aic g12 p16">
+                    <div class="text-muted">
+                      ${this.searchQuery || this.activeFilter !== 'all'
+                        ? 'No products match your search or filter.'
+                        : loggedIn
+                          ? 'No products yet. Click "New Product" to add your first item!'
+                          : 'No products available yet. Sign in to add the first product!'}
+                    </div>
+                    ${loggedIn && !this.searchQuery && this.activeFilter === 'all'
+                      ? html`
+                          <md-button color="filled" @click=${() => this.openCreateDialog()}>
+                            <md-icon slot="icon">add</md-icon>
+                            Create First Product
+                          </md-button>
+                        `
+                      : ''}
                   </div>
                 </md-card>
               `
-            : list.map((p) => {
-                const isOutOfStock = p.data?.inStock === false
-                const discount = p.data?.discount || 0
-                const category = p.data?.category
+            : html`
+                <div class="products-grid">
+                  ${list.map((p) => {
+                    const isOutOfStock = p.data?.inStock === false
+                    const discount = p.data?.discount || 0
+                    const category = p.data?.category
 
-                return html`
-                  <md-card class="p16 flex col w100 g12" style="box-sizing: border-box;">
-                    <div class="flex col g8">
-                      <div class="card-header">
-                        <div class="flex col g4">
-                          <div class="headline-medium">
-                            <a href="/products/${p.id}">${p.name}</a>
-                          </div>
-                          <div class="flex g8 aic flexw mt4">
-                            ${category ? html`<span class="category-tag">${category}</span>` : ''}
-                            <span class="stock-tag ${isOutOfStock ? 'out-of-stock' : 'in-stock'}">
-                              ${isOutOfStock ? 'Out of stock' : 'In stock'}
-                            </span>
-                            ${discount > 0 ? html`<span class="sale-badge">${discount}% OFF</span>` : ''}
-                          </div>
-                        </div>
-
-                        <div class="flex aic g4">
-                          <md-tooltip text="Delete product">
-                            <md-icon-button class="error" @click=${() => this.deleteProduct(p.id)}>
-                              <md-icon>delete</md-icon>
-                            </md-icon-button>
-                          </md-tooltip>
-                        </div>
-                      </div>
-
-                      ${p.description
-                        ? html`<div style="color: var(--md-sys-color-on-surface-variant);">${p.description}</div>`
-                        : ''}
-
-                      <div class="flex aic jcsb mt8">
-                        <div class="flex aic g8">
-                          <span style="font-weight: bold; font-size: 1.25rem; color: var(--md-sys-color-primary);">
-                            $${p.price}
-                          </span>
-                          ${discount > 0
-                            ? html`
-                                <span style="text-decoration: line-through; color: var(--md-sys-color-outline); font-size: 0.9rem;">
-                                  $${(p.price / (1 - discount / 100)).toFixed(2)}
+                    return html`
+                      <md-card class="p16 flex col jcsb w100 g12" style="box-sizing: border-box;">
+                        <div class="flex col g8">
+                          <div class="card-header">
+                            <div class="flex col g4">
+                              <div class="title-large" style="font-weight: 600;">
+                                <a href="/products/${p.id}">${p.name}</a>
+                              </div>
+                              <div class="flex g8 aic flexw mt4">
+                                ${category ? html`<span class="category-tag">${category}</span>` : ''}
+                                <span class="stock-tag ${isOutOfStock ? 'out-of-stock' : 'in-stock'}">
+                                  ${isOutOfStock ? 'Out of stock' : 'In stock'}
                                 </span>
-                              `
+                                ${discount > 0 ? html`<span class="sale-badge">${discount}% OFF</span>` : ''}
+                              </div>
+                            </div>
+
+                            ${loggedIn
+                              ? html`
+                                  <div class="flex aic g4">
+                                    <md-tooltip text="Edit product">
+                                      <md-icon-button @click=${() => this.openEditDialog(p)}>
+                                        <md-icon>edit</md-icon>
+                                      </md-icon-button>
+                                    </md-tooltip>
+                                    <md-tooltip text="Delete product">
+                                      <md-icon-button class="error" @click=${() => this.deleteProduct(p.id)}>
+                                        <md-icon>delete</md-icon>
+                                      </md-icon-button>
+                                    </md-tooltip>
+                                  </div>
+                                `
+                              : ''}
+                          </div>
+
+                          ${p.description
+                            ? html`<div style="color: var(--md-sys-color-on-surface-variant); line-height: 1.5;">
+                                ${p.description}
+                              </div>`
                             : ''}
                         </div>
-                        ${p.data?.x ? html`<span class="text-muted small">${p.data.x}</span>` : ''}
-                      </div>
-                    </div>
-                  </md-card>
-                `
-              })}
+
+                        <div class="flex aic jcsb mt8 pt12" style="border-top: 1px solid var(--md-sys-color-outline-variant, #ece6f0);">
+                          <div class="flex aic g8">
+                            <span style="font-weight: 700; font-size: 1.25rem; color: var(--md-sys-color-primary);">
+                              $${Number(p.price).toFixed(2)}
+                            </span>
+                            ${discount > 0
+                              ? html`
+                                  <span
+                                    style="text-decoration: line-through; color: var(--md-sys-color-outline); font-size: 0.9rem;">
+                                    $${(p.price / (1 - discount / 100)).toFixed(2)}
+                                  </span>
+                                `
+                              : ''}
+                          </div>
+                          <a href="/products/${p.id}">
+                            <md-button color="text" size="small">
+                              View Details
+                              <md-icon slot="icon">arrow_forward</md-icon>
+                            </md-button>
+                          </a>
+                        </div>
+                      </md-card>
+                    `
+                  })}
+                </div>
+              `}
       </div>
     `
   }

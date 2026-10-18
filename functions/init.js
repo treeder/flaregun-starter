@@ -1,5 +1,6 @@
 import { KV, Scheduler } from 'flaregun'
 import { runMigrations } from './data/migrations.js'
+import { seedProducts } from './data/products.js'
 import { globals } from './globals.js'
 import { ConsoleMailer } from './services/mailer.js'
 import { nanoid } from 'nanoid'
@@ -12,6 +13,7 @@ import { D1, ErrorHandler, CloudflareLogger } from 'flaregun'
  */
 export async function init(c) {
   await runMigrations(c)
+  await seedProducts(c)
 
   globals.x = 'set one time things on the globals object here'
 
