@@ -45,7 +45,7 @@ export async function layout(d) {
           }
         </script>
         <script>
-          window.user = ${JSON.stringify(d.user || null)}
+          window.user = ${JSON.stringify(d.user || null).replace(/</g, '\\u003c')}
         </script>
       </head>
       <body>
