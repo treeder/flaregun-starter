@@ -92,7 +92,11 @@ export class MaterialDemo extends LitElement {
       .card-media-placeholder {
         width: 100%;
         height: 150px;
-        background: linear-gradient(135deg, var(--md-sys-color-primary, #6750a4), var(--md-sys-color-tertiary, #7d5260));
+        background: linear-gradient(
+          135deg,
+          var(--md-sys-color-primary, #6750a4),
+          var(--md-sys-color-tertiary, #7d5260)
+        );
         display: flex;
         align-items: center;
         justify-content: center;
@@ -142,8 +146,9 @@ export class MaterialDemo extends LitElement {
               <div class="headline-medium">Material 3 Web Components</div>
               <div class="text-muted mt4">
                 Full showcase of pure ESM components from
-                <a href="https://github.com/material-esm/material" target="_blank" style="font-weight: 500;">material-esm</a>.
-                Always use these components when building features instead of creating custom HTML controls.
+                <a href="https://github.com/material-esm/material" target="_blank" style="font-weight: 500;"
+                  >material-esm</a
+                >. Always use these components when building features instead of creating custom HTML controls.
               </div>
             </div>
             <a href="https://material-esm.github.io/material/demo/" target="_blank">
@@ -254,7 +259,14 @@ export class MaterialDemo extends LitElement {
             </div>
           </div>
 
-          <form id="demo-form" class="flex col g16" style="max-width: 480px;" @submit=${(e) => { e.preventDefault(); snack('Form validated successfully!'); }}>
+          <form
+            id="demo-form"
+            class="flex col g16"
+            style="max-width: 480px;"
+            @submit=${(e) => {
+              e.preventDefault()
+              snack('Form validated successfully!')
+            }}>
             <md-text-field
               label="Outlined Text Field"
               required
@@ -301,7 +313,9 @@ export class MaterialDemo extends LitElement {
           <div class="section-header">
             <div>
               <h2 class="section-title">Selection Controls & Sliders</h2>
-              <p class="section-desc">Switches with icons, checkboxes with indeterminate state, radio buttons, and sliders.</p>
+              <p class="section-desc">
+                Switches with icons, checkboxes with indeterminate state, radio buttons, and sliders.
+              </p>
             </div>
           </div>
 
@@ -343,7 +357,9 @@ export class MaterialDemo extends LitElement {
                 min="0"
                 max="100"
                 value="${this.sliderVal}"
-                @change=${(e) => { this.sliderVal = Number(e.target.value); }}></md-slider>
+                @change=${(e) => {
+                  this.sliderVal = Number(e.target.value)
+                }}></md-slider>
             </div>
 
             <div class="flex col g4">
@@ -362,8 +378,8 @@ export class MaterialDemo extends LitElement {
                 value-start="${this.rangeStart}"
                 value-end="${this.rangeEnd}"
                 @change=${(e) => {
-                  this.rangeStart = Number(e.target.valueStart);
-                  this.rangeEnd = Number(e.target.valueEnd);
+                  this.rangeStart = Number(e.target.valueStart)
+                  this.rangeEnd = Number(e.target.valueEnd)
                 }}></md-slider>
             </div>
           </div>
@@ -379,7 +395,10 @@ export class MaterialDemo extends LitElement {
           </div>
 
           <div style="max-width: 600px;">
-            <md-tabs @change=${(e) => { this.activeTab = e.target.activeTabIndex; }}>
+            <md-tabs
+              @change=${(e) => {
+                this.activeTab = e.target.activeTabIndex
+              }}>
               <md-tab type="primary" aria-label="Overview">
                 <md-icon slot="icon">dashboard</md-icon>
                 Overview
@@ -394,11 +413,17 @@ export class MaterialDemo extends LitElement {
               </md-tab>
             </md-tabs>
             <div class="tabpanel">
-              ${this.activeTab === 0
-                ? html`<div><strong>Overview Panel:</strong> Quick glance at system metrics and recent activities.</div>`
-                : this.activeTab === 1
-                  ? html`<div><strong>Analytics Panel:</strong> Detailed charts and telemetry breakdowns.</div>`
-                  : html`<div><strong>Settings Panel:</strong> Configure global parameters and notification preferences.</div>`}
+              ${
+                this.activeTab === 0
+                  ? html`<div>
+                      <strong>Overview Panel:</strong> Quick glance at system metrics and recent activities.
+                    </div>`
+                  : this.activeTab === 1
+                    ? html`<div><strong>Analytics Panel:</strong> Detailed charts and telemetry breakdowns.</div>`
+                    : html`<div>
+                        <strong>Settings Panel:</strong> Configure global parameters and notification preferences.
+                      </div>`
+              }
             </div>
           </div>
         </section>
@@ -487,13 +512,19 @@ export class MaterialDemo extends LitElement {
               This is a standard Material 3 modal dialog with slot-based headline, content, and action buttons.
             </form>
             <div slot="actions">
-              <md-button color="text" form="dialog-content-form" @click=${() => this.renderRoot.querySelector('#demoDialog').close()}>
+              <md-button
+                color="text"
+                form="dialog-content-form"
+                @click=${() => this.renderRoot.querySelector('#demoDialog').close()}>
                 Dismiss
               </md-button>
-              <md-button color="filled" form="dialog-content-form" @click=${() => {
-                this.renderRoot.querySelector('#demoDialog').close();
-                snack('Action confirmed!');
-              }}>
+              <md-button
+                color="filled"
+                form="dialog-content-form"
+                @click=${() => {
+                  this.renderRoot.querySelector('#demoDialog').close()
+                  snack('Action confirmed!')
+                }}>
                 Confirm
               </md-button>
             </div>
@@ -553,7 +584,9 @@ export class MaterialDemo extends LitElement {
             </md-card>
 
             <md-card type="filled" class="component-card">
-              <div class="card-media-placeholder" style="background: linear-gradient(135deg, #006874, #00877a);">Filled Card</div>
+              <div class="card-media-placeholder" style="background: linear-gradient(135deg, #006874, #00877a);">
+                Filled Card
+              </div>
               <div class="flex col g8 p16">
                 <div style="font-weight: 600; font-size: 1.1rem;">Filled Card</div>
                 <div class="text-muted small">Subtle container surface color without outer border.</div>
@@ -565,7 +598,9 @@ export class MaterialDemo extends LitElement {
             </md-card>
 
             <md-card type="elevated" class="component-card">
-              <div class="card-media-placeholder" style="background: linear-gradient(135deg, #7c5295, #9c4146);">Elevated Card</div>
+              <div class="card-media-placeholder" style="background: linear-gradient(135deg, #7c5295, #9c4146);">
+                Elevated Card
+              </div>
               <div class="flex col g8 p16">
                 <div style="font-weight: 600; font-size: 1.1rem;">Elevated Card</div>
                 <div class="text-muted small">Prominent shadow elevation for hero elements.</div>
@@ -578,7 +613,8 @@ export class MaterialDemo extends LitElement {
           </div>
 
           <h3 class="sub-section-title">List Items</h3>
-          <div style="max-width: 500px; background: var(--md-sys-color-surface); border-radius: 12px; border: 1px solid var(--md-sys-color-outline-variant, #e0e0e0);">
+          <div
+            style="max-width: 500px; background: var(--md-sys-color-surface); border-radius: 12px; border: 1px solid var(--md-sys-color-outline-variant, #e0e0e0);">
             <md-list>
               <md-list-item headline="Storage Bucket" supporting-text="Cloudflare R2 Bucket binding ready">
                 <md-icon slot="start">cloud_queue</md-icon>
@@ -590,7 +626,9 @@ export class MaterialDemo extends LitElement {
                 <md-icon slot="end">chevron_right</md-icon>
               </md-list-item>
               <md-divider></md-divider>
-              <md-list-item headline="Passkey Authentication" supporting-text="WebAuthn biometric and security key login">
+              <md-list-item
+                headline="Passkey Authentication"
+                supporting-text="WebAuthn biometric and security key login">
                 <md-icon slot="start">fingerprint</md-icon>
                 <md-icon slot="end">chevron_right</md-icon>
               </md-list-item>

@@ -5,6 +5,7 @@ import 'material/divider/divider.js'
 import 'material/icon/icon.js'
 import 'material/buttons/button.js'
 import { api } from 'api'
+import state from 'state'
 import { signOut } from './auth-utils.js'
 import { styles } from '/css/styles.js'
 
@@ -84,19 +85,33 @@ export class AvatarMenu extends LitElement {
   constructor() {
     super()
     this.user = {}
+    this.onUserChange = (e) => {
+      this.user = e.detail.value || {}
+      this.requestUpdate()
+    }
   }
 
   async connectedCallback() {
     super.connectedCallback()
-    if (!this.isLoggedIn() && document.cookie.includes('session=')) {
+    state.addEventListener('user', this.onUserChange)
+    const initialUser = this.parseUser(this.user)
+    if (initialUser && (initialUser.id || initialUser.email)) {
+      state.set('user', initialUser, { skipStorage: true })
+    } else if (!this.isLoggedIn() && document.cookie.includes('session=')) {
       try {
         const res = await api('/v1/users/me')
         if (res?.user) {
           this.user = res.user
+          state.set('user', res.user, { skipStorage: true })
           this.requestUpdate()
         }
       } catch (e) {}
     }
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback()
+    state.removeEventListener('user', this.onUserChange)
   }
 
   isLoggedIn() {
@@ -104,22 +119,23 @@ export class AvatarMenu extends LitElement {
     return !!(user.id || user.email)
   }
 
-  getUser() {
-    let u = this.user
+  parseUser(u) {
     if (typeof u === 'string') {
       try {
-        u = JSON.parse(u)
+        return JSON.parse(u)
       } catch (e) {
-        u = {}
+        return {}
       }
     }
+    return u || {}
+  }
+
+  getUser() {
+    const u = this.parseUser(this.user)
     if (u && (u.id || u.email)) {
       return u
     }
-    if (typeof window !== 'undefined' && window.user) {
-      return window.user
-    }
-    return u || {}
+    return state.get('user') || {}
   }
 
   toggleMenu(e) {
@@ -132,6 +148,7 @@ export class AvatarMenu extends LitElement {
 
   async handleSignOut(e) {
     e?.preventDefault()
+    state.delete('user')
     signOut()
   }
 

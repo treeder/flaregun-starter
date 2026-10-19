@@ -8,6 +8,7 @@ import 'material/divider/divider.js'
 import '/components/confirm-dialog.js'
 import { styles } from '/css/styles.js'
 import { api } from 'api'
+import state from 'state'
 import { startRegistration } from 'passkeys/public/js/auth.js'
 
 export class SettingsPage extends LitElement {
@@ -146,6 +147,7 @@ export class SettingsPage extends LitElement {
           ...this.user,
           ...res.user,
         }
+        state.set('user', this.user, { skipStorage: true })
       }
     } catch (e) {
       console.error('Failed to fetch user profile', e)
@@ -159,6 +161,14 @@ export class SettingsPage extends LitElement {
       } catch (e) {
         this.user = {}
       }
+    }
+    if (!this.user?.id && !this.user?.email) {
+      const sUser = state.get('user')
+      if (sUser) {
+        this.user = sUser
+      }
+    } else {
+      state.set('user', this.user, { skipStorage: true })
     }
   }
 
@@ -207,13 +217,7 @@ export class SettingsPage extends LitElement {
         image: data.image,
       }
       this.avatarMessage = { type: 'success', text: 'Avatar updated successfully!' }
-
-      // Update any avatar menu instances on page
-      const avatarMenu = document.querySelector('avatar-menu')
-      if (avatarMenu) {
-        avatarMenu.user = this.user
-        avatarMenu.requestUpdate()
-      }
+      state.set('user', this.user, { skipStorage: true })
     } catch (err) {
       console.error(err)
       this.avatarMessage = { type: 'error', text: err.message || 'Failed to upload avatar' }
@@ -254,12 +258,7 @@ export class SettingsPage extends LitElement {
         image: null,
       }
       this.avatarMessage = { type: 'success', text: 'Avatar removed.' }
-
-      const avatarMenu = document.querySelector('avatar-menu')
-      if (avatarMenu) {
-        avatarMenu.user = this.user
-        avatarMenu.requestUpdate()
-      }
+      state.set('user', this.user, { skipStorage: true })
     } catch (err) {
       console.error(err)
       this.avatarMessage = { type: 'error', text: err.message || 'Failed to remove avatar' }
@@ -286,12 +285,7 @@ export class SettingsPage extends LitElement {
         name: res.user?.name || name,
       }
       this.profileMessage = { type: 'success', text: 'Profile updated successfully!' }
-
-      const avatarMenu = document.querySelector('avatar-menu')
-      if (avatarMenu) {
-        avatarMenu.user = this.user
-        avatarMenu.requestUpdate()
-      }
+      state.set('user', this.user, { skipStorage: true })
     } catch (err) {
       console.error(err)
       this.profileMessage = { type: 'error', text: err.message || 'Failed to update profile' }

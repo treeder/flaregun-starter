@@ -3,6 +3,7 @@ import 'material/buttons/button.js'
 import 'material/text/text-field.js'
 import 'material/card/card.js'
 import { api } from 'api'
+import state from 'state'
 import { startRegistration, startAuthentication } from 'passkeys/public/js/auth.js'
 import { styles } from '/css/styles.js'
 import { signOut } from './auth-utils.js'
@@ -60,6 +61,19 @@ export class SignIn extends LitElement {
 
   connectedCallback() {
     super.connectedCallback()
+    if (this.user) {
+      let u = this.user
+      if (typeof u === 'string') {
+        try {
+          u = JSON.parse(u)
+        } catch (e) {
+          u = null
+        }
+      }
+      if (u && (u.id || u.email)) {
+        state.set('user', u, { skipStorage: true })
+      }
+    }
     this.checkCapabilities()
   }
 
@@ -178,7 +192,7 @@ export class SignIn extends LitElement {
   }
 
   isLoggedIn() {
-    let user = this.user || (typeof window !== 'undefined' ? window.user : null)
+    let user = this.user || state.get('user')
     if (typeof user === 'string') {
       try {
         user = JSON.parse(user)
@@ -190,6 +204,7 @@ export class SignIn extends LitElement {
   }
 
   signOut() {
+    state.delete('user')
     signOut()
   }
 

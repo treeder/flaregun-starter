@@ -21,10 +21,15 @@ function render(d) {
     <div class="flex col g20 p16">
       <div class="display-medium tac mt20 pb20">Hello World!</div>
 
-      <div class="flex jcsb aic p16 flexw g12" style="background: var(--md-sys-color-surface-container, #f3edf7); border-radius: 16px; border: 1px solid var(--md-sys-color-outline-variant, #e0e0e0);">
+      <div
+        class="flex jcsb aic p16 flexw g12"
+        style="background: var(--md-sys-color-surface-container, #f3edf7); border-radius: 16px; border: 1px solid var(--md-sys-color-outline-variant, #e0e0e0);">
         <div class="flex col g4">
           <div style="font-weight: 600; font-size: 1.1rem;">Material 3 Web Components Demo</div>
-          <div class="text-muted small">Explore the full interactive showcase of Material 3 buttons, inputs, selects, tabs, dialogs, sliders, and feedback components.</div>
+          <div class="text-muted small">
+            Explore the full interactive showcase of Material 3 buttons, inputs, selects, tabs, dialogs, sliders, and
+            feedback components.
+          </div>
         </div>
         <a href="/demo">
           <md-button color="filled">

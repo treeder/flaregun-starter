@@ -51,7 +51,9 @@ export function root(d) {
       padding: 6px 12px;
       border-radius: 8px;
       text-decoration: none;
-      transition: background-color 0.15s ease, color 0.15s ease;
+      transition:
+        background-color 0.15s ease,
+        color 0.15s ease;
     }
 
     .nav-item:hover {

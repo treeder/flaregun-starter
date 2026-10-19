@@ -176,77 +176,86 @@ export class ProductList extends LitElement {
           </md-chip-set>
         </div>
 
-        ${this.loading
-          ? html`
-              <div class="flex col aic jcc p40 g16">
-                <md-loading size="48" contained></md-loading>
-                <div class="text-muted">Loading products...</div>
-              </div>
-            `
-          : list.length === 0
+        ${
+          this.loading
             ? html`
-                <md-card class="p24 text-center">
-                  <div class="text-muted p16">
-                    ${this.searchQuery || this.activeFilter !== 'all'
-                      ? 'No products match your search or filter.'
-                      : 'No products yet. Use the form to add your first product!'}
-                  </div>
-                </md-card>
+                <div class="flex col aic jcc p40 g16">
+                  <md-loading size="48" contained></md-loading>
+                  <div class="text-muted">Loading products...</div>
+                </div>
               `
-            : list.map((p) => {
-                const isOutOfStock = p.data?.inStock === false
-                const discount = p.data?.discount || 0
-                const category = p.data?.category
-
-                return html`
-                  <md-card class="p16 flex col w100 g12" style="box-sizing: border-box;">
-                    <div class="flex col g8">
-                      <div class="card-header">
-                        <div class="flex col g4">
-                          <div class="headline-medium">
-                            <a href="/products/${p.id}">${p.name}</a>
-                          </div>
-                          <div class="flex g8 aic flexw mt4">
-                            ${category ? html`<span class="category-tag">${category}</span>` : ''}
-                            <span class="stock-tag ${isOutOfStock ? 'out-of-stock' : 'in-stock'}">
-                              ${isOutOfStock ? 'Out of stock' : 'In stock'}
-                            </span>
-                            ${discount > 0 ? html`<span class="sale-badge">${discount}% OFF</span>` : ''}
-                          </div>
-                        </div>
-
-                        <div class="flex aic g4">
-                          <md-tooltip text="Delete product">
-                            <md-icon-button class="error" @click=${() => this.deleteProduct(p.id)}>
-                              <md-icon>delete</md-icon>
-                            </md-icon-button>
-                          </md-tooltip>
-                        </div>
-                      </div>
-
-                      ${p.description
-                        ? html`<div style="color: var(--md-sys-color-on-surface-variant);">${p.description}</div>`
-                        : ''}
-
-                      <div class="flex aic jcsb mt8">
-                        <div class="flex aic g8">
-                          <span style="font-weight: bold; font-size: 1.25rem; color: var(--md-sys-color-primary);">
-                            $${p.price}
-                          </span>
-                          ${discount > 0
-                            ? html`
-                                <span style="text-decoration: line-through; color: var(--md-sys-color-outline); font-size: 0.9rem;">
-                                  $${(p.price / (1 - discount / 100)).toFixed(2)}
-                                </span>
-                              `
-                            : ''}
-                        </div>
-                        ${p.data?.x ? html`<span class="text-muted small">${p.data.x}</span>` : ''}
-                      </div>
+            : list.length === 0
+              ? html`
+                  <md-card class="p24 text-center">
+                    <div class="text-muted p16">
+                      ${
+                        this.searchQuery || this.activeFilter !== 'all'
+                          ? 'No products match your search or filter.'
+                          : 'No products yet. Use the form to add your first product!'
+                      }
                     </div>
                   </md-card>
                 `
-              })}
+              : list.map((p) => {
+                  const isOutOfStock = p.data?.inStock === false
+                  const discount = p.data?.discount || 0
+                  const category = p.data?.category
+
+                  return html`
+                    <md-card class="p16 flex col w100 g12" style="box-sizing: border-box;">
+                      <div class="flex col g8">
+                        <div class="card-header">
+                          <div class="flex col g4">
+                            <div class="headline-medium">
+                              <a href="/products/${p.id}">${p.name}</a>
+                            </div>
+                            <div class="flex g8 aic flexw mt4">
+                              ${category ? html`<span class="category-tag">${category}</span>` : ''}
+                              <span class="stock-tag ${isOutOfStock ? 'out-of-stock' : 'in-stock'}">
+                                ${isOutOfStock ? 'Out of stock' : 'In stock'}
+                              </span>
+                              ${discount > 0 ? html`<span class="sale-badge">${discount}% OFF</span>` : ''}
+                            </div>
+                          </div>
+
+                          <div class="flex aic g4">
+                            <md-tooltip text="Delete product">
+                              <md-icon-button class="error" @click=${() => this.deleteProduct(p.id)}>
+                                <md-icon>delete</md-icon>
+                              </md-icon-button>
+                            </md-tooltip>
+                          </div>
+                        </div>
+
+                        ${
+                          p.description
+                            ? html`<div style="color: var(--md-sys-color-on-surface-variant);">${p.description}</div>`
+                            : ''
+                        }
+
+                        <div class="flex aic jcsb mt8">
+                          <div class="flex aic g8">
+                            <span style="font-weight: bold; font-size: 1.25rem; color: var(--md-sys-color-primary);">
+                              $${p.price}
+                            </span>
+                            ${
+                              discount > 0
+                                ? html`
+                                    <span
+                                      style="text-decoration: line-through; color: var(--md-sys-color-outline); font-size: 0.9rem;">
+                                      $${(p.price / (1 - discount / 100)).toFixed(2)}
+                                    </span>
+                                  `
+                                : ''
+                            }
+                          </div>
+                          ${p.data?.x ? html`<span class="text-muted small">${p.data.x}</span>` : ''}
+                        </div>
+                      </div>
+                    </md-card>
+                  `
+                })
+        }
       </div>
     `
   }

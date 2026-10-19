@@ -44,9 +44,6 @@ export async function layout(d) {
             }
           }
         </script>
-        <script>
-          window.user = ${JSON.stringify(d.user || null).replace(/</g, '\\u003c')}
-        </script>
       </head>
       <body>
         <script type="module">
@@ -67,9 +64,11 @@ export async function layout(d) {
           </div>
           <div class="flex g8 jcc aic">
             <div>
-              ${d.user
-                ? html`<avatar-menu user="${JSON.stringify(d.user).replace(/"/g, '&quot;')}"></avatar-menu>`
-                : html`<avatar-menu></avatar-menu>`}
+              ${
+                d.user
+                  ? html`<avatar-menu user="${JSON.stringify(d.user).replace(/"/g, '&quot;')}"></avatar-menu>`
+                  : html`<avatar-menu></avatar-menu>`
+              }
             </div>
           </div>
         </div>

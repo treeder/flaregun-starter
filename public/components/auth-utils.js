@@ -56,7 +56,6 @@ export function clearClientCookies() {
 export function signOut() {
   clearClientCookies()
   if (typeof window !== 'undefined') {
-    window.user = null
     window.location.href = '/signout'
   }
 }

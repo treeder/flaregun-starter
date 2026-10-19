@@ -55,7 +55,13 @@ export class ProductForm extends LitElement {
   render() {
     return html`
       <md-card class="p16 w100 mb24" style="box-sizing: border-box;">
-        <form id="product-form" class="w100" @submit=${(e) => { e.preventDefault(); this.submit(); }}>
+        <form
+          id="product-form"
+          class="w100"
+          @submit=${(e) => {
+            e.preventDefault()
+            this.submit()
+          }}>
           <div class="flex col g16">
             <md-text-field
               id="name"
@@ -66,7 +72,9 @@ export class ProductForm extends LitElement {
               placeholder="e.g. Wireless Headphones"></md-text-field>
 
             <md-select id="category" label="Category" required>
-              <md-select-option value="electronics" ?selected=${!this.product.data?.category || this.product.data?.category === 'electronics'}>
+              <md-select-option
+                value="electronics"
+                ?selected=${!this.product.data?.category || this.product.data?.category === 'electronics'}>
                 <div slot="headline">Electronics</div>
               </md-select-option>
               <md-select-option value="apparel" ?selected=${this.product.data?.category === 'apparel'}>
@@ -120,7 +128,9 @@ export class ProductForm extends LitElement {
                 max="75"
                 step="5"
                 value="${this.discount}"
-                @change=${(e) => { this.discount = Number(e.target.value) || 0 }}></md-slider>
+                @change=${(e) => {
+                  this.discount = Number(e.target.value) || 0
+                }}></md-slider>
             </div>
 
             ${this.submitting ? html`<md-progress type="linear" indeterminate shape="wavy"></md-progress>` : ''}
