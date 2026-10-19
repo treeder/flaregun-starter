@@ -50,7 +50,7 @@ export async function wrap(c) {
           return c.data.user
         },
         get path() {
-          return c.url ? c.url.pathname : (c.request ? new URL(c.request.url).pathname : '')
+          return c.url ? c.url.pathname : c.request ? new URL(c.request.url).pathname : ''
         },
       },
     })

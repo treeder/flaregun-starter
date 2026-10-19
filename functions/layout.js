@@ -40,7 +40,7 @@ export async function layout(d) {
               "api": "https://cdn.jsdelivr.net/gh/treeder/api@1/api.js",
               "state": "https://cdn.jsdelivr.net/gh/treeder/state@3/state.js",
               "models": "https://cdn.jsdelivr.net/gh/treeder/models@1/index.js",
-              "passkeys/": "https://cdn.jsdelivr.net/gh/treeder/passkeys@5/"
+              "passkeys/": "https://cdn.jsdelivr.net/gh/treeder/passkeys@6/"
             }
           }
         </script>
@@ -65,9 +65,11 @@ export async function layout(d) {
           </div>
           <div class="flex g8 jcc aic">
             <div>
-              ${d.user
-                ? html`<avatar-menu user="${JSON.stringify(d.user).replace(/"/g, '&quot;')}"></avatar-menu>`
-                : html`<avatar-menu></avatar-menu>`}
+              ${
+                d.user
+                  ? html`<avatar-menu user="${JSON.stringify(d.user).replace(/"/g, '&quot;')}"></avatar-menu>`
+                  : html`<avatar-menu></avatar-menu>`
+              }
             </div>
           </div>
         </div>

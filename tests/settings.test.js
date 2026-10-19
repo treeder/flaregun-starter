@@ -31,7 +31,7 @@ test('Settings page and Avatar menu integration tests', async () => {
   const setCookieHeaders = verifyRes.headers.getSetCookie?.() || [verifyRes.headers.get('set-cookie')].filter(Boolean)
   const cookieHeader = setCookieHeaders.map((c) => c.split(';')[0]).join('; ')
   expect(cookieHeader).toContain('session=')
-  expect(cookieHeader).toContain('userId=')
+  expect(cookieHeader).not.toContain('userId=')
 
   // 3. Authenticated request to /settings returns 200 with settings-page component
   const settingsRes = await fetch(`${baseURL}/settings`, {
@@ -202,7 +202,7 @@ test('Settings page and Avatar menu integration tests', async () => {
     signoutRes.headers.getSetCookie?.() || [signoutRes.headers.get('set-cookie')].filter(Boolean)
   const signoutCookieStr = signoutSetCookies.join('; ')
   expect(signoutCookieStr).toContain('session=')
-  expect(signoutCookieStr).toContain('userId=')
+  expect(signoutCookieStr).not.toContain('userId=')
 
   // Subsequent request to /settings using previous cookie should be unauthenticated and redirect
   const postSignoutRes = await fetch(`${baseURL}/settings`, {

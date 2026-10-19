@@ -10,6 +10,7 @@ import '/components/confirm-dialog.js'
 import '/components/product-form.js'
 import { styles } from '/css/styles.js'
 import { api } from 'api'
+import state from 'state'
 
 export class ProductDetail extends LitElement {
   static styles = [
@@ -74,11 +75,7 @@ export class ProductDetail extends LitElement {
   }
 
   async checkAuth() {
-    if (
-      !this.isLoggedIn() &&
-      typeof document !== 'undefined' &&
-      (document.cookie.includes('session=') || document.cookie.includes('userId='))
-    ) {
+    if (!this.isLoggedIn() && typeof document !== 'undefined' && /(?:^|;\s*)session=/.test(document.cookie)) {
       try {
         const res = await api('/v1/users/me')
         if (res?.user) {
@@ -103,14 +100,17 @@ export class ProductDetail extends LitElement {
 
   getUser() {
     if (typeof this.user === 'string') {
-      if (!this.user) return {}
+      if (!this.user) return state.get('user') || {}
       try {
         return JSON.parse(this.user)
       } catch (e) {
-        return {}
+        return state.get('user') || {}
       }
     }
-    return this.user || {}
+    if (this.user && (this.user.id || this.user.email)) {
+      return this.user
+    }
+    return state.get('user') || {}
   }
 
   isLoggedIn() {

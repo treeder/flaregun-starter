@@ -25,7 +25,9 @@ function render(d) {
       <div
         class="flex col aic tac g20 p24"
         style="background: var(--md-sys-color-surface-container, #f3edf7); border-radius: 24px; border: 1px solid var(--md-sys-color-outline-variant, #e0e0e0); padding: 48px 24px;">
-        <div class="flex aic g8" style="background: var(--md-sys-color-secondary-container, #e8def8); color: var(--md-sys-color-on-secondary-container, #1d192b); padding: 6px 16px; border-radius: 999px; font-weight: 500; font-size: 13px;">
+        <div
+          class="flex aic g8"
+          style="background: var(--md-sys-color-secondary-container, #e8def8); color: var(--md-sys-color-on-secondary-container, #1d192b); padding: 6px 16px; border-radius: 999px; font-weight: 500; font-size: 13px;">
           <md-icon style="font-size: 18px;">bolt</md-icon>
           <span>Full-Stack Cloudflare Workers Starter</span>
         </div>

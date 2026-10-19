@@ -16,6 +16,7 @@ import '/components/confirm-dialog.js'
 import '/components/product-form.js'
 import { styles } from '/css/styles.js'
 import { api } from 'api'
+import state from 'state'
 
 export class ProductList extends LitElement {
   static styles = [
@@ -124,11 +125,7 @@ export class ProductList extends LitElement {
   }
 
   async checkAuth() {
-    if (
-      !this.isLoggedIn() &&
-      typeof document !== 'undefined' &&
-      (document.cookie.includes('session=') || document.cookie.includes('userId='))
-    ) {
+    if (!this.isLoggedIn() && typeof document !== 'undefined' && /(?:^|;\s*)session=/.test(document.cookie)) {
       try {
         const res = await api('/v1/users/me')
         if (res?.user) {
@@ -141,14 +138,17 @@ export class ProductList extends LitElement {
 
   getUser() {
     if (typeof this.user === 'string') {
-      if (!this.user) return {}
+      if (!this.user) return state.get('user') || {}
       try {
         return JSON.parse(this.user)
       } catch (e) {
-        return {}
+        return state.get('user') || {}
       }
     }
-    return this.user || {}
+    if (this.user && (this.user.id || this.user.email)) {
+      return this.user
+    }
+    return state.get('user') || {}
   }
 
   isLoggedIn() {
@@ -385,7 +385,9 @@ export class ProductList extends LitElement {
                             : ''}
                         </div>
 
-                        <div class="flex aic jcsb mt8 pt12" style="border-top: 1px solid var(--md-sys-color-outline-variant, #ece6f0);">
+                        <div
+                          class="flex aic jcsb mt8 pt12"
+                          style="border-top: 1px solid var(--md-sys-color-outline-variant, #ece6f0);">
                           <div class="flex aic g8">
                             <span style="font-weight: 700; font-size: 1.25rem; color: var(--md-sys-color-primary);">
                               $${Number(p.price).toFixed(2)}

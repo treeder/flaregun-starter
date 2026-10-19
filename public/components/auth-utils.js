@@ -23,7 +23,7 @@ export function getCookieDomainCandidates(hostname) {
   return [...new Set(domains)]
 }
 
-export const AUTH_COOKIE_NAMES = ['session', 'userId']
+export const AUTH_COOKIE_NAMES = ['session']
 
 export function clearClientCookies() {
   if (typeof document === 'undefined') return

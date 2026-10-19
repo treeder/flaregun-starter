@@ -124,7 +124,9 @@ export class ProductForm extends LitElement {
             placeholder="e.g. Wireless Headphones"></md-text-field>
 
           <md-select id="category" label="Category" required>
-            <md-select-option value="electronics" ?selected=${!p.data?.category || p.data?.category === 'electronics'}>
+            <md-select-option
+              value="electronics"
+              ?selected=${!p.data?.category || p.data?.category === 'electronics'}>
               <div slot="headline">Electronics</div>
             </md-select-option>
             <md-select-option value="apparel" ?selected=${p.data?.category === 'apparel'}>
