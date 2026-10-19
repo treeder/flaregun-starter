@@ -1,13 +1,31 @@
 import { html } from 'rend'
 
 export async function onRequestGet(c) {
+  let afterLoginHref = '/'
+  if (c.request) {
+    try {
+      const url = new URL(c.request.url)
+      const redirect = url.searchParams.get('redirect')
+      if (
+        redirect &&
+        redirect.startsWith('/') &&
+        !redirect.startsWith('//') &&
+        !redirect.startsWith('/\\')
+      ) {
+        afterLoginHref = redirect.replace(/"/g, '&quot;')
+      }
+    } catch (e) {}
+  }
+
   return await c.data.rend.html({
     title: 'Sign In',
     main: render,
+    afterLoginHref,
   })
 }
 
 function render(d) {
+  const href = d.afterLoginHref || '/'
   return html`
     <script type="module">
       import '/components/sign-in.js'
@@ -19,9 +37,9 @@ function render(d) {
         d.user
           ? html`<sign-in
               baseURL="/auth"
-              afterLoginHref="/"
+              afterLoginHref="${href}"
               user="${JSON.stringify(d.user).replace(/"/g, '&quot;')}"></sign-in>`
-          : html`<sign-in baseURL="/auth" afterLoginHref="/"></sign-in>`
+          : html`<sign-in baseURL="/auth" afterLoginHref="${href}"></sign-in>`
       }
     </div>
   `

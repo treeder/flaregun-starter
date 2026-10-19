@@ -58,7 +58,8 @@ export async function layout(d) {
               </div>
             </a>
             <div class="flex g8 aic">
-              <a href="/" class="nav-item ${d.path === '/' ? 'active' : ''}">Products</a>
+              <a href="/" class="nav-item ${d.path === '/' ? 'active' : ''}">Home</a>
+              <a href="/products" class="nav-item ${d.path?.startsWith('/products') ? 'active' : ''}">Products</a>
               <a href="/demo" class="nav-item ${d.path === '/demo' ? 'active' : ''}">Components Demo</a>
             </div>
           </div>
