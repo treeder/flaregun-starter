@@ -15,7 +15,14 @@ function render(d) {
 
     <div class="flex col aic jcc p16 mt40">
       <div class="headline-medium mb24">Sign In</div>
-      <sign-in baseURL="/auth" afterLoginHref="/"></sign-in>
+      ${
+        d.user
+          ? html`<sign-in
+              baseURL="/auth"
+              afterLoginHref="/"
+              user="${JSON.stringify(d.user).replace(/"/g, '&quot;')}"></sign-in>`
+          : html`<sign-in baseURL="/auth" afterLoginHref="/"></sign-in>`
+      }
     </div>
   `
 }

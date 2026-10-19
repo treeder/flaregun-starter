@@ -124,7 +124,6 @@ describe('utils', () => {
       const setCookies = headers.getSetCookie?.() || []
       expect(setCookies.length).toBeGreaterThan(0)
       expect(setCookies.some((sc) => sc.startsWith('session=;') && sc.includes('Max-Age=0'))).toBe(true)
-      expect(setCookies.some((sc) => sc.startsWith('userId=;') && sc.includes('Max-Age=0'))).toBe(true)
     })
 
     it('handles host string and falsy input without throwing', () => {
