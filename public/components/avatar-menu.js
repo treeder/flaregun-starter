@@ -97,7 +97,7 @@ export class AvatarMenu extends LitElement {
     const initialUser = this.parseUser(this.user)
     if (initialUser && (initialUser.id || initialUser.email)) {
       state.set('user', initialUser, { skipStorage: true })
-    } else if (!this.isLoggedIn() && document.cookie.includes('session=')) {
+    } else if (!this.isLoggedIn() && /(?:^|;\s*)session=/.test(document.cookie)) {
       try {
         const res = await api('/v1/users/me')
         if (res?.user) {
