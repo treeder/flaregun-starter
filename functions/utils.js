@@ -1,7 +1,16 @@
+function stripPort(h) {
+  if (!h) return ''
+  if (h.startsWith('[')) {
+    const end = h.indexOf(']')
+    return end !== -1 ? h.slice(0, end + 1) : h
+  }
+  return h.split(':')[0]
+}
+
 function canTrustForwardedHost(c, hostHeader) {
   if (c?.data?.env === 'dev' || c?.env?.ENV === 'dev') return true
-  if (!hostHeader) return true
-  const rawHost = hostHeader.split(':')[0].toLowerCase()
+  if (!hostHeader) return false
+  const rawHost = stripPort(hostHeader).toLowerCase()
   return (
     rawHost === 'localhost' ||
     rawHost === '127.0.0.1' ||
@@ -22,10 +31,10 @@ function getEffectiveHostHeader(c) {
 
 export function hostname(c) {
   if (!c) return ''
-  if (typeof c === 'string') return c.split(':')[0]
+  if (typeof c === 'string') return stripPort(c)
   let h = getEffectiveHostHeader(c)
   if (h) {
-    h = h.split(':')[0] // remove port
+    h = stripPort(h) // remove port
   }
   return h || ''
 }

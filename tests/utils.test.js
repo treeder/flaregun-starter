@@ -27,7 +27,7 @@ describe('utils', () => {
       expect(hostname(c)).toBe('myapp.workers.dev')
     })
 
-    it('ignores spoofed x-forwarded-host header on production host', () => {
+    it('ignores spoofed x-forwarded-host header on production host or when host header is missing', () => {
       const c = {
         request: {
           headers: new Headers({
@@ -38,6 +38,27 @@ describe('utils', () => {
       }
       expect(hostname(c)).toBe('myapp.workers.dev')
       expect(hostURL(c)).toBe('https://myapp.workers.dev')
+
+      const cMissingHost = {
+        request: {
+          headers: new Headers({
+            'x-forwarded-host': 'evil.attacker.com',
+          }),
+        },
+      }
+      expect(hostname(cMissingHost)).toBe('')
+    })
+
+    it('preserves bracketed IPv6 localhost with port', () => {
+      const c = {
+        request: {
+          headers: new Headers({
+            host: '[::1]:8787',
+          }),
+        },
+      }
+      expect(hostname(c)).toBe('[::1]')
+      expect(hostURL(c)).toBe('http://[::1]:8787')
     })
 
     it('does not treat localhost subdomain as http localhost', () => {

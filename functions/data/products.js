@@ -88,10 +88,13 @@ export async function seedProducts(c) {
 
 export async function getProducts(c, q = {}) {
   const userId = c?.data?.user?.id || null
+  const where = Array.isArray(q.where)
+    ? [['userId', '=', userId], ...q.where]
+    : { ...(q.where || {}), userId }
   const query = {
-    where: { userId },
     order: ['createdAt', 'desc'],
     ...q,
+    where,
   }
   return await c.data.d1.query(Product, query)
 }
