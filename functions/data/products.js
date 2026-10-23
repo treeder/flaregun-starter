@@ -5,6 +5,9 @@ export class Product {
       type: String,
       primaryKey: true,
     },
+    userId: {
+      type: String,
+    },
     createdAt: {
       type: Date,
     },
@@ -72,10 +75,10 @@ export const SAMPLE_PRODUCTS = [
 export async function seedProducts(c) {
   if (!c?.data?.d1) return
   try {
-    const count = await c.data.d1.count(Product)
+    const count = await c.data.d1.count(Product, { where: { userId: null } })
     if (count === 0) {
       for (const item of SAMPLE_PRODUCTS) {
-        await c.data.d1.insert(Product, { ...item })
+        await c.data.d1.insert(Product, { ...item, userId: null })
       }
     }
   } catch (err) {
@@ -84,7 +87,9 @@ export async function seedProducts(c) {
 }
 
 export async function getProducts(c, q = {}) {
+  const userId = c?.data?.user?.id || null
   const query = {
+    where: { userId },
     order: ['createdAt', 'desc'],
     ...q,
   }
@@ -92,5 +97,10 @@ export async function getProducts(c, q = {}) {
 }
 
 export async function getProduct(c, id) {
-  return await c.data.d1.get(Product, id)
+  const product = await c.data.d1.get(Product, id)
+  if (!product) return null
+  if (product.userId && product.userId !== c?.data?.user?.id) {
+    return null
+  }
+  return product
 }

@@ -17,6 +17,7 @@ export async function onRequestPost(c) {
   }
 
   const record = {
+    userId: c.data.user.id,
     name: String(product.name).trim(),
     description: product.description ? String(product.description).trim() : '',
     price: Number(product.price) || 0,

@@ -16,6 +16,8 @@ export async function onRequestGet(c) {
   if (!file) throw new APIError('file not found', { status: 404 })
   const headers = new Headers()
   headers.append('etag', file.httpEtag)
+  headers.set('x-content-type-options', 'nosniff')
+  headers.set('content-security-policy', "default-src 'none'; style-src 'unsafe-inline'; sandbox")
   if (file.httpMetadata?.contentType) {
     headers.set('content-type', file.httpMetadata.contentType)
   }

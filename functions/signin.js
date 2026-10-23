@@ -1,4 +1,5 @@
-import { html } from 'rend'
+import { html, stringifyAttribute } from 'rend'
+import { escapeHtml } from './utils.js'
 
 export async function onRequestGet(c) {
   let afterLoginHref = '/'
@@ -12,7 +13,7 @@ export async function onRequestGet(c) {
         !redirect.startsWith('//') &&
         !redirect.startsWith('/\\')
       ) {
-        afterLoginHref = redirect.replace(/"/g, '&quot;')
+        afterLoginHref = escapeHtml(redirect)
       }
     } catch (e) {}
   }
@@ -38,7 +39,7 @@ function render(d) {
           ? html`<sign-in
               baseURL="/auth"
               afterLoginHref="${href}"
-              user="${JSON.stringify(d.user).replace(/"/g, '&quot;')}"></sign-in>`
+              user="${stringifyAttribute(d.user)}"></sign-in>`
           : html`<sign-in baseURL="/auth" afterLoginHref="${href}"></sign-in>`
       }
     </div>

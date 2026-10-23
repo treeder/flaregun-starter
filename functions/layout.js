@@ -1,4 +1,5 @@
-import { html, slot } from 'rend'
+import { html, slot, stringifyAttribute } from 'rend'
+import { escapeHtml } from './utils.js'
 
 export async function layout(d) {
   let title = d.title ? d.title + ' - Flaregun' : 'Flaregun Starter Kit'
@@ -6,7 +7,7 @@ export async function layout(d) {
     <html lang="en">
       <head>
         <meta charset="utf-8" />
-        <title>${title}</title>
+        <title>${escapeHtml(title)}</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="icon" href="/images/flaregun2.png" />
 
@@ -67,7 +68,7 @@ export async function layout(d) {
             <div>
               ${
                 d.user
-                  ? html`<avatar-menu user="${JSON.stringify(d.user).replace(/"/g, '&quot;')}"></avatar-menu>`
+                  ? html`<avatar-menu user="${stringifyAttribute(d.user)}"></avatar-menu>`
                   : html`<avatar-menu></avatar-menu>`
               }
             </div>

@@ -1,18 +1,20 @@
-import { html } from 'rend'
-import { Product } from '../../data/products.js'
+import { html, stringifyAttribute } from 'rend'
+import { getProduct } from '../../data/products.js'
 
 export async function onRequestGet(c) {
-  let product = await c.data.d1.get(Product, c.params.id)
+  let product = await getProduct(c, c.params.id)
+  const canManage = Boolean(c.data.user && product && product.userId === c.data.user.id)
   return await c.data.rend.html({
     title: product ? product.name : 'Product Not Found',
     main: render,
     product,
+    canManage,
   })
 }
 
 function render(d) {
-  const productAttr = d.product ? JSON.stringify(d.product).replace(/"/g, '&quot;') : ''
-  const userAttr = d.user ? JSON.stringify(d.user).replace(/"/g, '&quot;') : ''
+  const productAttr = stringifyAttribute(d.product)
+  const userAttr = stringifyAttribute(d.user)
 
   return html`
     <script type="module">
@@ -23,7 +25,7 @@ function render(d) {
       <product-detail
         product="${productAttr}"
         user="${userAttr}"
-        ${d.user ? 'can-manage' : ''}></product-detail>
+        ${d.canManage ? 'can-manage' : ''}></product-detail>
     </div>
   `
 }
