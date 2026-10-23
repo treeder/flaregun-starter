@@ -1,4 +1,4 @@
-import { html } from 'rend'
+import { html, stringifyAttribute } from 'rend'
 
 export async function onRequestGet(c) {
   return await c.data.rend.html({
@@ -8,7 +8,7 @@ export async function onRequestGet(c) {
 }
 
 function render(d) {
-  const userAttr = d.user ? JSON.stringify(d.user).replace(/"/g, '&quot;') : ''
+  const userAttr = stringifyAttribute(d.user)
 
   return html`
     <script type="module">

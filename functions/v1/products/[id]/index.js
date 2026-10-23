@@ -1,7 +1,7 @@
-import { Product } from '../../../data/products.js'
+import { Product, getProduct } from '../../../data/products.js'
 
 export async function onRequestGet(c) {
-  let product = await c.data.d1.get(Product, c.params.id)
+  let product = await getProduct(c, c.params.id)
   if (!product) {
     return Response.json({ error: { message: 'Product not found' } }, { status: 404 })
   }
@@ -17,6 +17,9 @@ async function handleUpdate(c) {
   const existing = await c.data.d1.get(Product, productId)
   if (!existing) {
     return Response.json({ error: { message: 'Product not found' } }, { status: 404 })
+  }
+  if (existing.userId !== c.data.user.id) {
+    return Response.json({ error: { message: 'Forbidden: you can only update your own products' } }, { status: 403 })
   }
 
   let input = await c.request.json()
@@ -39,6 +42,7 @@ async function handleUpdate(c) {
     updates.data = {
       ...(existing.data || {}),
       ...payload.data,
+      createdBy: existing.data?.createdBy || c.data.user.id,
       updatedBy: c.data.user.id,
     }
   }
@@ -61,6 +65,9 @@ export async function onRequestDelete(c) {
   const existing = await c.data.d1.get(Product, productId)
   if (!existing) {
     return Response.json({ error: { message: 'Product not found' } }, { status: 404 })
+  }
+  if (existing.userId !== c.data.user.id) {
+    return Response.json({ error: { message: 'Forbidden: you can only delete your own products' } }, { status: 403 })
   }
 
   await c.data.d1.delete(Product, productId)

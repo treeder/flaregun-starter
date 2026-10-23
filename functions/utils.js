@@ -1,10 +1,40 @@
+function stripPort(h) {
+  if (!h) return ''
+  if (h.startsWith('[')) {
+    const end = h.indexOf(']')
+    return end !== -1 ? h.slice(0, end + 1) : h
+  }
+  return h.split(':')[0]
+}
+
+function canTrustForwardedHost(c, hostHeader) {
+  if (c?.data?.env === 'dev' || c?.env?.ENV === 'dev') return true
+  if (!hostHeader) return false
+  const rawHost = stripPort(hostHeader).toLowerCase()
+  return (
+    rawHost === 'localhost' ||
+    rawHost === '127.0.0.1' ||
+    rawHost === '[::1]' ||
+    rawHost.endsWith('.local')
+  )
+}
+
+function getEffectiveHostHeader(c) {
+  let req = c?.request || c
+  const hostHeader = req?.headers?.get?.('host')
+  const forwardedHost = req?.headers?.get?.('x-forwarded-host')
+  if (forwardedHost && canTrustForwardedHost(c, hostHeader)) {
+    return forwardedHost.split(',')[0].trim()
+  }
+  return hostHeader || ''
+}
+
 export function hostname(c) {
   if (!c) return ''
-  if (typeof c === 'string') return c.split(':')[0]
-  let req = c.request || c
-  let h = req.headers?.get?.('x-forwarded-host') || req.headers?.get?.('host')
+  if (typeof c === 'string') return stripPort(c)
+  let h = getEffectiveHostHeader(c)
   if (h) {
-    h = h.split(':')[0] // remove port
+    h = stripPort(h) // remove port
   }
   return h || ''
 }
@@ -12,20 +42,30 @@ export function hostname(c) {
 export function hostURL(c) {
   let h = hostname(c)
   if (!h) return ''
-  if (h.includes('localhost') || h.includes('127.0.0.1')) {
-    let req = c.request || c
-    let h2 = req.headers?.get?.('x-forwarded-host') || req.headers?.get?.('host')
+  const lower = h.toLowerCase()
+  if (lower === 'localhost' || lower === '127.0.0.1' || lower === '[::1]') {
+    let h2 = getEffectiveHostHeader(c)
     let port = ''
     if (h2) {
       let split = h2.split(':')
-      if (split.length > 1) {
-        port = `:${split[1]}`
+      if (split.length > 1 && /^\d+$/.test(split[split.length - 1])) {
+        port = `:${split[split.length - 1]}`
       }
     }
     return `http://${h}${port}`
   }
   h = 'https://' + h
   return h
+}
+
+export function escapeHtml(str) {
+  if (str === null || str === undefined) return ''
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
 }
 
 export function domainLevels(c) {
@@ -68,12 +108,13 @@ export function clearAuthCookies(c, headers = new Headers()) {
   if (!c) return headers
   const host = (typeof c === 'string' ? c : hostname(c)) || ''
   const domainCandidates = getCookieDomainCandidates(host)
+  const lowerHost = host.toLowerCase()
   const isLocal =
     c?.data?.env === 'dev' ||
     c?.env?.ENV === 'dev' ||
-    host.includes('localhost') ||
-    host.includes('127.0.0.1') ||
-    host.includes('::1')
+    lowerHost === 'localhost' ||
+    lowerHost === '127.0.0.1' ||
+    lowerHost.includes('::1')
 
   for (const name of AUTH_COOKIE_NAMES) {
     // 1. Host-only (no domain specified)

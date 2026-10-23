@@ -158,6 +158,23 @@ test('Settings page and Avatar menu integration tests', async () => {
   const avifR2Res = await fetch(`${baseURL}${avifUploadData.image}`)
   expect(avifR2Res.status).toBe(200)
   expect(avifR2Res.headers.get('content-type')).toBe('image/avif')
+  expect(avifR2Res.headers.get('x-content-type-options')).toBe('nosniff')
+  expect(avifR2Res.headers.get('content-security-policy')).toContain('sandbox')
+
+  // 6c. Reject SVG avatar upload to prevent stored XSS
+  const svgFormData = new FormData()
+  const svgFile = new File(['<svg xmlns="http://www.w3.org/2000/svg"><script>alert(1)</script></svg>'], 'xss.svg', {
+    type: 'image/svg+xml',
+  })
+  svgFormData.append('file', svgFile)
+  const svgUploadRes = await fetch(`${baseURL}/v1/users/avatar`, {
+    method: 'POST',
+    headers: {
+      Cookie: cookieHeader,
+    },
+    body: svgFormData,
+  })
+  expect(svgUploadRes.status).toBe(400)
 
   // 7. Passkeys listing and deletion endpoints
   const listPasskeysRes = await fetch(`${baseURL}/auth/passkeys/list`, {

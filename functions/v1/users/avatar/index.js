@@ -2,6 +2,15 @@ import { APIError } from 'api'
 import { nanoid } from 'nanoid'
 import { User } from '../../../data/users.js'
 
+const ALLOWED_IMAGE_TYPES = new Map([
+  ['image/jpeg', 'jpg'],
+  ['image/jpg', 'jpg'],
+  ['image/png', 'png'],
+  ['image/webp', 'webp'],
+  ['image/avif', 'avif'],
+  ['image/gif', 'gif'],
+])
+
 export async function onRequestPost(c) {
   if (!c.data.user) {
     throw new APIError('Unauthorized', { status: 401 })
@@ -19,8 +28,9 @@ export async function onRequestPost(c) {
     throw new APIError('File is required', { status: 400 })
   }
 
-  if (!file.type || !file.type.startsWith('image/')) {
-    throw new APIError('Only image files are allowed', { status: 400 })
+  const ext = ALLOWED_IMAGE_TYPES.get((file.type || '').toLowerCase())
+  if (!ext) {
+    throw new APIError('Only JPG, PNG, WEBP, AVIF, and GIF image files are allowed', { status: 400 })
   }
 
   const maxBytes = 10 * 1024 * 1024 // 10MB
@@ -29,18 +39,8 @@ export async function onRequestPost(c) {
   }
 
   const buffer = await file.arrayBuffer()
-
-  let ext = 'jpg'
-  if (file.type === 'image/png') ext = 'png'
-  else if (file.type === 'image/webp') ext = 'webp'
-  else if (file.type === 'image/avif') ext = 'avif'
-  else if (file.type === 'image/gif') ext = 'gif'
-  else if (file.type === 'image/svg+xml') ext = 'svg'
-  else {
-    const parts = (file.name || '').split('.')
-    if (parts.length > 1) {
-      ext = parts.pop().toLowerCase()
-    }
+  if (buffer.byteLength > maxBytes) {
+    throw new APIError('File size exceeds 10MB limit', { status: 400 })
   }
 
   const filename = `avatar-${nanoid()}.${ext}`
@@ -48,7 +48,7 @@ export async function onRequestPost(c) {
 
   await c.env.R2.put(key, buffer, {
     httpMetadata: {
-      contentType: file.type || 'image/jpeg',
+      contentType: file.type.toLowerCase(),
     },
   })
 

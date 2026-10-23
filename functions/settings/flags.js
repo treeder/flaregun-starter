@@ -1,4 +1,4 @@
-import { html } from 'rend'
+import { html, stringifyAttribute } from 'rend'
 
 export async function onRequestGet(c) {
   if (!c.data.user) {
@@ -23,7 +23,7 @@ function render(d) {
     </script>
 
     <div class="flex col aic jcc p16 mt20">
-      <flags-page user="${JSON.stringify(d.user).replace(/"/g, '&quot;')}"></flags-page>
+      <flags-page user="${stringifyAttribute(d.user)}"></flags-page>
     </div>
   `
 }

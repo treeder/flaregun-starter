@@ -80,7 +80,8 @@ export class ProductDetail extends LitElement {
         const res = await api('/v1/users/me')
         if (res?.user) {
           this.user = res.user
-          this.canManage = true
+          const p = this.getProduct()
+          this.canManage = Boolean(p.userId && p.userId === res.user.id)
         }
       } catch (e) {}
     }
@@ -116,6 +117,13 @@ export class ProductDetail extends LitElement {
   isLoggedIn() {
     const u = this.getUser()
     return Boolean(this.canManage || u.id || u.email)
+  }
+
+  canManageProduct() {
+    const p = this.getProduct()
+    const u = this.getUser()
+    if (this.canManage) return true
+    return Boolean(u.id && p.userId && u.id === p.userId)
   }
 
   openEditDialog() {
@@ -163,6 +171,7 @@ export class ProductDetail extends LitElement {
   render() {
     const p = this.getProduct()
     const loggedIn = this.isLoggedIn()
+    const canEdit = this.canManageProduct()
 
     if (!p || !p.id) {
       return html`
@@ -188,7 +197,7 @@ export class ProductDetail extends LitElement {
     return html`
       <confirm-dialog id="confirmDialog"></confirm-dialog>
 
-      ${loggedIn
+      ${canEdit
         ? html`
             <md-dialog id="editDialog">
               <div slot="headline">Edit Product</div>
@@ -213,7 +222,7 @@ export class ProductDetail extends LitElement {
             </md-button>
           </a>
 
-          ${loggedIn
+          ${canEdit
             ? html`
                 <div class="flex aic g8">
                   <md-button color="tonal" @click=${this.openEditDialog}>
@@ -226,14 +235,16 @@ export class ProductDetail extends LitElement {
                   </md-button>
                 </div>
               `
-            : html`
-                <a href="/signin?redirect=/products/${p.id}">
-                  <md-button color="tonal">
-                    <md-icon slot="icon">login</md-icon>
-                    Sign in to edit
-                  </md-button>
-                </a>
-              `}
+            : !loggedIn
+              ? html`
+                  <a href="/signin?redirect=/products/${p.id}">
+                    <md-button color="tonal">
+                      <md-icon slot="icon">login</md-icon>
+                      Sign in to edit
+                    </md-button>
+                  </a>
+                `
+              : ''}
         </div>
 
         <md-card class="p24 flex col g16">

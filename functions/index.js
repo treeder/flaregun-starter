@@ -1,4 +1,5 @@
-import { html } from 'rend'
+import { html, stringifyAttribute } from 'rend'
+import { escapeHtml } from './utils.js'
 
 export async function onRequestGet(c) {
   return await c.data.rend.html({
@@ -7,7 +8,7 @@ export async function onRequestGet(c) {
 }
 
 function render(d) {
-  const userAttr = d.user ? JSON.stringify(d.user).replace(/"/g, '&quot;') : ''
+  const userAttr = stringifyAttribute(d.user)
 
   return html`
     <script type="module">
@@ -34,7 +35,7 @@ function render(d) {
 
         <div class="display-medium" style="font-weight: 700; max-width: 760px;">
           ${d.user
-            ? `Welcome back, ${d.user.name || d.user.email || 'Builder'}!`
+            ? `Welcome back, ${escapeHtml(d.user.name || d.user.email || 'Builder')}!`
             : 'Build fast, modern edge apps with Flaregun'}
         </div>
 

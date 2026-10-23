@@ -146,11 +146,63 @@ test('Landing page, seeded products, and authenticated CRUD flow', async () => {
   expect(updateData.product.data.inStock).toBe(false)
   expect(updateData.product.data.discount).toBe(20)
 
-  // 9. READ single product (GET /v1/products/:id)
-  const getOneRes = await fetch(`${baseUrl}/v1/products/${createdId}`)
+  // 9. READ single product (GET /v1/products/:id) as owner
+  const getOneRes = await fetch(`${baseUrl}/v1/products/${createdId}`, {
+    headers: { Cookie: cookieHeader },
+  })
   expect(getOneRes.status).toBe(200)
   const getOneData = await getOneRes.json()
   expect(getOneData.product.name).toBe('Cloudflare Edge Router Pro')
+
+  // 9b. Per-user isolation: unauthenticated and other users cannot view, update, or delete User 1's product
+  const unauthGetPrivateRes = await fetch(`${baseUrl}/v1/products/${createdId}`)
+  expect(unauthGetPrivateRes.status).toBe(404)
+
+  // User 1 cannot update or delete public sample products
+  const updateSampleRes = await fetch(`${baseUrl}/v1/products/${sampleProduct.id}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      Cookie: cookieHeader,
+    },
+    body: JSON.stringify({ product: { name: 'Overwrite Sample' } }),
+  })
+  expect(updateSampleRes.status).toBe(403)
+
+  // Sign in a second user and verify their product list is separate
+  const email2 = `crud-user2-${Date.now()}@example.com`
+  const startRes2 = await fetch(`${baseUrl}/auth/email/start`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email: email2 }),
+  })
+  const startData2 = await startRes2.json()
+  const verifyRes2 = await fetch(startData2.link, { redirect: 'manual' })
+  const setCookieHeaders2 = verifyRes2.headers.getSetCookie?.() || [verifyRes2.headers.get('set-cookie')].filter(Boolean)
+  const cookieHeader2 = setCookieHeaders2.map((c) => c.split(';')[0]).join('; ')
+
+  const user2ListRes = await fetch(`${baseUrl}/v1/products`, {
+    headers: { Cookie: cookieHeader2 },
+  })
+  expect(user2ListRes.status).toBe(200)
+  const user2ListData = await user2ListRes.json()
+  expect(user2ListData.products).toEqual([])
+
+  const user2UpdateUser1Res = await fetch(`${baseUrl}/v1/products/${createdId}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      Cookie: cookieHeader2,
+    },
+    body: JSON.stringify({ product: { name: 'Hijacked' } }),
+  })
+  expect(user2UpdateUser1Res.status).toBe(403)
+
+  const user2DeleteUser1Res = await fetch(`${baseUrl}/v1/products/${createdId}`, {
+    method: 'DELETE',
+    headers: { Cookie: cookieHeader2 },
+  })
+  expect(user2DeleteUser1Res.status).toBe(403)
 
   // 10. Authenticated DELETE product (DELETE /v1/products/:id)
   const deleteRes = await fetch(`${baseUrl}/v1/products/${createdId}`, {
@@ -159,6 +211,8 @@ test('Landing page, seeded products, and authenticated CRUD flow', async () => {
   })
   expect(deleteRes.status).toBe(200)
 
-  const getDeletedRes = await fetch(`${baseUrl}/v1/products/${createdId}`)
+  const getDeletedRes = await fetch(`${baseUrl}/v1/products/${createdId}`, {
+    headers: { Cookie: cookieHeader },
+  })
   expect(getDeletedRes.status).toBe(404)
 })
