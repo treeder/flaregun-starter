@@ -20,7 +20,7 @@ The `D1` class wraps the native Cloudflare D1 Database binding to add advanced o
   const user = await d1.get(User, userId)
   ```
 - Always prefer using model classes when retrieving or querying data. This ensures date strings, booleans, and JSON properties are parsed into native JavaScript types based on the model's static properties.
-- Prefer `camelCase` for values stored in the database (e.g., `product.type = 'teddyBears'` instead of `'teddy_bears'` or `'teddy-bears'`).
+- Prefer `camelCase` for table names and values stored in the database (e.g., `product.type = 'teddyBears'` instead of `'teddy_bears'` or `'teddy-bears'`).
 
 ### Database Operations
 
