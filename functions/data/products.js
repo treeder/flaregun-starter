@@ -73,7 +73,6 @@ export const SAMPLE_PRODUCTS = [
 ]
 
 export async function seedProducts(c) {
-  if (!c?.data?.d1) return
   try {
     const count = await c.data.d1.count(Product, { where: { userId: null } })
     if (count === 0) {
@@ -82,12 +81,12 @@ export async function seedProducts(c) {
       }
     }
   } catch (err) {
-    c.data?.logger?.error?.('Failed to seed products', err)
+    c.data.logger.error('Failed to seed products', err)
   }
 }
 
 export async function getProducts(c, q = {}) {
-  const userId = c?.data?.user?.id || null
+  const userId = c.data.user?.id || null
   const where = Array.isArray(q.where)
     ? [['userId', '=', userId], ...q.where]
     : { ...(q.where || {}), userId }
@@ -102,7 +101,7 @@ export async function getProducts(c, q = {}) {
 export async function getProduct(c, id) {
   const product = await c.data.d1.get(Product, id)
   if (!product) return null
-  if (product.userId && product.userId !== c?.data?.user?.id) {
+  if (product.userId && product.userId !== c.data.user?.id) {
     return null
   }
   return product

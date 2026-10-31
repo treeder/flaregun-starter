@@ -1,11 +1,9 @@
-import { KV, Scheduler } from 'flaregun'
+import { KV, Scheduler, D1, ErrorHandler, CloudflareLogger } from 'flaregun'
 import { runMigrations } from './data/migrations.js'
 import { seedProducts } from './data/products.js'
-import { globals } from './globals.js'
 import { ConsoleMailer } from './services/mailer.js'
 import { nanoid } from 'nanoid'
 import { ConsoleLogger } from 'console-logger'
-import { D1, ErrorHandler, CloudflareLogger } from 'flaregun'
 
 /**
  * Call this once at startup.
@@ -14,16 +12,6 @@ import { D1, ErrorHandler, CloudflareLogger } from 'flaregun'
 export async function init(c) {
   await runMigrations(c)
   await seedProducts(c)
-
-  globals.x = 'set one time things on the globals object here'
-
-  let scheduler = new Scheduler()
-  scheduler.addEventListener('minute', everyMinuteFunction)
-  scheduler.addEventListener('5minutes', every5MinutesFunction)
-  scheduler.addEventListener('hour', everyHourFunction)
-  globals.scheduler = scheduler
-
-  globals.mailer = new ConsoleMailer()
 }
 
 function everyMinuteFunction(evt) {
@@ -44,7 +32,6 @@ function everyHourFunction(evt) {
  * @param {*} c
  */
 export async function initRequest(c) {
-  c.data.globals = globals // make globals accessible through context
   let rid = nanoid()
   let ldata = {
     requestId: rid,
@@ -68,4 +55,12 @@ export async function initRequest(c) {
   c.data.d1 = new D1(c.env.D1)
   c.data.kv = new KV(c.env.KV)
   c.data.r2 = c.env.R2
+
+  let scheduler = new Scheduler()
+  scheduler.addEventListener('minute', everyMinuteFunction)
+  scheduler.addEventListener('5minutes', every5MinutesFunction)
+  scheduler.addEventListener('hour', everyHourFunction)
+  c.data.scheduler = scheduler
+
+  c.data.mailer = new ConsoleMailer()
 }

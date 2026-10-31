@@ -12,5 +12,5 @@ export async function scheduled(c) {
   await initRequest(c)
   await once(init, c)
 
-  await c.data.globals.scheduler.run(c, c.controller)
+  await c.data.scheduler.run(c, c.controller)
 }

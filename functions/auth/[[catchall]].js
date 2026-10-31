@@ -1,6 +1,5 @@
 import { Passkeys } from 'passkeys'
 import { hostURL, domainLevels } from '../utils.js'
-import { globals } from '../globals.js'
 import { isoBase64URL } from '@simplewebauthn/server/helpers'
 import { User } from '../data/users.js'
 
@@ -12,7 +11,7 @@ export async function onRequest(c) {
     baseURL: `${hostURL(c)}/auth`,
     domainLevels: domainLevels(c),
     kv: c.env.KV,
-    // mailer: globals.mailer, // replace with your own mailer instance with send() function
+    // mailer: c.data.mailer, // replace with your own mailer instance with send() function
     logger: c.data.logger,
     emailStart: async ({ email }) => {
       let normalized = (email || '').toLowerCase().trim()
