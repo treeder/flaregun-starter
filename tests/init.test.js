@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { initRequest } from '../functions/init.js'
+import { once, resetOnce } from 'once'
 import { ConsoleLogger } from 'console-logger'
 import { CloudflareLogger, Scheduler, D1, KV, ErrorHandler } from 'flaregun'
 import { ConsoleMailer } from '../functions/services/mailer.js'
@@ -114,5 +115,20 @@ describe('initRequest', () => {
     await initRequest(c3)
     expect(c3.data.env).toBe('prod')
     expect(c3.data.logger).toBeInstanceOf(CloudflareLogger)
+  })
+
+  it('once retries cleanly after transient init failure without poisoning the isolate', async () => {
+    resetOnce()
+    let calls = 0
+    const flakyInit = async () => {
+      calls++
+      if (calls === 1) throw new Error('D1_ERROR: internal error')
+      return 'ok'
+    }
+
+    await expect(once(flakyInit, {})).rejects.toThrow('D1_ERROR: internal error')
+    await expect(once(flakyInit, {})).resolves.toBe('ok')
+    await expect(once(flakyInit, {})).resolves.toBe('ok')
+    expect(calls).toBe(2)
   })
 })

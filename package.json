@@ -20,7 +20,7 @@
   "dependencies": {
     "api": "github:treeder/api#semver:^1",
     "console-logger": "github:treeder/console-logger#semver:^1",
-    "flaregun": "github:treeder/flaregun#semver:^4",
+    "flaregun": "github:treeder/flaregun#semver:^6",
     "migrations": "github:treeder/migrations#semver:^3",
     "nanoid": "^6.0.1",
     "once": "github:treeder/once#semver:^1",
