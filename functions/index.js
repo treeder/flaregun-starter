@@ -34,60 +34,66 @@ function render(d) {
         </div>
 
         <div class="display-medium" style="font-weight: 700; max-width: 760px;">
-          ${d.user
-            ? `Welcome back, ${escapeHtml(d.user.name || d.user.email || 'Builder')}!`
-            : 'Build fast, modern edge apps with Flaregun'}
+          ${
+            d.user
+              ? `Welcome back, ${escapeHtml(d.user.name || d.user.email || 'Builder')}!`
+              : 'Build fast, modern edge apps with Flaregun'
+          }
         </div>
 
         <div
           style="color: var(--md-sys-color-on-surface-variant); font-size: 1.15rem; line-height: 1.6; max-width: 680px;">
-          ${d.user
-            ? 'You are signed in. You can now create, edit, and delete products below or manage your full catalog.'
-            : 'Everything you need to ship on Cloudflare Workers—D1 database models, KV, R2 storage, Passkey authentication, and Material 3 Web Components.'}
+          ${
+            d.user
+              ? 'You are signed in. You can now create, edit, and delete products below or manage your full catalog.'
+              : 'Everything you need to ship on Cloudflare Workers—D1 database models, KV, R2 storage, Passkey authentication, and Material 3 Web Components.'
+          }
         </div>
 
         <div class="flex flexw jcc aic g12 mt8">
-          ${d.user
-            ? html`
-                <a href="/products">
-                  <md-button color="filled">
-                    <md-icon slot="icon">inventory_2</md-icon>
-                    Manage Products
-                  </md-button>
-                </a>
-                <a href="/demo">
-                  <md-button color="outlined">
-                    <md-icon slot="icon">widgets</md-icon>
-                    View Components Showcase
-                  </md-button>
-                </a>
-                <a href="/settings">
-                  <md-button color="text">
-                    <md-icon slot="icon">settings</md-icon>
-                    Account Settings
-                  </md-button>
-                </a>
-              `
-            : html`
-                <a href="/signin">
-                  <md-button color="filled">
-                    <md-icon slot="icon">login</md-icon>
-                    Sign In to Get Started
-                  </md-button>
-                </a>
-                <a href="/products">
-                  <md-button color="tonal">
-                    <md-icon slot="icon">storefront</md-icon>
-                    Browse Products
-                  </md-button>
-                </a>
-                <a href="/demo">
-                  <md-button color="outlined">
-                    <md-icon slot="icon">widgets</md-icon>
-                    View Components Showcase
-                  </md-button>
-                </a>
-              `}
+          ${
+            d.user
+              ? html`
+                  <a href="/products">
+                    <md-button color="filled">
+                      <md-icon slot="icon">inventory_2</md-icon>
+                      Manage Products
+                    </md-button>
+                  </a>
+                  <a href="/demo">
+                    <md-button color="outlined">
+                      <md-icon slot="icon">widgets</md-icon>
+                      View Components Showcase
+                    </md-button>
+                  </a>
+                  <a href="/settings">
+                    <md-button color="text">
+                      <md-icon slot="icon">settings</md-icon>
+                      Account Settings
+                    </md-button>
+                  </a>
+                `
+              : html`
+                  <a href="/signin">
+                    <md-button color="filled">
+                      <md-icon slot="icon">login</md-icon>
+                      Sign In to Get Started
+                    </md-button>
+                  </a>
+                  <a href="/products">
+                    <md-button color="tonal">
+                      <md-icon slot="icon">storefront</md-icon>
+                      Browse Products
+                    </md-button>
+                  </a>
+                  <a href="/demo">
+                    <md-button color="outlined">
+                      <md-icon slot="icon">widgets</md-icon>
+                      View Components Showcase
+                    </md-button>
+                  </a>
+                `
+          }
         </div>
       </div>
 
@@ -99,7 +105,8 @@ function render(d) {
             <div class="title-medium" style="font-weight: 600;">D1, KV &amp; R2 Built-In</div>
           </div>
           <div class="text-muted" style="line-height: 1.5;">
-            Zero-boilerplate wrappers for Cloudflare D1 SQL models, JSON merge patches, scoped KV storage, and R2 buckets.
+            Zero-boilerplate wrappers for Cloudflare D1 SQL models, JSON merge patches, scoped KV storage, and R2
+            buckets.
           </div>
         </md-card>
 
@@ -109,7 +116,8 @@ function render(d) {
             <div class="title-medium" style="font-weight: 600;">Passkeys &amp; Magic Links</div>
           </div>
           <div class="text-muted" style="line-height: 1.5;">
-            Passwordless authentication out of the box with WebAuthn passkeys, email verification, and user profile management.
+            Passwordless authentication out of the box with WebAuthn passkeys, email verification, and user profile
+            management.
           </div>
         </md-card>
 
@@ -119,7 +127,19 @@ function render(d) {
             <div class="title-medium" style="font-weight: 600;">Material 3 Web Components</div>
           </div>
           <div class="text-muted" style="line-height: 1.5;">
-            Native Lit &amp; Material 3 ESM components with no complex client bundle required. Explore the <a href="/demo">interactive demo</a>.
+            Native Lit &amp; Material 3 ESM components with no complex client bundle required. Explore the
+            <a href="/demo">interactive demo</a>.
+          </div>
+        </md-card>
+
+        <md-card class="p20 flex col g8">
+          <div class="flex aic g8" style="color: var(--md-sys-color-primary);">
+            <md-icon>smart_toy</md-icon>
+            <div class="title-medium" style="font-weight: 600;">MCP Endpoint Built-In</div>
+          </div>
+          <div class="text-muted" style="line-height: 1.5;">
+            Ready for AI agents out of the box at <code>/mcp</code> with Streamable HTTP, SSE, and scoped API keys in
+            <a href="/settings">Settings</a>.
           </div>
         </md-card>
       </div>
@@ -130,9 +150,11 @@ function render(d) {
           <div class="flex col g4">
             <div class="headline-medium" style="font-weight: 600;">Recent Products</div>
             <div class="text-muted">
-              ${d.user
-                ? 'Manage your product catalog—add new items, edit details, or remove products.'
-                : 'Explore recent items from the store. Sign in to add, edit, or delete products.'}
+              ${
+                d.user
+                  ? 'Manage your product catalog—add new items, edit details, or remove products.'
+                  : 'Explore recent items from the store. Sign in to add, edit, or delete products.'
+              }
             </div>
           </div>
           <a href="/products">
@@ -143,10 +165,7 @@ function render(d) {
           </a>
         </div>
 
-        <product-list
-          user="${userAttr}"
-          limit="6"
-          ${d.user ? 'can-manage' : ''}></product-list>
+        <product-list user="${userAttr}" limit="6" ${d.user ? 'can-manage' : ''}></product-list>
       </div>
     </div>
   `
