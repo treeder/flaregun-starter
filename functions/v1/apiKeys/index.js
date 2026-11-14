@@ -89,11 +89,12 @@ export async function onRequestPost(c) {
   const record = {
     name,
     keyHash,
-    maskedKey,
     userId: c.data.user.id,
-    scopes,
     expiresAt,
-    data: {},
+    data: {
+      maskedKey,
+      scopes,
+    },
   }
 
   await c.data.d1.insert(ApiKey, record)

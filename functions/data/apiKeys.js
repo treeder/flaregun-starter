@@ -20,15 +20,11 @@ export class ApiKey {
     },
     keyHash: {
       type: String,
-    },
-    maskedKey: {
-      type: String,
+      index: { unique: true },
     },
     userId: {
       type: String,
-    },
-    scopes: {
-      type: Object,
+      index: true,
     },
     lastUsedAt: {
       type: Date,
@@ -121,9 +117,14 @@ export async function resolveApiKey(c, rawToken) {
   return record
 }
 
+export function getApiKeyScopes(record) {
+  const scopes = record?.data?.scopes
+  return Array.isArray(scopes) ? scopes : DEFAULT_API_KEY_SCOPES
+}
+
 export function hasApiKeyScope(c, scope) {
   if (!c.data.apiKey) return true
-  const scopes = Array.isArray(c.data.apiKey.scopes) ? c.data.apiKey.scopes : DEFAULT_API_KEY_SCOPES
+  const scopes = getApiKeyScopes(c.data.apiKey)
   if (scopes.includes('*') || scopes.includes(scope)) return true
   if (scope === 'read') {
     return scopes.includes('write')
@@ -135,9 +136,9 @@ export function formatApiKey(record) {
   return {
     id: record.id,
     name: record.name || 'API Key',
-    maskedKey: record.maskedKey || '••••••••',
+    maskedKey: record.data?.maskedKey || '••••••••',
     userId: record.userId,
-    scopes: Array.isArray(record.scopes) ? record.scopes : DEFAULT_API_KEY_SCOPES,
+    scopes: getApiKeyScopes(record),
     lastUsedAt: record.lastUsedAt || null,
     expiresAt: record.expiresAt || null,
     createdAt: record.createdAt || null,

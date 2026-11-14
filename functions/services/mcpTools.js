@@ -1,4 +1,4 @@
-import { hasApiKeyScope } from '../data/apiKeys.js'
+import { getApiKeyScopes, hasApiKeyScope } from '../data/apiKeys.js'
 import { Product, getProduct } from '../data/products.js'
 import { User } from '../data/users.js'
 
@@ -40,7 +40,7 @@ export const TOOLS = [
           createdAt: user.createdAt || null,
         },
         authMethod: c.data.isAgent ? 'apiKey' : 'session',
-        scopes: c.data.apiKey?.scopes || ['mcp', 'read', 'write'],
+        scopes: getApiKeyScopes(c.data.apiKey),
       })
     },
   },
