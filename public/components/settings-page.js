@@ -6,6 +6,7 @@ import 'material/card/card.js'
 import 'material/icon/icon.js'
 import 'material/divider/divider.js'
 import '/components/confirm-dialog.js'
+import '/components/api-keys-card.js'
 import { styles } from '/css/styles.js'
 import { api } from 'api'
 import state from 'state'
@@ -524,6 +525,9 @@ export class SettingsPage extends LitElement {
             </div>
           </div>
         </md-card>
+
+        <!-- Section 3: MCP & API Keys -->
+        <api-keys-card></api-keys-card>
       </div>
     `
   }
