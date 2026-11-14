@@ -16,7 +16,7 @@ Every HTTP request, scheduled cron event, and queue batch runs through `flaregun
 - `c.passThroughOnException()`: Bound `ctx.passThroughOnException` function.
 - `c.next(nextReq?, nextEnv?)`: Advances to the next middleware or route handler in the chain.
 - `c.data`: Shared per-request context object, always initialized and populated before any route handler executes.
-- *(In [`functions/scheduled.js`](../functions/scheduled.js), `c.controller` is provided; in [`functions/queue.js`](../functions/queue.js), `c.batch` is provided).*
+- _(In [`functions/scheduled.js`](../functions/scheduled.js), `c.controller` is provided; in [`functions/queue.js`](../functions/queue.js), `c.batch` is provided)._
 
 ### Pre-Initialized Properties on `c.data`
 
@@ -31,7 +31,8 @@ Every HTTP request, scheduled cron event, and queue batch runs through `flaregun
 - `c.data.scheduler`: Pre-initialized `Scheduler` instance (`new Scheduler()`).
 - `c.data.mailer`: Pre-initialized mailer instance (`new ConsoleMailer()`).
 - `c.data.rend`: Pre-initialized `Rend` HTML renderer configured with the app layout and reactive `{ user, path }` data (for HTTP requests).
-- `c.data.user`: The authenticated `User` object when the request has a valid session, or `undefined` when unauthenticated (this is the **only** conditional property on `c.data`).
+- `c.data.user`: The authenticated `User` object when the request has a valid session or API key, or `undefined` when unauthenticated.
+- `c.data.apiKey` / `c.data.isAgent`: Present (`ApiKey` record and `true`) when the request was authenticated via an API key (`Authorization: Bearer fg_key_...`, `x-api-key`, or `?token=` on `/mcp`); `undefined` otherwise.
 
 ### Critical Rule — No Defensive Existence Checks
 
@@ -206,3 +207,10 @@ The starter app uses standard Material 3 ESM web components via [material-esm/ma
 | **Search**             | `<md-search>`                           | `material/search/search.js`                                             | `@input`, `placeholder`                                                                                 |
 | **Carousels**          | `<md-carousel>`<br>`<md-carousel-item>` | `material/carousel/carousel.js`<br>`material/carousel/carousel-item.js` | `layout="multi-browse"`, `indicators`, `loop`, contains `<md-carousel-item interactive headline="...">` |
 | **Dividers**           | `<md-divider>`                          | `material/divider/divider.js`                                           | Clean Material surface divider line                                                                     |
+
+---
+
+## Built-In MCP Endpoint (`/mcp`)
+
+- Every app started from `flaregun-starter` exposes a Model Context Protocol (MCP) server at [`functions/mcp/index.js`](../functions/mcp/index.js) backed by [`functions/services/mcpServer.js`](../functions/services/mcpServer.js) and API keys in [`functions/data/apiKeys.js`](../functions/data/apiKeys.js).
+- When adding new domain models or features, register corresponding MCP tools, resources, or prompts in [`functions/services/mcpTools.js`](../functions/services/mcpTools.js) and enforce write scopes (`hasApiKeyScope(c, 'write')`) and per-user ownership checks on mutating tools.
