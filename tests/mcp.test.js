@@ -311,7 +311,7 @@ test('API key lifecycle, MCP protocol transports, tools, resources, prompts, and
   expect(updatedProduct.price).toBe(79)
   expect(updatedProduct.data.inStock).toBe(false)
 
-  // List mine via MCP tool
+  // List mine via MCP tool (verifies D1 pushdown for search, category, and inStock)
   const listMineRpc = await fetch(`${baseUrl}/mcp`, {
     method: 'POST',
     headers: {
@@ -324,7 +324,7 @@ test('API key lifecycle, MCP protocol transports, tools, resources, prompts, and
       method: 'tools/call',
       params: {
         name: 'listProducts',
-        arguments: { scope: 'mine', search: 'Sensor' },
+        arguments: { scope: 'mine', search: 'Sensor', category: 'Electronics', inStock: false },
       },
     }),
   })
@@ -392,7 +392,7 @@ test('API key lifecycle, MCP protocol transports, tools, resources, prompts, and
   const user2GetData = await user2GetPrivate.json()
   expect(user2GetData.result.isError).toBe(true)
 
-  // Read-only key cannot call write tools or mutating /v1/* endpoints
+  // Read-only key and mcp-only key (without explicit 'write') cannot call write tools or mutating /v1/* endpoints
   const roKeyRes = await fetch(`${baseUrl}/v1/apiKeys`, {
     method: 'POST',
     headers: {
@@ -403,6 +403,34 @@ test('API key lifecycle, MCP protocol transports, tools, resources, prompts, and
   })
   expect(roKeyRes.status).toBe(201)
   const roKey = (await roKeyRes.json()).apiKey.key
+
+  const mcpOnlyKeyRes = await fetch(`${baseUrl}/v1/apiKeys`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Cookie: user1.cookie,
+    },
+    body: JSON.stringify({ name: 'MCP Only Agent', scopes: ['mcp'] }),
+  })
+  expect(mcpOnlyKeyRes.status).toBe(201)
+  const mcpOnlyKey = (await mcpOnlyKeyRes.json()).apiKey.key
+
+  const mcpOnlyWriteRes = await fetch(`${baseUrl}/mcp`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${mcpOnlyKey}`,
+    },
+    body: JSON.stringify({
+      jsonrpc: '2.0',
+      id: 'mcp-only-write',
+      method: 'tools/call',
+      params: { name: 'createProduct', arguments: { name: 'Should Fail' } },
+    }),
+  })
+  const mcpOnlyWriteData = await mcpOnlyWriteRes.json()
+  expect(mcpOnlyWriteData.result.isError).toBe(true)
+  expect(mcpOnlyWriteData.result.content[0].text).toContain('write')
 
   const roWriteMcp = await fetch(`${baseUrl}/mcp`, {
     method: 'POST',

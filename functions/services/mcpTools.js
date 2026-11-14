@@ -80,44 +80,45 @@ export const TOOLS = [
       const limit = Math.min(Math.max(Number(args.limit) || 20, 1), 100)
       const userId = c.data.user.id
 
-      let where
+      const where = []
       if (scope === 'mine') {
-        where = { userId }
+        where.push(['userId', '=', userId])
       } else if (scope === 'sample') {
-        where = { userId: null }
+        where.push(['userId', 'is', null])
       } else {
-        where = [[['userId', '=', userId], 'or', ['userId', 'is', null]]]
+        where.push([['userId', '=', userId], 'or', ['userId', 'is', null]])
       }
 
-      let products = await c.data.d1.query(Product, {
-        where,
-        order: [['createdAt', 'desc']],
-        limit: 100,
-      })
-
       if (args.category) {
-        const cat = String(args.category).trim().toLowerCase()
-        products = products.filter((p) => String(p.data?.category || '').toLowerCase() === cat)
+        const rawCat = String(args.category).trim()
+        if (rawCat) {
+          const lowerCat = rawCat.toLowerCase()
+          where.push(
+            rawCat === lowerCat
+              ? ['data.category', '=', rawCat]
+              : [['data.category', '=', rawCat], 'or', ['data.category', '=', lowerCat]],
+          )
+        }
       }
 
       if (typeof args.inStock === 'boolean') {
-        products = products.filter((p) => Boolean(p.data?.inStock) === args.inStock)
+        where.push(['data.inStock', '=', args.inStock])
       }
 
       if (args.search) {
-        const q = String(args.search).trim().toLowerCase()
-        products = products.filter(
-          (p) =>
-            String(p.name || '')
-              .toLowerCase()
-              .includes(q) ||
-            String(p.description || '')
-              .toLowerCase()
-              .includes(q),
-        )
+        const q = String(args.search).trim()
+        if (q) {
+          const pattern = `%${q}%`
+          where.push([['name', 'like', pattern], 'or', ['description', 'like', pattern]])
+        }
       }
 
-      products = products.slice(0, limit)
+      const products = await c.data.d1.query(Product, {
+        where,
+        order: [['createdAt', 'desc']],
+        limit,
+      })
+
       return textResult({
         count: products.length,
         products,
@@ -413,15 +414,23 @@ export async function readResource(c, uri) {
 export async function getPrompt(c, name, args = {}) {
   if (name !== 'summarizeCatalog') return null
   const userId = c.data.user.id
-  let products = await c.data.d1.query(Product, {
-    where: [[['userId', '=', userId], 'or', ['userId', 'is', null]]],
+  const where = [[['userId', '=', userId], 'or', ['userId', 'is', null]]]
+  if (args.category) {
+    const rawCat = String(args.category).trim()
+    if (rawCat) {
+      const lowerCat = rawCat.toLowerCase()
+      where.push(
+        rawCat === lowerCat
+          ? ['data.category', '=', rawCat]
+          : [['data.category', '=', rawCat], 'or', ['data.category', '=', lowerCat]],
+      )
+    }
+  }
+  const products = await c.data.d1.query(Product, {
+    where,
     order: [['createdAt', 'desc']],
     limit: 50,
   })
-  if (args.category) {
-    const cat = String(args.category).trim().toLowerCase()
-    products = products.filter((p) => String(p.data?.category || '').toLowerCase() === cat)
-  }
 
   return {
     description: 'Summarize the current product catalog and highlight pricing and stock insights.',

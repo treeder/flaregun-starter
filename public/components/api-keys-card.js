@@ -209,6 +209,7 @@ export class ApiKeysCard extends LitElement {
   }
 
   async createApiKey() {
+    if (this.creating) return
     const nameField = this.renderRoot.querySelector('#api-key-name-field')
     const name = nameField?.value?.trim() || 'MCP Agent Key'
 

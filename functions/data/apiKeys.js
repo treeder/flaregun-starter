@@ -125,11 +125,8 @@ export function hasApiKeyScope(c, scope) {
   if (!c.data.apiKey) return true
   const scopes = Array.isArray(c.data.apiKey.scopes) ? c.data.apiKey.scopes : DEFAULT_API_KEY_SCOPES
   if (scopes.includes('*') || scopes.includes(scope)) return true
-  if (scope === 'write') {
-    return !scopes.includes('read') && scopes.includes('mcp')
-  }
   if (scope === 'read') {
-    return scopes.includes('write') || scopes.includes('mcp')
+    return scopes.includes('write')
   }
   return false
 }
