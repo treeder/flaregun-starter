@@ -72,3 +72,54 @@ test('layout navbar includes navigation links for Products and Components Demo',
   expect(html).toContain('Components Demo')
   expect(html).toContain('href="/demo"')
 })
+
+test('layout renders semantic footer with Material 3 divider, nav sections, and responsive styles', async () => {
+  const res = await fetch(`${baseUrl}/demo`)
+  expect(res.status).toBe(200)
+  const html = await res.text()
+
+  expect(html).toContain('<main class="page-main">')
+  expect(html).toContain('<footer class="site-footer">')
+  expect(html).toContain("import 'material/divider/divider.js'")
+  expect(html).toContain('<md-divider></md-divider>')
+  expect(html).toContain('aria-labelledby="footer-nav-app"')
+  expect(html).toContain('aria-labelledby="footer-nav-dev"')
+  expect(html).toContain('aria-labelledby="footer-nav-resources"')
+  expect(html).toMatch(/href="\/demo"\s+aria-current="page"/)
+  expect(html).toContain('href="/signin"')
+  expect(html).toContain('Apache-2.0 License.')
+
+  // Verify authenticated user sees Account Settings instead of Sign In in footer
+  const email = `footer-${Date.now()}@example.com`
+  const startRes = await fetch(`${baseUrl}/auth/email/start`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email }),
+  })
+  expect(startRes.status).toBe(200)
+  const { link } = await startRes.json()
+  const verifyRes = await fetch(link, { redirect: 'manual' })
+  const setCookieHeaders = verifyRes.headers.getSetCookie?.() || [verifyRes.headers.get('set-cookie')].filter(Boolean)
+  const cookieHeader = setCookieHeaders.map((sc) => sc.split(';')[0]).join('; ')
+
+  const authedRes = await fetch(`${baseUrl}/`, {
+    headers: { Cookie: cookieHeader },
+  })
+  expect(authedRes.status).toBe(200)
+  const authedHtml = await authedRes.text()
+  expect(authedHtml).toContain('Account Settings')
+  expect(authedHtml).toMatch(/href="\/"\s+aria-current="page"/)
+
+  // Verify footer styles are served in /css/styles.css and excluded from shadow-DOM /css/styles.js
+  const cssRes = await fetch(`${baseUrl}/css/styles.css`)
+  expect(cssRes.status).toBe(200)
+  const cssText = await cssRes.text()
+  expect(cssText).toContain('.site-footer')
+  expect(cssText).toContain('.site-footer-grid')
+  expect(cssText).toContain('min-block-size: 100dvh')
+
+  const shadowCssRes = await fetch(`${baseUrl}/css/styles.js`)
+  expect(shadowCssRes.status).toBe(200)
+  const shadowCssText = await shadowCssRes.text()
+  expect(shadowCssText).not.toContain('.site-footer')
+})
