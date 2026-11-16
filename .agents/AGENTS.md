@@ -60,33 +60,42 @@ The `D1` class wraps the native Cloudflare D1 Database binding to add advanced o
 - Always use `c.data.d1` in route handlers, middleware, and scheduled jobs (only instantiate with `new D1(env.D1)` in standalone scripts or isolated unit tests).
 - You can enable debugging by setting `c.data.d1.debug = true`.
 
-### Table Names and Models
+### Models and Table Names
 
-- Database operations accept either a string table name or a model class (using the `models` npm library):
+- Always pass the model class (using the `models` npm library) rather than a string table name for database operations (`get`, `insert`, `update`, `delete`, `all`, `first`, `count`, and joins). String table names are supported only as a fallback when no model class exists.
   ```js
-  import { User } from './models/User.js'
-  // Resolves the table name from User.table and parses fields automatically
+  import { User } from './data/users.js'
+  // Resolves the table name from the class name ('users', or User.table if overridden) and parses fields automatically
   const user = await c.data.d1.get(User, userId)
   ```
-- Always prefer using model classes when retrieving or querying data. This ensures date strings, booleans, and JSON properties are parsed into native JavaScript types based on the model's static properties.
+- Using model classes ensures date strings, booleans, and JSON properties are parsed into native JavaScript types based on the model's `static properties`.
+- Table names default to the pluralized `camelCase` of the model class name (e.g., `User` -> `'users'`, `ApiKey` -> `'apiKeys'`), or `static table` if explicitly set on the class.
 - Prefer `camelCase` for table names and values stored in the database (e.g., `product.type = 'teddyBears'` instead of `'teddy_bears'` or `'teddy-bears'`).
 
 ### Database Operations
 
-- **Get**: `await c.data.d1.get(table, id, q = {})` retrieves a single record by ID.
-- **Delete**: `await c.data.d1.delete(table, id)` deletes a record by ID.
-- **Insert**: `await c.data.d1.insert(table, obj)` inserts a new record.
+- **Get**: `await c.data.d1.get(User, id, q = {})` retrieves a single record by ID.
+- **Delete**: `await c.data.d1.delete(User, id)` deletes a record by ID.
+- **Insert**: `await c.data.d1.insert(User, obj)` inserts a new record.
   - Automatically generates an alphanumeric ID using `nanoid()` if `id` is omitted.
   - Automatically inserts `createdAt` and `updatedAt` timestamps.
-- **Update**: `await c.data.d1.update(table, id, obj)` updates a record by ID.
+- **Update**: `await c.data.d1.update(User, id, obj)` updates a record by ID.
+  - Supports partial updates: pass only the columns/fields you want to modify without fetching the record first.
   - Automatically updates the `updatedAt` field to the current timestamp.
-  - **JSON Merge Patch**: Object properties inside the update payload are automatically patched on the database using SQL `json_patch(COALESCE(field, '{}'), ?)` (conforming to RFC 7396) if the column contains JSON data.
-- **Count**: `await c.data.d1.count(table, q = {})` returns the count of matching rows.
-- **First**: `await c.data.d1.first(table, q = {})` retrieves the first matching record.
+  - **JSON Merge Patch (`json_patch`)**: Object properties inside the update payload are merged atomically in SQLite using `json_patch(COALESCE(field, '{}'), ?)` ([RFC 7396](https://datatracker.ietf.org/doc/html/rfc7396)). You can update or add nested JSON fields without fetching the object and merging manually (and set a key to `null` to remove it):
+    ```js
+    // Merges into existing `data` JSON without overwriting sibling/nested keys
+    await c.data.d1.update(User, userId, {
+      data: { settings: { theme: 'light' }, tempFlag: null },
+    })
+    ```
+- **Count**: `await c.data.d1.count(User, q = {})` returns the count of matching rows.
+- **First**: `await c.data.d1.first(User, q = {})` retrieves the first matching record.
+- **All**: `await c.data.d1.all(User, q = {})` (or `c.data.d1.query(User, q = {})`) retrieves all matching records.
 
-### Advanced Querying (`c.data.d1.query(table, q)`)
+### Advanced Querying (`c.data.d1.all(User, q)` / `c.data.d1.query(User, q)`)
 
-The query method accepts a query options object `q` with the following parameters:
+The `all` / `query` methods accept a query options object `q` with the following parameters:
 
 - `where`: Filters the query.
   - **Equality Object**: `{ email: 'user@example.com', status: 'active' }` (creates `WHERE email = ? AND status = ?`).
@@ -97,7 +106,7 @@ The query method accepts a query options object `q` with the following parameter
 - `limit`: Maximum number of records to return, e.g., `100`.
 - `offset`: Query offset.
 - `columns`: Array of specific columns to retrieve.
-- `join`: Join query configuration. Supports joining objects or raw strings.
+- `join`: Join query configuration using model classes (e.g., `join: [User]` or `join: [{ type: 'INNER', table: User, on: ['userId', '=', 'id'] }]`).
 
 ---
 
