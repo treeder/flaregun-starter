@@ -48,30 +48,42 @@ Try making some changes and see it update in real-time!
 
 ### Schema / migrations
 
-Define models [models](https://github.com/treeder/models) in the [data](./functions/data) folder, then add the class to [migrations.js](./functions/data/migrations.js) to automatically keep your database schema up to date.
+Define [models](https://github.com/treeder/models) as classes in the [data](./functions/data) folder (table names default to the pluralized `camelCase` of the class name, e.g. `User` -> `'users'`, `Product` -> `'products'`), then add the class to [migrations.js](./functions/data/migrations.js) to automatically keep your database schema up to date.
 
 ### Using the database
 
-It's super easy to use the database:
+Pass your model class (e.g. `User`, `Product`) to `c.data.d1` methods — fields like dates, booleans, and JSON objects are parsed automatically:
 
 ```js
-let user = { name: 'John Wick', email: 'x@y.com' }
-await c.data.d1.insert('users', user)
+import { User } from './data/users.js'
 
-user.name = 'Jim Bean'
-// update a row
-await c.data.d1.update('users', user.id, user)
+let user = {
+  name: 'John Wick',
+  email: 'x@y.com',
+  data: { role: 'admin', settings: { theme: 'dark', notifications: true } },
+}
+await c.data.d1.insert(User, user)
+
+// partial updates — only pass the fields you want to change (no need to fetch first)
+await c.data.d1.update(User, user.id, { name: 'Jim Bean' })
+
+// JSON fields are merged atomically in SQLite via `json_patch` (RFC 7396),
+// so you can update nested properties without fetching and merging manually
+// (and set a key to `null` to delete it):
+await c.data.d1.update(User, user.id, {
+  data: { settings: { theme: 'light' } },
+})
 
 // get object
-user = c.data.d1.get('users', user.id)
+user = await c.data.d1.get(User, user.id)
 
-// querying
-let users = await c.data.d1.query('users', {
+// querying (`all`, or `query` alias)
+let users = await c.data.d1.all(User, {
   where: { email: 'x@y.com' },
 })
 ```
 
-See the [D1 docs](https://github.com/treeder/flaregun/blob/main/README.md#d1-sqlite-database) in the flaregun for more complex examples.
+See the [D1 docs](https://github.com/treeder/flaregun/blob/main/README.md#d1-sqlite-database) in flaregun for more complex examples.
 
 ## Layout
 
@@ -142,6 +154,16 @@ await c.env.QUEUE.send({ message: 'Hello, world!' }, { delaySeconds: 60 })
 ```
 
 That will delay the message for 60 seconds.
+
+## Email & Authentication
+
+Email magic-link verification and transactional messages use **Cloudflare Email Service** (`bindings.sendEmail()` on `c.env.EMAIL`) wrapped by `CloudflareMailer` in [functions/services/mailer.js](functions/services/mailer.js) whenever the `EMAIL_FROM` environment variable is set (e.g. `EMAIL_FROM="My App <noreply@updates.example.com>"`).
+
+- **When `EMAIL_FROM` is not set**: `c.data.mailer` falls back to `ConsoleMailer` and logs emails to the console.
+- **When `EMAIL_FROM` is set**: `c.data.mailer` uses `CloudflareMailer` to send emails via `c.env.EMAIL`.
+- **Local development (`npm start`)**: `/auth/email/start` includes a convenience verification link in `dev` mode so you can sign in immediately on `localhost`, while `preview` and `prod` never expose verification links in API responses.
+
+Set `EMAIL_FROM` via Worker secrets (`npx cf workers secrets update EMAIL_FROM --text "My App <noreply@example.com>"`), Cloudflare Workers Builds environment variables, or `.env` / `.dev.vars` locally.
 
 ## MCP Server (AI Agent Ready)
 

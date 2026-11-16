@@ -1,7 +1,7 @@
 import { KV, Scheduler, D1, ErrorHandler, CloudflareLogger } from 'flaregun'
 import { runMigrations } from './data/migrations.js'
 import { seedProducts } from './data/products.js'
-import { ConsoleMailer } from './services/mailer.js'
+import { CloudflareMailer, ConsoleMailer } from './services/mailer.js'
 import { nanoid } from 'nanoid'
 import { ConsoleLogger } from 'console-logger'
 
@@ -62,5 +62,12 @@ export async function initRequest(c) {
   scheduler.addEventListener('hour', everyHourFunction)
   c.data.scheduler = scheduler
 
-  c.data.mailer = new ConsoleMailer()
+  const emailFrom = String(c.env.EMAIL_FROM || '').trim()
+  c.data.mailer = emailFrom
+    ? new CloudflareMailer(c.env.EMAIL, {
+        from: emailFrom,
+        appName: 'Flaregun',
+        logger: c.data.logger,
+      })
+    : new ConsoleMailer()
 }
