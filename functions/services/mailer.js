@@ -170,7 +170,11 @@ export class CloudflareMailer {
     if (opts.body) {
       const isHtml = /<[a-z][\s\S]*>/i.test(opts.body)
       if (!html) {
-        if (extractedLink && /sign in|verify/i.test(`${subject} ${opts.body}`)) {
+        if (
+          extractedLink &&
+          /\/auth\/email\/verify\b/i.test(extractedLink) &&
+          /sign in|verify/i.test(`${subject} ${opts.body}`)
+        ) {
           html = renderEmailTemplate({
             title: subject,
             content: `Click the button below to verify your email address and sign in to <strong>${escapeHtml(this.appName)}</strong>.`,
@@ -183,7 +187,7 @@ export class CloudflareMailer {
         }
       }
       if (!text) {
-        text = stripHtmlToText(opts.body)
+        text = isHtml ? stripHtmlToText(opts.body) : String(opts.body).trim()
       }
     } else if (html && !text) {
       text = stripHtmlToText(html)

@@ -85,11 +85,16 @@ describe('CloudflareMailer, ConsoleMailer & formatAppFrom', () => {
 
     await mailer.send({
       to: 'user@example.com',
-      subject: 'Notification',
-      body: 'Plain text notification\nLine two',
+      subject: 'Please verify your order',
+      body: 'Items with price < 50 and > 10 at https://example.com/orders/1\nLine two',
     })
     expect(sendMock).toHaveBeenCalledTimes(1)
-    expect(sendMock.mock.calls[0][0].html).toBe('<p>Plain text notification<br>Line two</p>')
+    expect(sendMock.mock.calls[0][0].html).toBe(
+      '<p>Items with price &lt; 50 and &gt; 10 at https://example.com/orders/1<br>Line two</p>',
+    )
+    expect(sendMock.mock.calls[0][0].text).toBe(
+      'Items with price < 50 and > 10 at https://example.com/orders/1\nLine two',
+    )
   })
 })
 
@@ -267,5 +272,38 @@ describe('End-to-end Auth Hardening on Live Dev Server', () => {
       body: JSON.stringify({ userId: 'some-other-user-id', credential: {} }),
     })
     expect(spoofCreate.status).toBe(403)
+
+    // API key (agent) requests must not be allowed to manage passkeys
+    const keyRes = await fetch(`${baseUrl}/v1/apiKeys`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Cookie: cookie,
+      },
+      body: JSON.stringify({ apiKey: { name: 'Passkey Guard Test Key' } }),
+    })
+    expect(keyRes.status).toBe(201)
+    const { apiKey } = await keyRes.json()
+    const apiKeyToken = apiKey.key
+
+    const agentNewRes = await fetch(`${baseUrl}/auth/passkeys/new`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${apiKeyToken}`,
+      },
+      body: JSON.stringify({}),
+    })
+    expect(agentNewRes.status).toBe(403)
+
+    const agentCreateRes = await fetch(`${baseUrl}/auth/passkeys/create`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${apiKeyToken}`,
+      },
+      body: JSON.stringify({ credential: {} }),
+    })
+    expect(agentCreateRes.status).toBe(403)
   })
 })

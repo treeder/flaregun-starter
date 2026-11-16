@@ -8,17 +8,28 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 function sanitizeRedirectLocation(rawLocation, origin) {
   if (!rawLocation) return '/'
   const loc = String(rawLocation).trim()
-  if (loc.startsWith('/') && !loc.startsWith('//') && !loc.startsWith('/\\') && !/[\r\n]/.test(loc)) {
+  if (/[\x00-\x1f\x7f]/.test(loc)) return '/'
+  if (loc.startsWith('/') && !loc.startsWith('//') && !loc.startsWith('/\\')) {
     return loc
   }
   try {
     const parsed = new URL(loc)
     const expectedOrigin = new URL(origin).origin
     if (parsed.origin === expectedOrigin) {
-      return loc
+      return parsed.href
     }
   } catch {}
   return '/'
+}
+
+function assertInteractiveSession(c) {
+  if (!c.data.user) {
+    return Response.json({ error: { message: 'Authentication required' } }, { status: 401 })
+  }
+  if (c.data.isAgent) {
+    return Response.json({ error: { message: 'Forbidden: session authentication required' } }, { status: 403 })
+  }
+  return null
 }
 
 export async function onRequest(c) {
@@ -95,18 +106,16 @@ export async function onRequest(c) {
     }
   } else if (p[0] == 'passkeys') {
     if (p[1] == 'new') {
-      if (!c.data.user) {
-        return Response.json({ error: { message: 'Authentication required' } }, { status: 401 })
-      }
+      const authErr = assertInteractiveSession(c)
+      if (authErr) return authErr
       return await passkeys.new(c)
     }
     if (p[1] == 'start') {
       return await passkeys.start(c)
     }
     if (p[1] == 'create') {
-      if (!c.data.user) {
-        return Response.json({ error: { message: 'Authentication required' } }, { status: 401 })
-      }
+      const authErr = assertInteractiveSession(c)
+      if (authErr) return authErr
       let body = null
       try {
         body = await c.request.clone().json()
@@ -128,12 +137,18 @@ export async function onRequest(c) {
       return await passkeys.verify(c)
     }
     if (p[1] == 'check') {
+      const authErr = assertInteractiveSession(c)
+      if (authErr) return authErr
       return await passkeys.check(c)
     }
     if (p[1] == 'list' && c.request.method === 'GET') {
+      const authErr = assertInteractiveSession(c)
+      if (authErr) return authErr
       return await passkeys.list(c)
     }
     if ((p[1] == 'delete' || p[1] == 'remove') && (c.request.method === 'POST' || c.request.method === 'DELETE')) {
+      const authErr = assertInteractiveSession(c)
+      if (authErr) return authErr
       return await passkeys.delete(c)
     }
   }
