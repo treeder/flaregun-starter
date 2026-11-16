@@ -225,7 +225,19 @@ test('API key lifecycle, MCP protocol transports, tools, resources, prompts, and
   const toolsListData = await toolsListRes.json()
   const toolNames = toolsListData.result.tools.map((t) => t.name)
   expect(toolNames).toEqual(
-    expect.arrayContaining(['whoami', 'listProducts', 'getProduct', 'createProduct', 'updateProduct', 'deleteProduct']),
+    expect.arrayContaining([
+      'whoami',
+      'listProducts',
+      'getProduct',
+      'createProduct',
+      'updateProduct',
+      'deleteProduct',
+      'listProductReviews',
+      'createProductReview',
+      'listOrders',
+      'getOrder',
+      'createOrder',
+    ]),
   )
   expect(toolsListData.result.tools[0].handler).toBeUndefined()
 
@@ -361,11 +373,96 @@ test('API key lifecycle, MCP protocol transports, tools, resources, prompts, and
   const batchData = await batchRpcRes.json()
   expect(batchData.length).toBe(3)
   expect(batchData[0].id).toBe('r1')
-  expect(batchData[0].result.resources.length).toBe(2)
+  expect(batchData[0].result.resources.length).toBe(3)
   expect(batchData[1].id).toBe('r2')
   expect(JSON.parse(batchData[1].result.contents[0].text).product.id).toBe(createdProduct.id)
   expect(batchData[2].id).toBe('p1')
   expect(batchData[2].result.messages[0].content.text).toContain('MCP Smart Sensor')
+
+  // 8b. MCP reviews and orders tools work end-to-end
+  const restockRpc = await fetch(`${baseUrl}/mcp`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${rawKey}`,
+    },
+    body: JSON.stringify({
+      jsonrpc: '2.0',
+      id: 'restock-1',
+      method: 'tools/call',
+      params: {
+        name: 'updateProduct',
+        arguments: { id: createdProduct.id, inStock: true, stockCount: 5 },
+      },
+    }),
+  })
+  expect((await restockRpc.json()).result.isError).toBe(false)
+
+  const reviewRpc = await fetch(`${baseUrl}/mcp`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Cookie: user2.cookie,
+    },
+    body: JSON.stringify({
+      jsonrpc: '2.0',
+      id: 'rev-1',
+      method: 'tools/call',
+      params: {
+        name: 'createProductReview',
+        arguments: {
+          productId: createdProduct.id,
+          rating: 5,
+          title: 'Awesome MCP sensor',
+          body: 'Works great over Zigbee and Thread.',
+        },
+      },
+    }),
+  })
+  const reviewData = await reviewRpc.json()
+  expect(reviewData.result.isError).toBe(false)
+  expect(JSON.parse(reviewData.result.content[0].text).summary.ratingAvg).toBe(5)
+
+  const orderRpc = await fetch(`${baseUrl}/mcp`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Cookie: user2.cookie,
+    },
+    body: JSON.stringify({
+      jsonrpc: '2.0',
+      id: 'ord-1',
+      method: 'tools/call',
+      params: {
+        name: 'createOrder',
+        arguments: {
+          items: [{ productId: createdProduct.id, quantity: 2 }],
+          customerName: 'User Two',
+          shippingAddress: '500 Market St, San Francisco, CA',
+        },
+      },
+    }),
+  })
+  const orderRpcData = await orderRpc.json()
+  expect(orderRpcData.result.isError).toBe(false)
+  const createdOrder = JSON.parse(orderRpcData.result.content[0].text).order
+  expect(createdOrder.orderNumber).toMatch(/^FG-/)
+
+  // User 1 cannot read User 2's order via MCP getOrder
+  const crossOrderRpc = await fetch(`${baseUrl}/mcp`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${rawKey}`,
+    },
+    body: JSON.stringify({
+      jsonrpc: '2.0',
+      id: 'ord-cross',
+      method: 'tools/call',
+      params: { name: 'getOrder', arguments: { id: createdOrder.id } },
+    }),
+  })
+  expect((await crossOrderRpc.json()).result.isError).toBe(true)
 
   // 9. Per-user isolation & read-only scope enforcement
   // User 2 cannot revoke User 1's key
@@ -375,7 +472,36 @@ test('API key lifecycle, MCP protocol transports, tools, resources, prompts, and
   })
   expect(crossRevoke.status).toBe(403)
 
-  // User 2 session on /mcp cannot read or delete User 1's product
+  // User 2 cannot delete User 1's product, and cannot read User 1's private draft
+  const user2DeleteOther = await fetch(`${baseUrl}/mcp`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Cookie: user2.cookie,
+    },
+    body: JSON.stringify({
+      jsonrpc: '2.0',
+      id: 'del-other',
+      method: 'tools/call',
+      params: { name: 'deleteProduct', arguments: { id: createdProduct.id } },
+    }),
+  })
+  expect((await user2DeleteOther.json()).result.isError).toBe(true)
+
+  await fetch(`${baseUrl}/mcp`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${rawKey}`,
+    },
+    body: JSON.stringify({
+      jsonrpc: '2.0',
+      id: 'draft-1',
+      method: 'tools/call',
+      params: { name: 'updateProduct', arguments: { id: createdProduct.id, published: false } },
+    }),
+  })
+
   const user2GetPrivate = await fetch(`${baseUrl}/mcp`, {
     method: 'POST',
     headers: {

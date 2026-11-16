@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 400" fill="none">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="640" y2="400" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#E3F2FD"/>
+      <stop offset="100%" stop-color="#BBDEFB"/>
+    </linearGradient>
+  </defs>
+  <rect width="640" height="400" fill="url(#bg)"/>
+  <g transform="translate(115, 125) rotate(-6)">
+    <rect x="0" y="0" width="185" height="145" rx="18" fill="#1E293B"/>
+    <rect x="14" y="16" width="28" height="24" rx="5" fill="#6750A4"/>
+    <rect x="48" y="16" width="28" height="24" rx="5" fill="#475569"/>
+    <rect x="82" y="16" width="28" height="24" rx="5" fill="#475569"/>
+    <rect x="116" y="16" width="28" height="24" rx="5" fill="#475569"/>
+    <rect x="150" y="16" width="22" height="24" rx="5" fill="#38BDF8"/>
+    <rect x="14" y="48" width="34" height="24" rx="5" fill="#475569"/>
+    <rect x="54" y="48" width="28" height="24" rx="5" fill="#64748B"/>
+    <rect x="88" y="48" width="28" height="24" rx="5" fill="#64748B"/>
+    <rect x="122" y="48" width="50" height="24" rx="5" fill="#475569"/>
+    <rect x="14" y="80" width="42" height="24" rx="5" fill="#475569"/>
+    <rect x="62" y="80" width="28" height="24" rx="5" fill="#64748B"/>
+    <rect x="96" y="80" width="28" height="24" rx="5" fill="#64748B"/>
+    <rect x="130" y="80" width="42" height="24" rx="5" fill="#475569"/>
+    <rect x="62" y="112" width="110" height="20" rx="6" fill="#38BDF8"/>
+  </g>
+  <g transform="translate(340, 105) rotate(6)">
+    <rect x="0" y="0" width="185" height="145" rx="18" fill="#1E293B"/>
+    <rect x="14" y="16" width="28" height="24" rx="5" fill="#475569"/>
+    <rect x="48" y="16" width="28" height="24" rx="5" fill="#475569"/>
+    <rect x="82" y="16" width="28" height="24" rx="5" fill="#475569"/>
+    <rect x="116" y="16" width="56" height="24" rx="5" fill="#6750A4"/>
+    <rect x="14" y="48" width="28" height="24" rx="5" fill="#64748B"/>
+    <rect x="48" y="48" width="28" height="24" rx="5" fill="#64748B"/>
+    <rect x="82" y="48" width="28" height="24" rx="5" fill="#64748B"/>
+    <rect x="116" y="48" width="56" height="24" rx="5" fill="#38BDF8"/>
+    <rect x="14" y="80" width="28" height="24" rx="5" fill="#64748B"/>
+    <rect x="48" y="80" width="28" height="24" rx="5" fill="#64748B"/>
+    <rect x="82" y="80" width="90" height="24" rx="5" fill="#475569"/>
+    <rect x="14" y="112" width="110" height="20" rx="6" fill="#38BDF8"/>
+  </g>
+</svg>

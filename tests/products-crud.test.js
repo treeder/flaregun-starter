@@ -154,9 +154,14 @@ test('Landing page, seeded products, and authenticated CRUD flow', async () => {
   const getOneData = await getOneRes.json()
   expect(getOneData.product.name).toBe('Cloudflare Edge Router Pro')
 
-  // 9b. Per-user isolation: unauthenticated and other users cannot view, update, or delete User 1's product
-  const unauthGetPrivateRes = await fetch(`${baseUrl}/v1/products/${createdId}`)
-  expect(unauthGetPrivateRes.status).toBe(404)
+  // 9b. Shared marketplace + draft privacy + owner-only write enforcement
+  // Public listings are visible in the shared marketplace with seller attribution (without leaking seller email)
+  const unauthGetPublicRes = await fetch(`${baseUrl}/v1/products/${createdId}`)
+  expect(unauthGetPublicRes.status).toBe(200)
+  const unauthGetPublicData = await unauthGetPublicRes.json()
+  expect(unauthGetPublicData.product.seller).toBeDefined()
+  expect(unauthGetPublicData.product.seller.id).toBeDefined()
+  expect(unauthGetPublicData.product.seller.email).toBeUndefined()
 
   // User 1 cannot update or delete public sample products
   const updateSampleRes = await fetch(`${baseUrl}/v1/products/${sampleProduct.id}`, {
@@ -169,7 +174,7 @@ test('Landing page, seeded products, and authenticated CRUD flow', async () => {
   })
   expect(updateSampleRes.status).toBe(403)
 
-  // Sign in a second user and verify their product list is separate
+  // Sign in a second user: sees shared marketplace, has empty ?scope=mine, and cannot modify User 1's product
   const email2 = `crud-user2-${Date.now()}@example.com`
   const startRes2 = await fetch(`${baseUrl}/auth/email/start`, {
     method: 'POST',
@@ -178,15 +183,42 @@ test('Landing page, seeded products, and authenticated CRUD flow', async () => {
   })
   const startData2 = await startRes2.json()
   const verifyRes2 = await fetch(startData2.link, { redirect: 'manual' })
-  const setCookieHeaders2 = verifyRes2.headers.getSetCookie?.() || [verifyRes2.headers.get('set-cookie')].filter(Boolean)
+  const setCookieHeaders2 =
+    verifyRes2.headers.getSetCookie?.() || [verifyRes2.headers.get('set-cookie')].filter(Boolean)
   const cookieHeader2 = setCookieHeaders2.map((c) => c.split(';')[0]).join('; ')
 
-  const user2ListRes = await fetch(`${baseUrl}/v1/products`, {
+  const user2MarketplaceRes = await fetch(`${baseUrl}/v1/products`, {
     headers: { Cookie: cookieHeader2 },
   })
-  expect(user2ListRes.status).toBe(200)
-  const user2ListData = await user2ListRes.json()
-  expect(user2ListData.products).toEqual([])
+  expect(user2MarketplaceRes.status).toBe(200)
+  const user2MarketplaceData = await user2MarketplaceRes.json()
+  expect(user2MarketplaceData.products.some((p) => p.id === createdId)).toBe(true)
+  expect(user2MarketplaceData.products.some((p) => p.name === 'Wireless Studio Headphones')).toBe(true)
+
+  const user2MineRes = await fetch(`${baseUrl}/v1/products?scope=mine`, {
+    headers: { Cookie: cookieHeader2 },
+  })
+  expect(user2MineRes.status).toBe(200)
+  const user2MineData = await user2MineRes.json()
+  expect(user2MineData.products).toEqual([])
+
+  // When User 1 marks their listing as a private draft (published: false), unauthenticated and User 2 get 404
+  const draftRes = await fetch(`${baseUrl}/v1/products/${createdId}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      Cookie: cookieHeader,
+    },
+    body: JSON.stringify({ product: { data: { published: false } } }),
+  })
+  expect(draftRes.status).toBe(200)
+
+  const unauthGetDraftRes = await fetch(`${baseUrl}/v1/products/${createdId}`)
+  expect(unauthGetDraftRes.status).toBe(404)
+  const user2GetDraftRes = await fetch(`${baseUrl}/v1/products/${createdId}`, {
+    headers: { Cookie: cookieHeader2 },
+  })
+  expect(user2GetDraftRes.status).toBe(404)
 
   const user2UpdateUser1Res = await fetch(`${baseUrl}/v1/products/${createdId}`, {
     method: 'PUT',

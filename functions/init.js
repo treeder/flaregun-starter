@@ -1,6 +1,7 @@
 import { KV, Scheduler, D1, ErrorHandler, CloudflareLogger } from 'flaregun'
 import { runMigrations } from './data/migrations.js'
 import { seedProducts } from './data/products.js'
+import { seedReviews } from './data/reviews.js'
 import { CloudflareMailer, ConsoleMailer } from './services/mailer.js'
 import { nanoid } from 'nanoid'
 import { ConsoleLogger } from 'console-logger'
@@ -12,6 +13,7 @@ import { ConsoleLogger } from 'console-logger'
 export async function init(c) {
   await runMigrations(c)
   await seedProducts(c)
+  await seedReviews(c)
 }
 
 function everyMinuteFunction(evt) {

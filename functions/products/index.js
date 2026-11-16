@@ -22,18 +22,18 @@ function render(d) {
     <div class="flex col g20 p16" style="max-width: 1120px; margin: 0 auto;">
       <div class="flex jcsb aic flexw g12">
         <div class="flex col g4">
-          <div class="headline-medium" style="font-weight: 600;">Products Catalog</div>
+          <h1 class="headline-medium" style="margin: 0; font-weight: 600;">Products Catalog</h1>
           <div class="text-muted">
-            ${d.user
-              ? 'Create, edit, and manage products in your catalog.'
-              : 'Browse all products. Sign in to create, edit, or delete items.'}
+            ${
+              d.user
+                ? 'Shop the shared marketplace, upload product photos to R2, or manage your own listings.'
+                : 'Browse community and official products, add items to your cart, or sign in to list your own.'
+            }
           </div>
         </div>
       </div>
 
-      <product-list
-        user="${userAttr}"
-        ${d.user ? 'can-manage' : ''}></product-list>
+      <product-list user="${userAttr}" ${d.user ? 'can-manage' : ''}></product-list>
     </div>
   `
 }

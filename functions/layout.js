@@ -49,6 +49,7 @@ export async function layout(d) {
       <body>
         <script type="module">
           import '/components/avatar-menu.js'
+          import '/components/cart-drawer.js'
           import 'material/divider/divider.js'
           import 'material/icon/icon.js'
         </script>
@@ -60,13 +61,19 @@ export async function layout(d) {
                 <div class="title-large">Flaregun Starter Kit</div>
               </div>
             </a>
-            <div class="flex g8 aic">
+            <nav class="flex g8 aic" aria-label="Primary">
               <a href="/" class="nav-item ${d.path === '/' ? 'active' : ''}">Home</a>
               <a href="/products" class="nav-item ${d.path?.startsWith('/products') ? 'active' : ''}">Products</a>
+              ${
+                d.user
+                  ? html`<a href="/orders" class="nav-item ${d.path?.startsWith('/orders') ? 'active' : ''}">Orders</a>`
+                  : ''
+              }
               <a href="/demo" class="nav-item ${d.path === '/demo' ? 'active' : ''}">Components Demo</a>
-            </div>
+            </nav>
           </div>
           <div class="flex g8 jcc aic">
+            <cart-button user="${stringifyAttribute(d.user)}"></cart-button>
             <div>
               ${
                 d.user
@@ -116,8 +123,11 @@ function footer(d) {
               ${
                 d.user
                   ? html`<li>
-                      <a href="/settings" ${d.path === '/settings' ? 'aria-current="page"' : ''}>Account Settings</a>
-                    </li>`
+                        <a href="/orders" ${d.path?.startsWith('/orders') ? 'aria-current="page"' : ''}>My Orders</a>
+                      </li>
+                      <li>
+                        <a href="/settings" ${d.path === '/settings' ? 'aria-current="page"' : ''}>Account Settings</a>
+                      </li>`
                   : html`<li><a href="/signin" ${d.path === '/signin' ? 'aria-current="page"' : ''}>Sign In</a></li>`
               }
             </ul>

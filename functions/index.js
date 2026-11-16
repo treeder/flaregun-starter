@@ -33,20 +33,20 @@ function render(d) {
           <span>Full-Stack Cloudflare Workers Starter</span>
         </div>
 
-        <div class="display-medium" style="font-weight: 700; max-width: 760px;">
+        <h1 class="display-medium" style="margin: 0; font-weight: 700; max-width: 760px;">
           ${
             d.user
               ? `Welcome back, ${escapeHtml(d.user.name || d.user.email || 'Builder')}!`
               : 'Build fast, modern edge apps with Flaregun'
           }
-        </div>
+        </h1>
 
         <div
           style="color: var(--md-sys-color-on-surface-variant); font-size: 1.15rem; line-height: 1.6; max-width: 680px;">
           ${
             d.user
-              ? 'You are signed in. You can now create, edit, and delete products below or manage your full catalog.'
-              : 'Everything you need to ship on Cloudflare Workers—D1 database models, KV, R2 storage, Passkey authentication, and Material 3 Web Components.'
+              ? 'Explore the shared marketplace, upload product photos to R2, leave reviews, or test KV cart checkout.'
+              : 'Everything you need to ship on Cloudflare Workers—D1 models & joins, KV cart, R2 storage, Passkey authentication, Material 3 Web Components, and MCP.'
           }
         </div>
 
@@ -148,12 +148,12 @@ function render(d) {
       <div class="flex col g16">
         <div class="flex jcsb aic flexw g12">
           <div class="flex col g4">
-            <div class="headline-medium" style="font-weight: 600;">Recent Products</div>
+            <h2 class="headline-medium" style="margin: 0; font-weight: 600;">Recent Products</h2>
             <div class="text-muted">
               ${
                 d.user
-                  ? 'Manage your product catalog—add new items, edit details, or remove products.'
-                  : 'Explore recent items from the store. Sign in to add, edit, or delete products.'
+                  ? 'Shop community and official listings, or click "New Product" to list your own item.'
+                  : 'Explore recent items from the marketplace. Add items to your cart or sign in to list products.'
               }
             </div>
           </div>

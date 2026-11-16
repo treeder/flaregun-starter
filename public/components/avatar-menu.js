@@ -186,6 +186,12 @@ export class AvatarMenu extends LitElement {
             <div class="menu-email">${user.email || ''}</div>
           </div>
           <md-divider></md-divider>
+          <a href="/orders" class="menu-link">
+            <md-menu-item>
+              <md-icon slot="start">receipt_long</md-icon>
+              <div slot="headline">My Orders</div>
+            </md-menu-item>
+          </a>
           <a href="/settings" class="menu-link">
             <md-menu-item>
               <md-icon slot="start">settings</md-icon>
