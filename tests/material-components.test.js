@@ -87,6 +87,8 @@ test('layout renders semantic footer with Material 3 divider, nav sections, and 
   expect(html).toContain('aria-labelledby="footer-nav-resources"')
   expect(html).toMatch(/href="\/demo"\s+aria-current="page"/)
   expect(html).toContain('href="/signin"')
+  expect(html).not.toContain('href="/mcp"')
+  expect(html).not.toContain('/settings/flags')
   expect(html).toContain('Apache-2.0 License.')
 
   // Verify authenticated user sees Account Settings instead of Sign In in footer

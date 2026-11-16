@@ -130,11 +130,18 @@ function footer(d) {
                 <a href="/v1/products">REST API <code>/v1</code></a>
               </li>
               <li>
-                <a href="/mcp">MCP Server <code>/mcp</code></a>
+                <a href="/settings">MCP &amp; API Keys <code>/mcp</code></a>
               </li>
-              <li><a href="/settings">Scoped API Keys</a></li>
               <li>
-                <a href="/settings/flags" ${d.path === '/settings/flags' ? 'aria-current="page"' : ''}>Feature Flags</a>
+                <a
+                  href="https://github.com/treeder/flaregun-starter/blob/main/docs/mcp.md"
+                  target="_blank"
+                  rel="noopener noreferrer">
+                  MCP Documentation
+                </a>
+              </li>
+              <li>
+                <a href="https://github.com/treeder/models" target="_blank" rel="noopener noreferrer">Data Models</a>
               </li>
             </ul>
           </nav>
