@@ -3,7 +3,7 @@ import { initRequest } from '../functions/init.js'
 import { once, resetOnce } from 'once'
 import { ConsoleLogger } from 'console-logger'
 import { CloudflareLogger, Scheduler, D1, KV, ErrorHandler } from 'flaregun'
-import { ConsoleMailer } from '../functions/services/mailer.js'
+import { CloudflareMailer, ConsoleMailer } from '../functions/services/mailer.js'
 
 describe('initRequest', () => {
   it('instantiates services directly on c.data on each request', async () => {
@@ -31,6 +31,29 @@ describe('initRequest', () => {
     expect(c2.data.scheduler).not.toBe(c1.data.scheduler)
     expect(c2.data.mailer).toBeInstanceOf(ConsoleMailer)
     expect(c2.data.mailer).not.toBe(c1.data.mailer)
+  })
+
+  it('uses CloudflareMailer when EMAIL_FROM is set and ConsoleMailer when unset', async () => {
+    const withoutFrom = {
+      env: { ENV: 'prod', EMAIL: { send: async () => {} } },
+      request: new Request('https://myapp.com/v1/status'),
+      data: {},
+    }
+    await initRequest(withoutFrom)
+    expect(withoutFrom.data.mailer).toBeInstanceOf(ConsoleMailer)
+
+    const withFrom = {
+      env: {
+        ENV: 'prod',
+        EMAIL: { send: async () => {} },
+        EMAIL_FROM: 'noreply@example.com',
+      },
+      request: new Request('https://myapp.com/v1/status'),
+      data: {},
+    }
+    await initRequest(withFrom)
+    expect(withFrom.data.mailer).toBeInstanceOf(CloudflareMailer)
+    expect(withFrom.data.mailer.from).toBe('Flaregun <noreply@example.com>')
   })
 
   it('detects dev environment for localhost', async () => {

@@ -1,3 +1,4 @@
+import 'dotenv/config'
 import { bindings, defineConfig, triggers } from 'cf/config'
 
 export default defineConfig((ctx) => {
@@ -34,6 +35,8 @@ export default defineConfig((ctx) => {
           ],
       env: {
         ENV: bindings.text(isPreview ? 'preview' : 'prod'),
+        EMAIL: bindings.sendEmail(),
+        ...(process.env.EMAIL_FROM ? { EMAIL_FROM: bindings.text(process.env.EMAIL_FROM) } : {}),
         D1: bindings.d1({
           name: `${name}${suffix}`,
           ...(isPreview && { id: '5059f84f-8f67-4cbb-9d24-49c172950540' }),

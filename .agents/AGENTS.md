@@ -9,7 +9,7 @@ Every HTTP request, scheduled cron event, and queue batch runs through `flaregun
 ### Guaranteed Properties on `c`
 
 - `c.request`: Standard Fetch `Request` object (on HTTP requests).
-- `c.env`: Cloudflare Worker environment bindings (`c.env.D1`, `c.env.KV`, `c.env.R2`, `c.env.ASSETS`, `c.env.ENV`).
+- `c.env`: Cloudflare Worker environment bindings (`c.env.D1`, `c.env.KV`, `c.env.R2`, `c.env.EMAIL`, `c.env.EMAIL_FROM`, `c.env.ASSETS`, `c.env.ENV`).
 - `c.ctx`: Native Cloudflare Worker `ExecutionContext`.
 - `c.params`: Route parameters parsed from file-based routing (e.g. `c.params.id` for `[id]`, `c.params.catchall` array for `[[catchall]]`).
 - `c.waitUntil(promise)`: Bound `ctx.waitUntil` function for scheduling background tasks that outlive the response.
@@ -29,7 +29,7 @@ Every HTTP request, scheduled cron event, and queue batch runs through `flaregun
 - `c.data.errorHandler`: Pre-initialized `ErrorHandler` instance (`new ErrorHandler({ logger })`).
 - `c.data.env`: Resolved environment name (`'dev'`, `'preview'`, or `'prod'`).
 - `c.data.scheduler`: Pre-initialized `Scheduler` instance (`new Scheduler()`).
-- `c.data.mailer`: Pre-initialized mailer instance (`new ConsoleMailer()`).
+- `c.data.mailer`: Pre-initialized mailer (`CloudflareMailer` when `c.env.EMAIL_FROM` is set, otherwise `ConsoleMailer`).
 - `c.data.rend`: Pre-initialized `Rend` HTML renderer configured with the app layout and reactive `{ user, path }` data (for HTTP requests).
 - `c.data.user`: The authenticated `User` object when the request has a valid session or API key, or `undefined` when unauthenticated.
 - `c.data.apiKey` / `c.data.isAgent`: Present (`ApiKey` record and `true`) when the request was authenticated via an API key (`Authorization: Bearer fg_key_...`, `x-api-key`, or `?token=` on `/mcp`); `undefined` otherwise.

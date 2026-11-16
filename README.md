@@ -155,6 +155,16 @@ await c.env.QUEUE.send({ message: 'Hello, world!' }, { delaySeconds: 60 })
 
 That will delay the message for 60 seconds.
 
+## Email & Authentication
+
+Email magic-link verification and transactional messages use **Cloudflare Email Service** (`bindings.sendEmail()` on `c.env.EMAIL`) wrapped by `CloudflareMailer` in [functions/services/mailer.js](functions/services/mailer.js) whenever the `EMAIL_FROM` environment variable is set (e.g. `EMAIL_FROM="My App <noreply@updates.example.com>"`).
+
+- **When `EMAIL_FROM` is not set**: `c.data.mailer` falls back to `ConsoleMailer` and logs emails to the console.
+- **When `EMAIL_FROM` is set**: `c.data.mailer` uses `CloudflareMailer` to send emails via `c.env.EMAIL`.
+- **Local development (`npm start`)**: `/auth/email/start` includes a convenience verification link in `dev` mode so you can sign in immediately on `localhost`, while `preview` and `prod` never expose verification links in API responses.
+
+Set `EMAIL_FROM` via Worker secrets (`npx cf workers secrets update EMAIL_FROM --text "My App <noreply@example.com>"`), Cloudflare Workers Builds environment variables, or `.env` / `.dev.vars` locally.
+
 ## MCP Server (AI Agent Ready)
 
 Every app comes with a built-in [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) endpoint at `/mcp` (supporting Streamable HTTP and SSE transports) plus SHA-256 hashed API key management in `/settings` (`/v1/apiKeys`).
