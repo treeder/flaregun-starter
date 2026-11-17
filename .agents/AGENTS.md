@@ -51,6 +51,13 @@ Every HTTP request, scheduled cron event, and queue batch runs through `flaregun
 
 ---
 
+## Local Environment Variables (`.env`)
+
+- **Always use `.env` for local environment variables and secrets — NEVER create or use `.dev.vars`.**
+- Local development (`vite dev`, `cf`, and [`cloudflare.config.ts`](../cloudflare.config.ts) via `dotenv/config`) loads variables and secrets from `.env`. `.dev.vars` is legacy Wrangler configuration and should not be used.
+
+---
+
 ## D1 Database Wrapper (`flaregun/d1.js`)
 
 The `D1` class wraps the native Cloudflare D1 Database binding to add advanced object mapping, query builders, and automated field formatting.
