@@ -53,33 +53,35 @@ export async function layout(d) {
           import 'material/divider/divider.js'
           import 'material/icon/icon.js'
         </script>
-        <header class="flex g12 jcsb mb20 topnav p16">
-          <div class="flex g16 aic flexw">
-            <a href="/">
-              <div class="flex g8 jcc aic">
-                <img src="/images/flaregun2.png" alt="" width="38" height="40" style="height: 40px;" />
-                <div class="title-large">Flaregun Starter Kit</div>
+        <header class="topnav p16">
+          <div class="topnav-inner">
+            <div class="flex g16 aic flexw">
+              <a href="/" class="brand-link">
+                <img src="/images/flaregun2.png" alt="" width="36" height="38" class="brand-logo" />
+                <span class="brand-title">Flaregun Starter Kit</span>
+              </a>
+              <nav class="flex g8 aic flexw" aria-label="Primary">
+                <a href="/" class="nav-item ${d.path === '/' ? 'active' : ''}">Home</a>
+                <a href="/products" class="nav-item ${d.path?.startsWith('/products') ? 'active' : ''}">Products</a>
+                ${
+                  d.user
+                    ? html`<a href="/orders" class="nav-item ${d.path?.startsWith('/orders') ? 'active' : ''}"
+                        >Orders</a
+                      >`
+                    : ''
+                }
+                <a href="/demo" class="nav-item ${d.path === '/demo' ? 'active' : ''}">Components Demo</a>
+              </nav>
+            </div>
+            <div class="flex g8 jcc aic">
+              <cart-button user="${stringifyAttribute(d.user)}"></cart-button>
+              <div>
+                ${
+                  d.user
+                    ? html`<avatar-menu user="${stringifyAttribute(d.user)}"></avatar-menu>`
+                    : html`<avatar-menu></avatar-menu>`
+                }
               </div>
-            </a>
-            <nav class="flex g8 aic" aria-label="Primary">
-              <a href="/" class="nav-item ${d.path === '/' ? 'active' : ''}">Home</a>
-              <a href="/products" class="nav-item ${d.path?.startsWith('/products') ? 'active' : ''}">Products</a>
-              ${
-                d.user
-                  ? html`<a href="/orders" class="nav-item ${d.path?.startsWith('/orders') ? 'active' : ''}">Orders</a>`
-                  : ''
-              }
-              <a href="/demo" class="nav-item ${d.path === '/demo' ? 'active' : ''}">Components Demo</a>
-            </nav>
-          </div>
-          <div class="flex g8 jcc aic">
-            <cart-button user="${stringifyAttribute(d.user)}"></cart-button>
-            <div>
-              ${
-                d.user
-                  ? html`<avatar-menu user="${stringifyAttribute(d.user)}"></avatar-menu>`
-                  : html`<avatar-menu></avatar-menu>`
-              }
             </div>
           </div>
         </header>

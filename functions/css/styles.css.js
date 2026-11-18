@@ -3,6 +3,7 @@
  */
 
 import { css } from 'rend'
+import { landingStyles } from './landing.css.js'
 
 export async function onRequestGet(c) {
   return new Response(root({}), {
@@ -83,7 +84,7 @@ export function root(d) {
     }
 
     .site-footer-inner {
-      max-inline-size: 1120px;
+      max-inline-size: 1160px;
       margin-inline: auto;
       padding-block: 48px 28px;
       padding-inline: 24px;
@@ -258,6 +259,7 @@ export function root(d) {
       font-size: 16px;
     }
 
+    ${landingStyles()}
     ${all(d)}
   `
 }
@@ -510,7 +512,7 @@ export function all(d) {
     }
 
     .text-muted {
-      color: #8492a6 !important;
+      color: var(--md-sys-color-on-surface-variant, #49454f);
     }
     .text-center {
       text-align: center;

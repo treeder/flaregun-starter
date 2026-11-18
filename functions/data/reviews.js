@@ -180,7 +180,7 @@ export async function seedReviews(c) {
     const count = await c.data.d1.count(Review)
     if (count > 0) return
 
-    const sampleProducts = await c.data.d1.query(Product, { where: { userId: null } })
+    const sampleProducts = await c.data.d1.query(Product, { where: [['userId', 'is', null]] })
     if (!sampleProducts.length) return
 
     const byName = new Map(sampleProducts.map((p) => [p.name, p]))
