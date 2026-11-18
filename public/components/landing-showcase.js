@@ -7,10 +7,10 @@ import 'material/icon/icon.js'
 import 'material/tooltip/tooltip.js'
 import { snack } from 'material/snackbar/snackbar.js'
 
-const SNIPPETS = [
+export const SNIPPETS = [
   {
     id: 'edge-data',
-    file: 'functions/v1/products/[id].js',
+    file: 'functions/v1/products/[id]/index.js',
     badge: 'D1 + KV + R2',
     raw: `import { Product } from '../../../data/products.js'
 
@@ -43,10 +43,10 @@ Content-Type: application/json
   "id": 1,
   "method": "tools/call",
   "params": {
-    "name": "list_products",
+    "name": "listProducts",
     "arguments": {
       "category": "electronics",
-      "inStockOnly": true
+      "inStock": true
     }
   }
 }`,
@@ -78,6 +78,26 @@ export const onRequestGet = (c) =>
     pills: ['WebAuthn Passkeys', 'Magic Links', 'Material 3 ESM', 'SSR Slots'],
   },
 ]
+
+const TOKEN_RE =
+  /(\/\/[^\n]*)|(`[\s\S]*?`|'[^'\n]*'|Bearer\s+[^\n]+)|("[^"\n]*"(?=\s*:)|\b[a-zA-Z_$][\w$-]*(?=\s*:)|\/mcp\b)|("[^"\n]*")|(\b(?:import|from|export|async|function|const|await|return|true|false|POST)\b)|(\b[a-zA-Z_$][\w$]*(?=\s*\())/g
+
+export function tokenizeCode(raw) {
+  const tokens = []
+  let lastIndex = 0
+  for (const match of raw.matchAll(TOKEN_RE)) {
+    if (match.index > lastIndex) {
+      tokens.push({ cls: '', text: raw.slice(lastIndex, match.index) })
+    }
+    const cls = match[1] ? 'cmt' : match[2] || match[4] ? 'str' : match[3] ? 'prop' : match[5] ? 'kw' : 'fn'
+    tokens.push({ cls, text: match[0] })
+    lastIndex = match.index + match[0].length
+  }
+  if (lastIndex < raw.length) {
+    tokens.push({ cls: '', text: raw.slice(lastIndex) })
+  }
+  return tokens
+}
 
 export class CliCopyBar extends LitElement {
   static properties = {
@@ -153,6 +173,11 @@ export class CliCopyBar extends LitElement {
     this.copied = false
   }
 
+  disconnectedCallback() {
+    super.disconnectedCallback()
+    clearTimeout(this._copyTimer)
+  }
+
   async copyCommand() {
     try {
       await navigator.clipboard.writeText(this.command)
@@ -216,9 +241,9 @@ export class LandingShowcase extends LitElement {
       display: flex;
       align-items: safe center;
       justify-content: space-between;
-      gap: 10px;
+      gap: 8px;
       padding-block: 10px;
-      padding-inline: 16px 10px;
+      padding-inline: 14px 8px;
       background: rgba(255, 255, 255, 0.03);
       border-block-end: 1px solid rgba(255, 255, 255, 0.08);
     }
@@ -247,11 +272,11 @@ export class LandingShowcase extends LitElement {
 
     .file-pill {
       font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, monospace;
-      font-size: 0.78rem;
+      font-size: 0.73rem;
       color: #9fb0c7;
       background: rgba(255, 255, 255, 0.05);
       padding-block: 4px;
-      padding-inline: 10px;
+      padding-inline: 9px;
       border-radius: 999px;
       border: 1px solid rgba(255, 255, 255, 0.07);
       overflow: hidden;
@@ -271,7 +296,7 @@ export class LandingShowcase extends LitElement {
       display: inline-flex;
       align-items: safe center;
       gap: 6px;
-      font-size: 0.75rem;
+      font-size: 0.74rem;
       font-weight: 600;
       color: #7ee787;
       background: rgba(46, 160, 67, 0.14);
@@ -419,6 +444,11 @@ export class LandingShowcase extends LitElement {
     this.copied = false
   }
 
+  disconnectedCallback() {
+    super.disconnectedCallback()
+    clearTimeout(this._timer)
+  }
+
   onTabChange(e) {
     this.activeTab = e.target.activeTabIndex ?? 0
     this.copied = false
@@ -439,46 +469,8 @@ export class LandingShowcase extends LitElement {
     }
   }
 
-  renderHighlightedCode(index) {
-    if (index === 0) {
-      return html`<span class="kw">import</span> { Product } <span class="kw">from</span>
-        <span class="str">'../../../data/products.js'</span>
-
-        <span class="kw">export async function</span> <span class="fn">onRequestPatch</span>(c) {
-        <span class="cmt">// Atomic SQLite RFC 7396 json_patch — no read-modify-write</span>
-        <span class="kw">await</span> c.data.d1.<span class="fn">update</span>(Product, c.params.id, {
-        <span class="prop">data</span>: { <span class="prop">inStock</span>: <span class="kw">true</span>,
-        <span class="prop">featured</span>: <span class="kw">true</span> }, })
-
-        <span class="kw">const</span> product = <span class="kw">await</span> c.data.d1.<span class="fn">get</span
-        >(Product, c.params.id) <span class="kw">await</span> c.data.kv.<span class="fn">putJSON</span>(<span
-          class="str"
-          >\`product:\${product.id}\`</span
-        >, product) <span class="kw">return</span> Response.<span class="fn">json</span>({ product }) }`
-    }
-
-    if (index === 1) {
-      return html`<span class="cmt">// Connect Claude, Gemini, or Cursor with a scoped key</span>
-        <span class="kw">POST</span> <span class="prop">/mcp</span> HTTP/1.1 <span class="prop">Authorization</span>:
-        <span class="str">Bearer fg_key_live_9x82k...</span>
-
-        {
-        <span class="prop">"jsonrpc"</span>: <span class="str">"2.0"</span>, <span class="prop">"method"</span>:
-        <span class="str">"tools/call"</span>, <span class="prop">"params"</span>: { <span class="prop">"name"</span>:
-        <span class="str">"list_products"</span>, <span class="prop">"arguments"</span>: {
-        <span class="prop">"category"</span>: <span class="str">"electronics"</span>,
-        <span class="prop">"inStockOnly"</span>: <span class="kw">true</span> } } }`
-    }
-
-    return html`<span class="kw">import</span> { html } <span class="kw">from</span> <span class="str">'rend'</span>
-
-      <span class="kw">export const</span> <span class="fn">onRequestGet</span> = (c) =&gt; c.data.rend.<span class="fn"
-        >html</span
-      >({ <span class="prop">title</span>: <span class="str">'Sign In'</span>, <span class="prop">main</span>: () =&gt;
-      html<span class="str"
-        >\` &lt;script type="module"&gt; import '/components/sign-in.js' import 'material/buttons/button.js'
-        &lt;/script&gt; &lt;sign-in baseURL="/auth" afterLoginHref="/"&gt;&lt;/sign-in&gt; \`</span
-      >, })`
+  renderHighlightedCode(raw) {
+    return tokenizeCode(raw).map((tok) => (tok.cls ? html`<span class=${tok.cls}>${tok.text}</span>` : tok.text))
   }
 
   render() {
@@ -524,7 +516,7 @@ export class LandingShowcase extends LitElement {
         </md-tabs>
 
         <pre role="region" aria-labelledby="showcase-code-label" tabindex="0"><code>${this.renderHighlightedCode(
-          this.activeTab,
+          active.raw,
         )}</code></pre>
 
         <div class="studio-footer">

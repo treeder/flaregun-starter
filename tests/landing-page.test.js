@@ -1,6 +1,7 @@
 import { test, expect } from 'vitest'
 import { baseUrl } from './helper.js'
-import { Product, SAMPLE_PRODUCTS, seedProducts } from '../functions/data/products.js'
+import { SAMPLE_PRODUCTS, seedProducts } from '../functions/data/products.js'
+import { TOOLS } from '../functions/services/mcpTools.js'
 
 test('landing page renders redesigned hero, interactive showcase, bento grid, and launchpad CTA', async () => {
   const res = await fetch(`${baseUrl}/`)
@@ -18,7 +19,7 @@ test('landing page renders redesigned hero, interactive showcase, bento grid, an
   expect(html).toContain('class="cta-launchpad"')
 })
 
-test('landing-showcase component uses Material 3 tabs, tooltips, icon buttons, and snackbar', async () => {
+test('landing-showcase component uses Material 3 tabs, exact MCP schema, and lossless code tokenization', async () => {
   const res = await fetch(`${baseUrl}/components/landing-showcase.js`)
   expect(res.status).toBe(200)
   const code = await res.text()
@@ -30,8 +31,18 @@ test('landing-showcase component uses Material 3 tabs, tooltips, icon buttons, a
   expect(code).toContain("import 'material/buttons/icon-button.js'")
   expect(code).toContain("import 'material/tooltip/tooltip.js'")
   expect(code).toContain("import { snack } from 'material/snackbar/snackbar.js'")
+  expect(code).toContain('disconnectedCallback()')
+  expect(code).toContain('functions/v1/products/[id]/index.js')
+  expect(code).toContain('"listProducts"')
+  expect(code).toContain('"inStock": true')
   expect(code).toContain('role="region"')
   expect(code).toContain('tabindex="0"')
+
+  // Verify MCP tool referenced in the showcase matches the real MCP server tool schema
+  const listProductsTool = TOOLS.find((t) => t.name === 'listProducts')
+  expect(listProductsTool).toBeDefined()
+  expect(listProductsTool.inputSchema.properties).toHaveProperty('category')
+  expect(listProductsTool.inputSchema.properties).toHaveProperty('inStock')
 })
 
 test('landing page styles are served in /css/styles.css and excluded from shadow-DOM /css/styles.js', async () => {
