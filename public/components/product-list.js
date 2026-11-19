@@ -30,25 +30,49 @@ export class ProductList extends LitElement {
         display: flex;
         flex-direction: column;
         gap: 12px;
-        margin-block-end: 8px;
+        margin-block-end: 6px;
+        padding: 14px 16px;
+        border-radius: 18px;
+        background: var(--md-card-container-color, var(--md-sys-color-surface, #ffffff));
+        border: 1px solid color-mix(in oklab, var(--md-sys-color-outline-variant, #c2c7ce) 72%, transparent);
+      }
+      .filter-toolbar md-search {
+        --md-search-container-max-width: 100%;
+        max-inline-size: 100%;
+        inline-size: 100%;
       }
       .toolbar-row {
         display: flex;
-        align-items: center;
+        align-items: safe center;
         justify-content: space-between;
         flex-wrap: wrap;
         gap: 12px;
       }
       .products-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
         gap: 18px;
         inline-size: 100%;
       }
       .product-card-shell {
         container-type: inline-size;
-        overflow: hidden;
+        overflow: clip;
         box-sizing: border-box;
+        border-radius: 18px;
+        border: 1px solid color-mix(in oklab, var(--md-sys-color-outline-variant, #c2c7ce) 75%, transparent);
+        transition:
+          border-color 0.2s ease,
+          box-shadow 0.2s ease,
+          translate 0.2s ease;
+      }
+      .product-card-shell:hover {
+        border-color: color-mix(in oklab, var(--md-sys-color-primary) 42%, var(--md-sys-color-outline-variant));
+        box-shadow: 0 14px 28px -14px color-mix(in oklab, var(--md-sys-color-primary) 24%, transparent);
+      }
+      @media (prefers-reduced-motion: no-preference) {
+        .product-card-shell:hover {
+          translate: 0 -2px;
+        }
       }
       .product-article {
         display: flex;
@@ -58,24 +82,60 @@ export class ProductList extends LitElement {
       }
       .product-article > img {
         inline-size: 100%;
+        block-size: auto;
         aspect-ratio: 16 / 10;
         object-fit: cover;
         display: block;
         background: var(--md-sys-color-surface-container, #f3edf7);
-        border-block-end: 1px solid var(--md-sys-color-outline-variant, #ece6f0);
+        border-block-end: 1px solid color-mix(in oklab, var(--md-sys-color-outline-variant) 65%, transparent);
+      }
+      .product-media-placeholder {
+        inline-size: 100%;
+        aspect-ratio: 16 / 10;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background:
+          radial-gradient(
+            circle at 25% 25%,
+            color-mix(in oklab, var(--md-sys-color-primary) 16%, transparent) 0%,
+            transparent 60%
+          ),
+          linear-gradient(
+            135deg,
+            color-mix(in oklab, var(--md-sys-color-secondary-container) 65%, var(--md-sys-color-surface)) 0%,
+            color-mix(in oklab, var(--md-sys-color-primary-container) 45%, var(--md-sys-color-surface)) 100%
+          );
+        border-block-end: 1px solid color-mix(in oklab, var(--md-sys-color-outline-variant) 65%, transparent);
+      }
+      .placeholder-emblem {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        inline-size: 64px;
+        block-size: 64px;
+        border-radius: 20px;
+        background: color-mix(in oklab, var(--md-sys-color-surface) 78%, transparent);
+        color: var(--md-sys-color-primary);
+        border: 1px solid color-mix(in oklab, var(--md-sys-color-primary) 20%, transparent);
+        box-shadow: 0 8px 20px -8px rgba(0, 0, 0, 0.12);
+      }
+      .placeholder-emblem md-icon {
+        font-size: 30px;
       }
       .card-header {
         display: flex;
         align-items: flex-start;
         justify-content: space-between;
         gap: 8px;
-        padding: 16px 16px 0;
+        padding: 16px 18px 0;
       }
       .card-title {
         margin: 0;
-        font-size: 1.15rem;
+        font-size: 1.12rem;
         line-height: 1.35;
-        font-weight: 600;
+        font-weight: 700;
+        letter-spacing: -0.01em;
       }
       .card-title a {
         color: var(--md-sys-color-on-surface);
@@ -86,7 +146,7 @@ export class ProductList extends LitElement {
         color: var(--md-sys-color-primary);
       }
       .card-content {
-        padding: 10px 16px 0;
+        padding: 10px 18px 0;
         display: flex;
         flex-direction: column;
         gap: 10px;
@@ -95,73 +155,75 @@ export class ProductList extends LitElement {
       .card-desc {
         margin: 0;
         color: var(--md-sys-color-on-surface-variant);
-        line-height: 1.5;
+        line-height: 1.52;
         display: -webkit-box;
         -webkit-line-clamp: 3;
         -webkit-box-orient: vertical;
-        overflow: hidden;
+        line-clamp: 3;
+        overflow: clip;
       }
       .card-footer {
         display: flex;
-        align-items: center;
+        align-items: safe center;
         justify-content: space-between;
         flex-wrap: wrap;
         gap: 10px;
         margin-block-start: 14px;
-        padding: 12px 16px 16px;
-        border-block-start: 1px solid var(--md-sys-color-outline-variant, #ece6f0);
+        padding: 12px 18px 16px;
+        border-block-start: 1px solid color-mix(in oklab, var(--md-sys-color-outline-variant) 55%, transparent);
       }
       .category-tag {
-        font-size: 11px;
-        padding: 2px 8px;
-        border-radius: 12px;
+        font-size: 0.72rem;
+        font-weight: 600;
+        padding: 2px 9px;
+        border-radius: 999px;
         background: var(--md-sys-color-surface-container-high, #ece6f0);
         color: var(--md-sys-color-on-surface-variant, #49454f);
         text-transform: capitalize;
         display: inline-block;
       }
       .sale-badge {
-        font-size: 11px;
-        padding: 2px 8px;
-        border-radius: 12px;
+        font-size: 0.72rem;
+        padding: 2px 9px;
+        border-radius: 999px;
         background: var(--md-sys-color-tertiary-container, #ffd8e4);
         color: var(--md-sys-color-on-tertiary-container, #31111d);
-        font-weight: 600;
+        font-weight: 700;
         display: inline-block;
       }
       .draft-badge {
-        font-size: 11px;
-        padding: 2px 8px;
-        border-radius: 12px;
-        background: #fff3e0;
-        color: #e65100;
+        font-size: 0.72rem;
+        padding: 2px 9px;
+        border-radius: 999px;
+        background: color-mix(in oklab, #f59e0b 18%, var(--md-sys-color-surface));
+        color: color-mix(in oklab, #b45309 80%, var(--md-sys-color-on-surface));
         font-weight: 600;
         display: inline-block;
       }
       .stock-tag {
-        font-size: 11px;
-        padding: 2px 8px;
-        border-radius: 12px;
-        font-weight: 500;
+        font-size: 0.72rem;
+        padding: 2px 9px;
+        border-radius: 999px;
+        font-weight: 600;
       }
       .in-stock {
-        background: #e8f5e9;
-        color: #2e7d32;
+        background: color-mix(in oklab, #16a34a 15%, var(--md-sys-color-surface));
+        color: color-mix(in oklab, #15803d 82%, var(--md-sys-color-on-surface));
       }
       .out-of-stock {
-        background: #ffebee;
-        color: #c62828;
+        background: color-mix(in oklab, var(--md-sys-color-error, #ba1a1a) 14%, var(--md-sys-color-surface));
+        color: var(--md-sys-color-error, #ba1a1a);
       }
       .rating-pill {
         display: inline-flex;
-        align-items: center;
+        align-items: safe center;
         gap: 3px;
-        font-size: 12px;
-        font-weight: 600;
-        color: #b45309;
-        background: #fef3c7;
+        font-size: 0.75rem;
+        font-weight: 700;
+        color: color-mix(in oklab, #b45309 82%, var(--md-sys-color-on-surface));
+        background: color-mix(in oklab, #f59e0b 18%, var(--md-sys-color-surface));
         padding: 2px 8px;
-        border-radius: 12px;
+        border-radius: 999px;
       }
       .rating-pill md-icon {
         font-size: 14px;
@@ -355,6 +417,15 @@ export class ProductList extends LitElement {
     }
   }
 
+  categoryIcon(category) {
+    const key = String(category || '').toLowerCase()
+    if (key.includes('electr') || key.includes('tech') || key.includes('audio')) return 'devices'
+    if (key.includes('book') || key.includes('guide')) return 'menu_book'
+    if (key.includes('home') || key.includes('office')) return 'chair'
+    if (key.includes('access')) return 'watch'
+    return 'shopping_bag'
+  }
+
   renderSeller(p) {
     if (p.seller?.id) {
       const initial = (p.seller.name || 'S').charAt(0).toUpperCase()
@@ -527,7 +598,17 @@ export class ProductList extends LitElement {
                       return html`
                         <md-card class="w100 product-card-shell">
                           <article class="product-article">
-                            ${p.image ? html`<img src="${p.image}" alt="${p.name}" loading="lazy" />` : ''}
+                            ${
+                              p.image
+                                ? html`<img src="${p.image}" alt="${p.name}" width="640" height="400" loading="lazy" />`
+                                : html`
+                                    <div class="product-media-placeholder" aria-hidden="true">
+                                      <span class="placeholder-emblem">
+                                        <md-icon>${this.categoryIcon(category)}</md-icon>
+                                      </span>
+                                    </div>
+                                  `
+                            }
 
                             <header class="card-header">
                               <div class="flex col g4" style="min-inline-size: 0;">

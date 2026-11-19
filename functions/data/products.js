@@ -138,14 +138,18 @@ export function unwrapJoinedProduct(row) {
 
 export async function seedProducts(c) {
   try {
-    const existingSamples = await c.data.d1.query(Product, { where: { userId: null } })
-    if (existingSamples.length === 0) {
+    const existingSamples = await c.data.d1.query(Product, { where: [['userId', 'is', null]] })
+    const sampleByName = new Map(SAMPLE_PRODUCTS.map((s) => [s.name, s]))
+    const hasOfficialSamples = existingSamples.some((row) => sampleByName.has(row.name))
+
+    if (!hasOfficialSamples) {
       for (const item of SAMPLE_PRODUCTS) {
         await c.data.d1.insert(Product, { ...item, userId: null })
       }
-    } else {
+    }
+
+    if (existingSamples.length > 0) {
       await c.data.d1.prepare("UPDATE products SET status = 'active' WHERE status IS NULL").run()
-      const sampleByName = new Map(SAMPLE_PRODUCTS.map((s) => [s.name, s]))
       for (const row of existingSamples) {
         const template = sampleByName.get(row.name)
         if (!template) continue
