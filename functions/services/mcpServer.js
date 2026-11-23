@@ -204,6 +204,17 @@ export async function handleMcpGet(c) {
   const denied = checkMcpAccess(c, false)
   if (denied) return denied
 
+  const accept = (c.request.headers.get('Accept') || '').toLowerCase()
+  if (accept.includes('text/event-stream') && !accept.includes('application/json')) {
+    return new Response(null, {
+      status: 405,
+      headers: {
+        Allow: 'POST, DELETE',
+        'MCP-Protocol-Version': MCP_PROTOCOL_VERSION,
+      },
+    })
+  }
+
   const tools = listPublicTools()
   return Response.json(
     {

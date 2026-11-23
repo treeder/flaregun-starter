@@ -98,7 +98,7 @@ test('API key lifecycle, MCP protocol transports, tools, resources, prompts, and
   const queryTokenOnV1 = await fetch(`${baseUrl}/v1/users/me?token=${encodeURIComponent(rawKey)}`)
   expect(queryTokenOnV1.status).toBe(401)
 
-  // 4. GET /mcp metadata
+  // 4. GET /mcp metadata & 405 for Streamable HTTP SSE stream probes
   const metaRes = await fetch(`${baseUrl}/mcp`, {
     headers: { Authorization: `Bearer ${rawKey}` },
   })
@@ -110,6 +110,16 @@ test('API key lifecycle, MCP protocol transports, tools, resources, prompts, and
   expect(metaData.supportedProtocolVersions).toEqual(['2026-07-28', '2025-11-25'])
   expect(metaData.authenticatedAs.id).toBe(user1.user.id)
   expect(metaData.toolsCount).toBeGreaterThanOrEqual(6)
+
+  const sseProbeRes = await fetch(`${baseUrl}/mcp`, {
+    headers: {
+      Authorization: `Bearer ${rawKey}`,
+      Accept: 'text/event-stream',
+    },
+  })
+  expect(sseProbeRes.status).toBe(405)
+  expect(sseProbeRes.headers.get('allow')).toBe('POST, DELETE')
+  expect(sseProbeRes.headers.get('mcp-protocol-version')).toBe('2026-07-28')
 
   // 5. Origin DNS-rebinding check
   const badOriginRes = await fetch(`${baseUrl}/mcp`, {
