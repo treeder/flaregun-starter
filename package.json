@@ -22,17 +22,17 @@
     "console-logger": "github:treeder/console-logger#semver:^1",
     "flaregun": "github:treeder/flaregun#semver:^6",
     "migrations": "github:treeder/migrations#semver:^3",
-    "nanoid": "^6.0.1",
+    "nanoid": "^6.0.2",
     "once": "github:treeder/once#semver:^1",
     "passkeys": "github:treeder/passkeys#semver:^6",
     "rend": "github:treeder/rend#semver:^1"
   },
   "devDependencies": {
-    "@cloudflare/vite-plugin": "^2.0.0-beta.sha-52b0dc0e9",
-    "cf": "^1.0.0-beta.12",
-    "prettier": "^3.9.8",
-    "vite": "^8.3.0",
-    "vitest": "^5.0.1"
+    "@cloudflare/vite-plugin": "^2.0.0-rc.3",
+    "cf": "^1.0.0-rc.4",
+    "prettier": "^3.10.1",
+    "vite": "^8.3.8",
+    "vitest": "^5.1.1"
   },
   "prettier": {
     "semi": false,
@@ -41,5 +41,8 @@
     "trailingComma": "all",
     "printWidth": 120,
     "bracketSameLine": true
+  },
+  "allowScripts": {
+    "workerd": true
   }
 }
