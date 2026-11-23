@@ -43,6 +43,6 @@
     "bracketSameLine": true
   },
   "allowScripts": {
-    "workerd@1.20261119.1": true
+    "workerd": true
   }
 }
