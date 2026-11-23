@@ -10,7 +10,7 @@ import {
 } from './mcpTools.js'
 
 export const MCP_PROTOCOL_VERSION = '2026-07-28'
-export const SUPPORTED_PROTOCOL_VERSIONS = ['2026-07-28', '2025-11-25', '2025-06-18', '2025-03-26', '2024-11-05']
+export const SUPPORTED_PROTOCOL_VERSIONS = ['2026-07-28', '2025-11-25']
 export const SERVER_INFO = {
   name: 'flaregun-mcp',
   version: '1.0.0',
@@ -204,18 +204,12 @@ export async function handleMcpGet(c) {
   const denied = checkMcpAccess(c, false)
   if (denied) return denied
 
-  const accept = c.request.headers.get('Accept') || ''
-  const url = new URL(c.request.url)
-  const token = url.searchParams.get('token') || url.searchParams.get('apiKey') || ''
-
-  if (accept.includes('text/event-stream')) {
-    const postEndpoint = token ? `/mcp?token=${encodeURIComponent(token)}` : '/mcp'
-    const bodyText = `event: endpoint\ndata: ${postEndpoint}\n\n`
-    return new Response(bodyText, {
+  const accept = (c.request.headers.get('Accept') || '').toLowerCase()
+  if (accept.includes('text/event-stream') && !accept.includes('application/json')) {
+    return new Response(null, {
+      status: 405,
       headers: {
-        'Content-Type': 'text/event-stream; charset=utf-8',
-        'Cache-Control': 'no-cache',
-        Connection: 'keep-alive',
+        Allow: 'POST, DELETE',
         'MCP-Protocol-Version': MCP_PROTOCOL_VERSION,
       },
     })
@@ -279,70 +273,15 @@ export async function handleMcpPost(c) {
     )
   }
 
-  if (!rpc || typeof rpc !== 'object') {
+  if (!rpc || typeof rpc !== 'object' || Array.isArray(rpc)) {
     return Response.json(
       {
         jsonrpc: '2.0',
-        error: { code: -32600, message: 'Invalid Request: payload must be a JSON object or batch array' },
+        error: { code: -32600, message: 'Invalid Request: payload must be a JSON-RPC 2.0 object' },
         id: null,
       },
       { status: 400, headers: baseHeaders },
     )
-  }
-
-  if (Array.isArray(rpc)) {
-    if (rpc.length === 0) {
-      return Response.json(
-        {
-          jsonrpc: '2.0',
-          error: { code: -32600, message: 'Invalid Request: empty batch' },
-          id: null,
-        },
-        { status: 400, headers: baseHeaders },
-      )
-    }
-
-    const responses = []
-    for (const item of rpc) {
-      if (
-        !item ||
-        typeof item !== 'object' ||
-        Array.isArray(item) ||
-        item.jsonrpc !== '2.0' ||
-        typeof item.method !== 'string'
-      ) {
-        responses.push({
-          jsonrpc: '2.0',
-          id: item?.id ?? null,
-          error: { code: -32600, message: 'Invalid Request: each batch item must be a valid JSON-RPC 2.0 object' },
-        })
-        continue
-      }
-
-      const headerErr = validateMcpHeaders(c.request, item)
-      if (headerErr) {
-        responses.push({
-          jsonrpc: '2.0',
-          id: item.id ?? null,
-          error: headerErr.error,
-        })
-        continue
-      }
-
-      const itemRes = await handleRpcItem(c, item)
-      if (itemRes && !itemRes.isNotification) {
-        responses.push({
-          jsonrpc: '2.0',
-          id: item.id ?? null,
-          ...(itemRes.error ? { error: itemRes.error } : { result: itemRes.result }),
-        })
-      }
-    }
-
-    if (responses.length === 0) {
-      return new Response(null, { status: 202, headers: baseHeaders })
-    }
-    return Response.json(responses, { headers: baseHeaders })
   }
 
   if (rpc.jsonrpc !== '2.0' || typeof rpc.method !== 'string') {

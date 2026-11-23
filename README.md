@@ -167,7 +167,7 @@ Set `EMAIL_FROM` via Worker secrets (`npx cf workers secrets update EMAIL_FROM -
 
 ## MCP Server (AI Agent Ready)
 
-Every app comes with a built-in [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) endpoint at `/mcp` (supporting Streamable HTTP and SSE transports) plus SHA-256 hashed API key management in `/settings` (`/v1/apiKeys`).
+Every app comes with a built-in [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) endpoint at `/mcp` (supporting Streamable HTTP) plus SHA-256 hashed API key management in `/settings` (`/v1/apiKeys`).
 
 Add or customize your app's MCP tools, resources, and prompts in [functions/services/mcpTools.js](functions/services/mcpTools.js). See [docs/mcp.md](docs/mcp.md) for client configuration and examples.
 

@@ -53,7 +53,7 @@ Content-Type: application/json
     footerLabel: 'Scoped read/write keys per user',
     footerLinkText: 'Manage API Keys',
     footerHref: '/settings',
-    pills: ['Streamable HTTP', 'SSE Transport', 'Scoped Keys', 'Tool Auth'],
+    pills: ['Streamable HTTP', 'Stateless Discovery', 'Scoped Keys', 'Tool Auth'],
   },
   {
     id: 'ui-auth',
