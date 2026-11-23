@@ -98,7 +98,7 @@ test('API key lifecycle, MCP protocol transports, tools, resources, prompts, and
   const queryTokenOnV1 = await fetch(`${baseUrl}/v1/users/me?token=${encodeURIComponent(rawKey)}`)
   expect(queryTokenOnV1.status).toBe(401)
 
-  // 4. GET /mcp metadata & SSE endpoint discovery
+  // 4. GET /mcp metadata
   const metaRes = await fetch(`${baseUrl}/mcp`, {
     headers: { Authorization: `Bearer ${rawKey}` },
   })
@@ -106,17 +106,10 @@ test('API key lifecycle, MCP protocol transports, tools, resources, prompts, and
   expect(metaRes.headers.get('mcp-protocol-version')).toBe('2026-07-28')
   const metaData = await metaRes.json()
   expect(metaData.status).toBe('online')
+  expect(metaData.protocolVersion).toBe('2026-07-28')
+  expect(metaData.supportedProtocolVersions).toEqual(['2026-07-28', '2025-11-25'])
   expect(metaData.authenticatedAs.id).toBe(user1.user.id)
   expect(metaData.toolsCount).toBeGreaterThanOrEqual(6)
-
-  const sseRes = await fetch(`${baseUrl}/mcp?token=${encodeURIComponent(rawKey)}`, {
-    headers: { Accept: 'text/event-stream' },
-  })
-  expect(sseRes.status).toBe(200)
-  expect(sseRes.headers.get('content-type')).toContain('text/event-stream')
-  const sseBody = await sseRes.text()
-  expect(sseBody).toContain('event: endpoint')
-  expect(sseBody).toContain(`data: /mcp?token=${encodeURIComponent(rawKey)}`)
 
   // 5. Origin DNS-rebinding check
   const badOriginRes = await fetch(`${baseUrl}/mcp`, {
@@ -153,7 +146,7 @@ test('API key lifecycle, MCP protocol transports, tools, resources, prompts, and
   expect(discoverRes.status).toBe(200)
   const discoverData = await discoverRes.json()
   expect(discoverData.result.resultType).toBe('complete')
-  expect(discoverData.result.supportedVersions).toContain('2026-07-28')
+  expect(discoverData.result.supportedVersions).toEqual(['2026-07-28', '2025-11-25'])
 
   const initRes = await fetch(`${baseUrl}/mcp`, {
     method: 'POST',
@@ -191,13 +184,14 @@ test('API key lifecycle, MCP protocol transports, tools, resources, prompts, and
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${rawKey}`,
-      'MCP-Protocol-Version': '1999-01-01',
+      'MCP-Protocol-Version': '2024-11-05',
     },
     body: JSON.stringify({ jsonrpc: '2.0', id: 3, method: 'ping' }),
   })
   expect(unsupportedVerRes.status).toBe(400)
   const unsupportedVerData = await unsupportedVerRes.json()
   expect(unsupportedVerData.error.code).toBe(-32022)
+  expect(unsupportedVerData.error.data.supported).toEqual(['2026-07-28', '2025-11-25'])
 
   const mismatchMethodRes = await fetch(`${baseUrl}/mcp`, {
     method: 'POST',
@@ -345,39 +339,67 @@ test('API key lifecycle, MCP protocol transports, tools, resources, prompts, and
   expect(listedMine.count).toBe(1)
   expect(listedMine.products[0].id).toBe(createdProduct.id)
 
-  // 8. Resources, Resource Templates, Prompts, and Batch RPC
+  // 8. Resources, Resource Templates, Prompts, and rejection of legacy batch arrays
   const batchRpcRes = await fetch(`${baseUrl}/mcp`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${rawKey}`,
     },
-    body: JSON.stringify([
-      { jsonrpc: '2.0', method: 'notifications/initialized' },
-      { jsonrpc: '2.0', id: 'r1', method: 'resources/list' },
-      {
-        jsonrpc: '2.0',
-        id: 'r2',
-        method: 'resources/read',
-        params: { uri: `flaregun://products/${createdProduct.id}` },
-      },
-      {
-        jsonrpc: '2.0',
-        id: 'p1',
-        method: 'prompts/get',
-        params: { name: 'summarizeCatalog', arguments: { category: 'electronics' } },
-      },
-    ]),
+    body: JSON.stringify([{ jsonrpc: '2.0', id: 'b1', method: 'ping' }]),
   })
-  expect(batchRpcRes.status).toBe(200)
-  const batchData = await batchRpcRes.json()
-  expect(batchData.length).toBe(3)
-  expect(batchData[0].id).toBe('r1')
-  expect(batchData[0].result.resources.length).toBe(3)
-  expect(batchData[1].id).toBe('r2')
-  expect(JSON.parse(batchData[1].result.contents[0].text).product.id).toBe(createdProduct.id)
-  expect(batchData[2].id).toBe('p1')
-  expect(batchData[2].result.messages[0].content.text).toContain('MCP Smart Sensor')
+  expect(batchRpcRes.status).toBe(400)
+  const batchErrData = await batchRpcRes.json()
+  expect(batchErrData.error.code).toBe(-32600)
+
+  const resourcesListRes = await fetch(`${baseUrl}/mcp`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${rawKey}`,
+    },
+    body: JSON.stringify({ jsonrpc: '2.0', id: 'r1', method: 'resources/list' }),
+  })
+  expect(resourcesListRes.status).toBe(200)
+  const resourcesListData = await resourcesListRes.json()
+  expect(resourcesListData.id).toBe('r1')
+  expect(resourcesListData.result.resources.length).toBe(3)
+
+  const resourceReadRes = await fetch(`${baseUrl}/mcp`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${rawKey}`,
+    },
+    body: JSON.stringify({
+      jsonrpc: '2.0',
+      id: 'r2',
+      method: 'resources/read',
+      params: { uri: `flaregun://products/${createdProduct.id}` },
+    }),
+  })
+  expect(resourceReadRes.status).toBe(200)
+  const resourceReadData = await resourceReadRes.json()
+  expect(resourceReadData.id).toBe('r2')
+  expect(JSON.parse(resourceReadData.result.contents[0].text).product.id).toBe(createdProduct.id)
+
+  const promptGetRes = await fetch(`${baseUrl}/mcp`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${rawKey}`,
+    },
+    body: JSON.stringify({
+      jsonrpc: '2.0',
+      id: 'p1',
+      method: 'prompts/get',
+      params: { name: 'summarizeCatalog', arguments: { category: 'electronics' } },
+    }),
+  })
+  expect(promptGetRes.status).toBe(200)
+  const promptGetData = await promptGetRes.json()
+  expect(promptGetData.id).toBe('p1')
+  expect(promptGetData.result.messages[0].content.text).toContain('MCP Smart Sensor')
 
   // 8b. MCP reviews and orders tools work end-to-end
   const restockRpc = await fetch(`${baseUrl}/mcp`, {

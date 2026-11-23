@@ -39,7 +39,7 @@ Pass the key using any of:
 
 - `Authorization: Bearer <your_api_key>`
 - `x-api-key: <your_api_key>`
-- `?token=<your_api_key>` (on `/mcp` for SSE clients)
+- `?token=<your_api_key>` (on `/mcp`)
 
 Raw keys are hashed with SHA-256 (`keyHash`) before storage in D1 and KV, so the full token is only returned once upon creation.
 
@@ -47,7 +47,7 @@ Raw keys are hashed with SHA-256 (`keyHash`) before storage in D1 and KV, so the
 
 ## 2. Connecting MCP Clients
 
-### Streamable HTTP (Recommended)
+### Streamable HTTP
 
 ```json
 {
@@ -62,28 +62,15 @@ Raw keys are hashed with SHA-256 (`keyHash`) before storage in D1 and KV, so the
 }
 ```
 
-### SSE Transport
-
-```json
-{
-  "mcpServers": {
-    "flaregun": {
-      "url": "http://localhost:8787/mcp?token=fg_key_YOUR_API_KEY",
-      "transport": "sse"
-    }
-  }
-}
-```
-
 ---
 
 ## 3. Protocol Support
 
 The `/mcp` endpoint ([`functions/mcp/index.js`](../functions/mcp/index.js) and [`functions/services/mcpServer.js`](../functions/services/mcpServer.js)) supports:
 
-- **Protocol Versions**: `2026-07-28`, `2025-11-25`, `2025-06-18`, `2025-03-26`, `2024-11-05`
-- **Transports**: Stateless Streamable HTTP (`POST /mcp`), SSE endpoint discovery (`GET /mcp` with `Accept: text/event-stream`), server status metadata (`GET /mcp`), and session close (`DELETE /mcp`)
-- **JSON-RPC Methods**: `server/discover`, `initialize`, `ping`, `tools/list`, `tools/call`, `resources/list`, `resources/templates/list`, `resources/read`, `prompts/list`, `prompts/get`, and JSON-RPC batch arrays
+- **Protocol Versions**: `2026-07-28`, `2025-11-25`
+- **Transports**: Stateless Streamable HTTP (`POST /mcp`), server status metadata (`GET /mcp`), and session close (`DELETE /mcp`)
+- **JSON-RPC Methods**: `server/discover`, `initialize`, `ping`, `tools/list`, `tools/call`, `resources/list`, `resources/templates/list`, `resources/read`, `prompts/list`, and `prompts/get`
 
 ---
 
