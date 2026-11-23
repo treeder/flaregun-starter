@@ -179,8 +179,8 @@ function render(d) {
               </div>
               <h3 class="bento-title">MCP Endpoint Built-In</h3>
               <p class="bento-desc">
-                Connect Claude, Gemini, or Cursor directly to <code>/mcp</code> over Streamable HTTP or SSE using
-                per-user <code>fg_key_*</code> bearer tokens with granular read/write scopes.
+                Connect Claude, Gemini, or Cursor directly to <code>/mcp</code> over Streamable HTTP using per-user
+                <code>fg_key_*</code> bearer tokens with granular read/write scopes.
               </p>
             </div>
             <footer class="bento-footer">
